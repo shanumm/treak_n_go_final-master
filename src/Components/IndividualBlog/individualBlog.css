@@ -1,0 +1,40 @@
+.individualBlog {
+  min-height: 100vh;
+}
+.individualBlogBy {
+  /* text-align: center; */
+  width: 80%;
+  font-size: 22px;
+  color: #ff5e00;
+  margin: auto;
+}
+.individualBlogTime {
+  width: 80%;
+  color: #ff5e00;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+.individualBlogHeading {
+  padding-top: 3rem;
+  text-align: center;
+  font-size: 2rem;
+  color: #ff5e00;
+  text-transform: uppercase;
+}
+.inline-image__picture--stretched img {
+  height: 50vh;
+  object-fit: cover;
+}
+.inline-image__caption {
+  /* display: none; */
+}
+
+.ce-block__content {
+  width: 80%;
+  max-width: 80%;
+}
+
+.individualBlog .codex-editor__redactor {
+  padding-bottom: 50px !important;
+}

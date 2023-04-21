@@ -1,0 +1,214 @@
+.peacefulStayPage {
+  min-height: 100vh;
+  background-color: #f3f3f3;
+}
+.peacefulStayComponentpart1 {
+  display: flex;
+}
+.peacefulStayPageTop {
+  min-height: 50vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+.peacefulStayPageTop > * {
+  height: 50vh;
+  width: 100%;
+  object-fit: cover;
+}
+.peacefulStayPageTopLeft > div {
+  width: 80%;
+  padding: 4rem;
+}
+
+.peacefulStayPageTopLeft > div h2 {
+  font-size: 3rem;
+  text-transform: uppercase;
+  color: #ff5e00;
+}
+.peacefulStayPageTopLeft > div h5 {
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+.peacefulStayPageTopRight > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+.peacefulStayPageTopLeft button {
+  padding: 0.4rem 1rem;
+  border: none;
+  background: #ff5e00;
+  color: white;
+}
+.peacefulStayPageTopLeft p {
+  margin: 3rem 0;
+}
+
+.peacefulStayPageTopRight > div img {
+  object-fit: cover;
+  width: 12rem;
+  height: 12rem;
+  position: absolute;
+  border-radius: 10px;
+}
+.peacefulStayPageTopRight > div img:nth-of-type(1) {
+  right: 20%;
+  top: 2.5%;
+  width: 80%;
+  height: 90%;
+}
+.peacefulStayPageTopRight > div img:nth-of-type(2) {
+  top: 10%;
+  left: -10%;
+}
+.peacefulStayPageTopRight > div img:nth-of-type(3) {
+  top: 50%;
+  left: -10%;
+}
+
+.peacefulStayBottom {
+  width: 90%;
+  min-height: 20vh;
+  padding: 1rem 0;
+  display: flex;
+}
+
+.peacefulStayBottomRight {
+  width: 100%;
+}
+.peacefulStayComponent {
+  border-radius: 20px;
+  display: flex;
+  min-height: 30vh;
+  margin: 1rem 1rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid rgba(183, 183, 183, 0.306);
+}
+
+.peacefulStayComponent > div:nth-of-type(1) {
+  width: 25%;
+  margin: 0 0.5rem 0 0;
+}
+.peacefulStayComponent > div:nth-of-type(2) {
+  font-weight: 400;
+  width: 50%;
+}
+.peacefulStayComponent > div:nth-of-type(2) h4 {
+  font-weight: 400;
+}
+.peacefulStayComponent > div:nth-of-type(2) > div {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.peacefulStayComponent > div:nth-of-type(2) h4:nth-of-type(1) {
+  font-size: 24px;
+  color: #ff5e00;
+}
+.peacefulStayComponent > div:nth-of-type(2) h4:nth-of-type(2) {
+  font-size: 1rem;
+}
+
+.peacefulStayComponent > div:nth-of-type(1) > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.peacefulStayComponent > div:last-child {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  margin-left: auto;
+}
+.peacefulStayComponent > div:last-child > div {
+  padding: 0.2rem 0;
+}
+.peacefulStayComponent > div:last-child > div:nth-of-type(1) {
+  display: flex;
+}
+.peacefulStayComponent
+  > div:last-child
+  > div:nth-of-type(1)
+  > div:nth-of-type(1) {
+  font-size: 12px;
+  margin-right: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.peacefulStayComponent
+  > div:last-child
+  > div:nth-of-type(1)
+  > div:nth-of-type(2) {
+  background-color: #ff5e00;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border-radius: 10px;
+}
+.peacefulStayComponent > div:last-child div button {
+  background: #ff5e00;
+  border: none;
+  color: white;
+  padding: 0.4rem 1rem;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .peacefulStayBottom {
+    width: 100%;
+    padding: 2rem 0;
+  }
+  .peacefulStayComponent > div:nth-of-type(1) {
+    width: 30%;
+    margin: 0 0.5rem 0 0;
+  }
+  .peacefulStayComponent > div:nth-of-type(2) {
+    font-weight: 400;
+    width: 50%;
+  }
+  .peacefulStayPageTop > * {
+    flex: 1 1 20rem;
+    width: 90%;
+    margin: 0 auto;
+    min-height: 40vh;
+  }
+  .peacefulStayPageTopRight > div img:nth-of-type(2) {
+    display: none;
+  }
+  .peacefulStayPageTopRight > div img:nth-of-type(3) {
+    display: none;
+  }
+  .peacefulStayPageTopLeft > div {
+    width: 100%;
+    padding: 1rem;
+  }
+  .reviewTitle {
+    display: none;
+  }
+  .peacefulStayComponent {
+    flex-wrap: wrap;
+    min-height: 30vh;
+    height: auto;
+  }
+  .peacefulStayComponent > div:nth-of-type(1) {
+    flex: 1 1 20rem;
+  }
+  .peacefulStayComponent > div:nth-of-type(2) {
+    flex: 1;
+  }
+  .peacefulStayComponent > div:last-child {
+    text-align: left;
+    margin-left: 0;
+    width: auto;
+  }
+}

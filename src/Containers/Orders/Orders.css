@@ -1,0 +1,9 @@
+.ordersContainer {
+  min-height: 30vh;
+  width: 90%;
+  margin: auto;
+}
+
+.ordersContainer > h2{
+    margin: 0 0 2rem 0;
+}

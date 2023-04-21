@@ -1,0 +1,219 @@
+.AddTrek {
+  min-height: 100vh;
+}
+.uploadBannerImages {
+  display: flex;
+  flex-direction: column;
+}
+.chooseUpdate {
+  box-shadow: none !important;
+  flex-wrap: wrap;
+  display: flex;
+}
+.chooseUpdate button {
+  flex: 1 1 10rem;
+  margin: 0.5rem 1rem !important;
+  cursor: pointer;
+}
+.allPackages > div {
+  margin: 1rem 0;
+}
+.allPackages > div > input:nth-of-type(2) {
+  width: 5rem;
+  margin: 0 1rem;
+}
+.AddTrek > div {
+  width: 80%;
+  margin: auto;
+}
+.AddTrekHeading {
+  font-size: 3rem;
+  margin-top: 3rem;
+}
+.SLIDropDown {
+  display: flex;
+  flex-direction: column;
+}
+.SLIDropDown label {
+  font-weight: 700;
+}
+.SLIDropDown select {
+  width: 30%;
+  margin-top: 0.2rem;
+}
+.addOns > div {
+  margin: 1rem 0;
+}
+
+.try > form {
+  display: flex;
+  width: 50%;
+  margin: 1rem 0;
+}
+
+.try input {
+  width: auto !important;
+}
+.try label {
+  margin: 0 1rem;
+}
+.try > form > div {
+  padding: 0.4rem;
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid grey;
+  margin-right: 1rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.addOns > div input:nth-of-type(1) {
+  width: 30%;
+  margin-right: 1rem;
+}
+.AddTrek input {
+  border-radius: 5px;
+  width: 50%;
+}
+.datesContainer > div:nth-of-type(1) {
+  width: 70%;
+  display: flex;
+}
+
+.datesContainer h4 {
+  margin: 1rem 0;
+}
+.datesContainer > div:nth-of-type(1) input {
+  width: auto !important;
+}
+.datesContainer > div:nth-of-type(1) label {
+  margin: 0 1rem;
+}
+.datesContainer > div:nth-of-type(1) > div {
+  padding: 0.4rem;
+  flex: 1 1;
+  border-radius: 5px;
+  border: 1px solid grey;
+  margin-right: 1rem;
+  box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+}
+
+.startDate,
+.endDate {
+  margin: 0 1rem;
+}
+.startDate > div,
+.endDate > div {
+  padding: 0 1rem;
+}
+.startDate button,
+.endDate button {
+  border: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: unset !important;
+}
+
+.allDates {
+  width: 40%;
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.AddTrek > div > div > div {
+  margin: 3rem 0;
+  padding: 0.5rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.uploadSliderImages {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.uploadSliderImages > select,
+.setPopularTreksOption > select {
+  margin: 10px 0;
+}
+
+.setPopularTreksOption {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.itinerary {
+  display: flex;
+  flex-direction: column;
+}
+.itinerary button {
+  width: 30%;
+}
+
+.highlightInputs,
+.importantNotesInputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.highlightInputs > input,
+.importantNotesInputs > input {
+  margin: 0.5rem 0;
+}
+
+.AddTrek button {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid;
+  background: #ff5e00;
+  color: white;
+  margin: 0.4rem 0.5rem 0.4rem 0;
+}
+
+.addInclusion,
+.addExclusion,
+.thingsToCarry {
+  display: flex;
+  flex-direction: column;
+}
+
+.addExclusion > input,
+.addInclusion > input,
+.thingsToCarry > input,
+.trekkingImages > input {
+  margin: 0.5rem 0;
+}
+
+.trekkingImages {
+  display: flex;
+  flex-direction: column;
+}
+
+.Details {
+  color: red;
+}
+.Uploaded {
+  color: green;
+}
+.uploadCategory > div {
+  display: flex;
+}
+.uploadCategory div div {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  flex-wrap: wrap;
+}
+.uploadCategory input {
+  display: block !important;
+  width: auto;
+  flex: 0;
+  margin-right: 5px;
+}
+
+@media (max-width: 800px) {
+  .AddTrek input {
+    border-radius: 5px;
+    width: 90%;
+  }
+}

@@ -1,0 +1,48 @@
+import React, { useContext, useEffect, useState } from "react";
+import "./filter.css";
+import FilterContext from "../FilterContext";
+
+export default function Filter({ dayFilterTrek ,isPeaceful}) {
+  const { updateDayFilter, categoryUpdate, updateSort } =
+    useContext(FilterContext);
+
+  useEffect(() => {
+    const dayFilterSelect = document.querySelector(".dayFilterSelect");
+    const sortFilterSelect = document.querySelector(".sortFilterSelect");
+
+    dayFilterSelect.selectedIndex = "0";
+    sortFilterSelect.selectedIndex = "0";
+  }, [categoryUpdate]);
+
+  return (
+    <div className="filter customFilterHeight">
+      <div>
+        <select
+          className="dayFilterSelect"
+          onChange={(e) => updateDayFilter(e.target.value)}
+          name="days"
+          id=""
+        >
+          <option value="day" selected disabled>
+            Days
+          </option>
+          {dayFilterTrek &&
+            dayFilterTrek.map((d) => <option value={d}>{d}</option>)}
+        </select>
+        <select
+          style={{ marginLeft: "1rem" }}
+          className="sortFilterSelect"
+          onChange={(e) => updateSort(e.target.value)}
+          name="sorting"
+          id=""
+        >
+          <option value="sort" selected disabled>
+            Sort
+          </option>
+          <option value="asc">Low to High</option>
+          <option value="desc">High To Low</option>
+        </select>
+      </div>
+    </div>
+  );
+}

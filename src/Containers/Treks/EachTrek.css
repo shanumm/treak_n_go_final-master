@@ -1,0 +1,212 @@
+.eachTrekContainer {
+  width: 20rem;
+  min-height: 20rem;
+  height: 20rem;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: white;
+  flex: 0 0 16rem;
+  margin: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.eachTrekContainer:hover .eachTrekImg > img {
+  width: 120%;
+  height: 120%;
+}
+.eachTrekContainer > div {
+  width: 100%;
+  height: 50%;
+}
+
+.eachTrekImg {
+  height: 60% !important;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 25px;
+  position: relative;
+}
+
+.clone {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  z-index: 10;
+}
+.cloneMenu {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.cloneMenu > div {
+  margin: 2px 0;
+  width: 5px;
+  height: 5px;
+  background: white;
+  border-radius: 50%;
+}
+
+.cloneContainer {
+  display: none;
+  position: absolute;
+  right: 6%;
+  top: 20%;
+  z-index: 10;
+  width: 100%;
+}
+.cloneContainerActive {
+  display: block;
+}
+
+.cloneDetailsContainer {
+  border-radius: 5px;
+  padding: 5px;
+  background: white;
+  margin-left: auto;
+  width: 80%;
+}
+.cloneDetailsContainer > input {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.cloneDetailsContainer > div > button:nth-of-type(2) {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid;
+  background: #ff5e00;
+  color: white;
+  margin: 0;
+}
+
+.cloneDetailsContainer > div > button:nth-of-type(1) {
+  padding: 0.2rem 0.6rem;
+  background: none;
+  color: black;
+  outline: none;
+  border: none;
+  margin: 0;
+}
+
+.CloneUploadCategory > div > div {
+  display: flex;
+}
+.CloneUploadCategory {
+  margin: 10px 0;
+}
+
+.eachTrekDetails {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.eachTrekImg {
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  min-height: 0%;
+}
+.eachTrekImg input[type="checkbox"] {
+  display: block;
+  flex: 0;
+  margin-right: 10px;
+}
+.eachTrekImg > img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.eachTrekImg:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgb(0, 0, 0) 100%);
+}
+
+.eachTrekTag {
+  position: absolute;
+  bottom: 5%;
+  font-size: var(--smallText);
+  left: 0;
+  color: white;
+  padding: 0.2rem 0.8rem;
+  z-index: 10;
+}
+
+.eachTrekDetailsName {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff5e00;
+  text-transform: capitalize;
+}
+.eachTrekDetailsName > * {
+  text-align: center;
+  font-size: var(--secondaryText);
+}
+
+.eachTrekDetailsDuration {
+  margin: 0rem auto;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eachTrekDetailsDuration > div:nth-of-type(1) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--smallText);
+}
+.eachTrekDetailsDuration > div svg {
+  height: var(--smallText);
+  width: auto;
+}
+.eachTrekDetailsDuration > div:nth-of-type(2) {
+  color: #ff5e00;
+}
+.eachTrekDetailsPrice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--secondaryText);
+}
+
+.eachTrekDetailsPrice > div:nth-of-type(2) {
+  font-weight: 700;
+  color: #ff5e00;
+}
+
+.eachTrekDetailsButton {
+  margin: 0.5em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.eachTrekDetailsButton button {
+  padding: 0.2rem 0.6rem;
+  background-color: #ff5e00;
+  color: white;
+  border: none;
+  outline: none;
+  /* width: 10rem; */
+  margin: 0.3rem;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .eachTrekContainer {
+    flex: 1 1 14rem;
+  }
+}

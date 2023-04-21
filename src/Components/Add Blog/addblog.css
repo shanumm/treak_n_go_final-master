@@ -1,0 +1,38 @@
+.addblog {
+  width: 90%;
+  margin: 2rem auto;
+}
+
+.addblog > div:nth-of-type(1) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20vh;
+  font-size: 2rem;
+}
+
+.addblog > div:nth-of-type(2) > div {
+  margin: 3rem 0;
+  padding: 1rem;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  border-radius: 10px;
+}
+
+.addblog input,
+.addblog textarea {
+  width: 100%;
+  margin: 0.8rem 0;
+}
+
+.addBlogButton {
+  border: none;
+  background: #ff5e00;
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 10px;
+  margin: 0 1rem;
+}
+
+.addblog .codex-editor__redactor {
+  padding-bottom: 300px !important;
+}

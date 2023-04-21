@@ -1,0 +1,398 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+.react-date-picker {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.react-date-picker__wrapper,
+.react-date-picker__wrapper button {
+  background-color: #2c2c2c !important;
+  border: 1px solid #444 !important;
+}
+
+.react-date-picker__inputGroup {
+  background-color: #2c2c2c !important;
+  color: #fff !important;
+}
+
+.react-date-picker__inputGroup__input {
+  color: #fff !important;
+}
+
+.react-date-picker__inputGroup__divider {
+  color: #444 !important;
+}
+
+.react-date-picker__inputGroup__leadingZero {
+  color: #444 !important;
+}
+
+.react-date-picker__button__icon {
+  stroke: #fff !important;
+}
+
+.react-calendar {
+  background-color: #2c2c2c !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.react-calendar__tile {
+  background-color: #2c2c2c !important;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #444 !important;
+}
+
+.react-calendar__tile--hasActive,
+.react-calendar__tile--active {
+  background-color: #ff5e00 !important;
+  color: #fff !important;
+}
+
+.react-calendar__tile--hasActive:hover,
+.react-calendar__tile--active:hover,
+.react-calendar__tile--hasActive:focus,
+.react-calendar__tile--active:focus {
+  background-color: #ff5e00 !important;
+  color: #fff !important;
+}
+
+.react-calendar__navigation {
+  background-color: #2c2c2c !important;
+  border: none !important;
+}
+
+.react-calendar__navigation__label,
+.react-calendar__navigation__arrow {
+  color: #fff !important;
+}
+
+.individualPeacefulStays {
+  min-height: 100vh;
+  width: 100%;
+  background: #f0f0f0;
+}
+
+.individualPeacefulStays .modal {
+  display: flex;
+  position: fixed;
+  z-index: 100000;
+  left: 0;
+  top: 0;
+  width: 100% !important;
+  margin: 0 !important;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  align-items: center;
+  justify-content: center;
+}
+
+.AmenityContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.AmenityContainer > div {
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  margin-bottom: 10px;
+  align-items: center;
+  padding: 4px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: 13px;
+}
+
+.individualPeacefulStays .modal-content {
+  width: 80%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.individualPeacefulStays .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.individualPeacefulStays .prev,
+.individualPeacefulStays .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.individualPeacefulStays .prev {
+  left: 20px;
+}
+
+.individualPeacefulStays .next {
+  right: 20px;
+}
+
+.individualPeacefulStays > div {
+  width: 80% !important;
+  margin: 0 auto 10px auto !important;
+  padding-top: 10px;
+}
+
+.individualPeacefulStays > div:not(:nth-child(1), :nth-child(2)) {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.ipsNav ul {
+  display: flex;
+  border-bottom: 1px solid #c3dcfe;
+}
+.ipsNav ul li {
+  margin: 0 2px 0 0;
+  flex: 1;
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ebf3fe;
+}
+
+.ipsDetailsHeading > div {
+  display: flex;
+  align-items: center;
+}
+.ipsDetailsHeading > div > div:nth-of-type(1) {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+.ipsDetailsHeading > div > div:nth-of-type(2) {
+  display: flex;
+}
+
+.ipslocation {
+  width: 70%;
+  margin-bottom: 10px;
+}
+.ipsCompleteAddress {
+  color: gray;
+  font-size: 14px;
+}
+.ipslocation > svg {
+  margin-right: 10px;
+}
+
+.ipsGallary {
+  min-height: 60vh;
+  width: 100%;
+  margin: 10px 0;
+}
+.view-more-container {
+  position: relative;
+}
+
+.ipsGallary > div {
+  display: grid;
+  height: 60vh;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.ipsGallary > div > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.ipsGallary > div > img:nth-of-type(1) {
+  grid-column: 1/5;
+  grid-row: 1 / span 2;
+}
+.ipsGallary > div > img:nth-of-type(2) {
+  grid-column: 1 / 3;
+  grid-row: 3 / span 5;
+}
+.ipsGallary > div > img:nth-of-type(3) {
+  grid-column: 3 / 4;
+  grid-row: 3 / span 5;
+}
+.ipsGallary > div > div {
+  grid-column: 4 / 5;
+  grid-row: 3 / span 5;
+  border-radius: 4px;
+}
+.ipsGallary > div > div img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.view-more-container button {
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  outline: none;
+  color: white;
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.ipsDescription {
+  margin: 2rem 0;
+  display: flex;
+}
+
+.ipsDescription > div:nth-of-type(1) {
+  width: 60%;
+}
+
+.ipsDescription > div:nth-of-type(2) {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ipsDescription > div:nth-of-type(2) > div {
+  width: 80%;
+  min-height: 80%;
+  background: #ebf3fe;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.ipsPropertyHighlight > div {
+  display: flex;
+  flex-direction: column;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(1) {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(2) {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ipsPropertyHighlight > div > div:nth-of-type(3) {
+  margin: 10px 0;
+}
+
+.ipsPropertyHighlight > div > div:nth-of-type(3) li {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.ipsPropertyHighlight {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 5px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ipsPropertyHighlight div {
+}
+
+.ipsPropertyHighlight button {
+  background-color: #ff5e00;
+  color: #ffffff;
+  padding: 0.2rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.ipsPropertyHighlight button:hover {
+  background-color: #e65a00;
+}
+
+.roomsCountControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.roomsCountControl button {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.ipsMostPopular {
+  margin: 2rem 0;
+}
+.ipsMostPopular h5 {
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.ipsMostPopular > div {
+  display: flex;
+}
+.ipsMostPopular > div li {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.ipsMostPopular > div li svg {
+  color: #39811d;
+}
+
+.ipsSurroundings h5 {
+  font-size: 1rem;
+}
+
+.ipsSurroundings > div {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ipsSurroundings > div > div {
+  width: 100%;
+}
+.ipsSurroundings > div > div > div:nth-of-type(1) {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+.ipsSurroundings > div > div > div:nth-of-type(2) {
+  display: flex;
+  flex-direction: column;
+}
+.ipsSurroundings > div > div > div:nth-of-type(2) > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e7e7e7;
+  margin-right: 10px;
+}
+.ipsSurroundings > div > div > div:nth-of-type(2) > div > div:last-of-type {
+  color: #232323;
+}

@@ -1,0 +1,41 @@
+.why-trekngo {
+  text-align: center;
+  padding: 2rem 0;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.why-trekngo-item {
+  margin-top: 20px;
+  margin-bottom: 2rem;
+  background-color: #f7f7f7;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 1.5rem;
+  flex: 0 0 calc(33.333% - 2rem);
+  box-sizing: border-box;
+}
+
+.why-trekngo h3 {
+  margin-bottom: 1rem;
+  color: #ff5e00;
+}
+
+.why-trekngo a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+  .why-trekngo-item {
+    flex: 0 0 calc(50% - 2rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .why-trekngo-item {
+    flex: 0 0 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

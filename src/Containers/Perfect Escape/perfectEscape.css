@@ -1,0 +1,80 @@
+.perfectEscape {
+  min-height: 100vh;
+}
+.perfectEscapeBanner {
+  width: 100%;
+  height: 60vh;
+  background-attachment: fixed;
+}
+
+.perfectEscapeBanner img {
+  width: 100%;
+  height: 100%;
+  background-attachment: fixed;
+  object-fit: cover;
+}
+.perfectEscapeTop {
+  width: 80%;
+  margin: 2rem auto;
+}
+.perfectEscapeHeading {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.perfectEscape > div {
+  flex: 1;
+}
+
+.perfectEscapeHeading > div {
+  flex: 1 1 20rem;
+}
+.perfectEscapeHeading img {
+  width: 15rem;
+  height: 15rem;
+  object-fit: cover;
+  margin: 1rem;
+  border-radius: 15px;
+}
+.perfectEscapeHeading {
+  position: relative;
+}
+.perfectEscapeHeadingImg {
+  display: flex;
+  width: 50%;
+  position: absolute;
+  top: -100%;
+  right: 0;
+}
+.perfectdes {
+  font-size: var(--subHeading);
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+.perfectEscapeHeading > div > div:nth-of-type(1) {
+  color: #ff5e00;
+  font-size: var(--heading);
+  text-align: center;
+}
+
+.perfectEscapeDescription {
+  position: relative;
+  margin: 5rem 0;
+}
+.perfectEscapeDescription::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 4rem;
+  height: 2px;
+  background-color: #494949;
+}
+
+@media (max-width: 767px) {
+  .perfectdes {
+    width: 100%;
+  }
+}

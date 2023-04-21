@@ -1,0 +1,47 @@
+.filter {
+  width: 50%;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 1rem;
+  flex-wrap: wrap;
+}
+
+.filter > div {
+  margin: 0 1rem;
+}
+.filter > div > select {
+  width: 10rem;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem;
+  transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+  color: black;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.filter > div > select:hover {
+  background: #ff5e00;
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .filter {
+    height: 20vh;
+    width: auto;
+    justify-content: center;
+  }
+  .filter > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .filter > div > select {
+    flex: 1;
+  }
+  .customFilterHeight {
+    height: auto !important;
+  }
+}
