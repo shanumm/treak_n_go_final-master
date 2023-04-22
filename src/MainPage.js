@@ -11,6 +11,52 @@ import PerfectEscapeMain from "./Containers/PerfectEscape/PerfectEscapeMain";
 import SliderBanner from "./Components/Slider Banner/SilderBanner";
 import { db } from "./firebase";
 import WhyTrekNgo from "./Containers/WhyTrekNGo/WhyTrekNGo";
+
+const liveBarContainerStyle = {
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  backgroundColor: "#f1c40f",
+  color: "#000",
+  fontWeight: "bold",
+  padding: "5px",
+  position: "relative",
+  height: "5vh",
+};
+
+const liveBarContentStyle = {
+  display: "inline-block",
+  position: "absolute",
+  animation: "marquee 15s linear infinite",
+};
+const LiveBar = () => {
+  const [liveBarData, setLiveBarData] = useState("");
+  const liveText = db
+    .collection("liveBar")
+    .doc("liveBar")
+    .get()
+    .then((snapshot) => setLiveBarData(snapshot.data().liveBar));
+  if (!liveBarData.length) return;
+  return (
+    <div style={liveBarContainerStyle}>
+      <style>
+        {`
+        @keyframes marquee {
+          0% {
+            transform: translateX(300%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        `}
+      </style>
+      <div style={liveBarContentStyle}>
+        Live 🔴 It's snowing at Kheerganga and Tosh 20 April 2023
+      </div>
+    </div>
+  );
+};
+
 export default function MainPage({ data }) {
   const [isWinterAvailable, setIsWinterAvailable] = useState(false);
   const [isSpiritualAvailable, setIsSpiritualAvailable] = useState(false);
@@ -52,6 +98,7 @@ export default function MainPage({ data }) {
   return (
     <div>
       <HeroSection data={data} />
+      <LiveBar />
       <PopularTreks />
       <PerfectEscapeMain />
       {isWinterAvailable === "show" && <PopularPackages />}

@@ -240,6 +240,10 @@ export default function Edit() {
   };
 
   const DateRange = () => {
+    // Create a new Date object for tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     return (
       <>
         <DatePicker
@@ -250,6 +254,7 @@ export default function Edit() {
           endDate={endDate}
           value={startDate}
           className="startDate"
+          minDate={tomorrow} // Set the minimum selectable date as tomorrow
         />
         <DatePicker
           selected={endDate}
@@ -281,10 +286,10 @@ export default function Edit() {
       "/" +
       endDate.getFullYear();
     getAllDates.push(startEndDate);
-
     setAllDates([...allDates, ...getAllDates]);
   };
   const handleRemoveDate = (idx) => {
+    console.log(idx);
     // assigning the list to temp variable
     const temp = [...allDates];
 
@@ -446,6 +451,9 @@ export default function Edit() {
             rating: rating,
             discountValue,
           };
+          if (predefinedDates) {
+            trekData.allDates = allDates;
+          }
           if (addon) {
             trekData.addone = allAddons;
           }
@@ -604,6 +612,9 @@ export default function Edit() {
       addAddOns.removeChild(addAddOns.lastElementChild);
     }
   };
+  const addSameDiscount = () => {
+    setDiscountValue(editT?.discountValue);
+  };
   const addSameName = () => {
     setName(editT?.name);
   };
@@ -729,6 +740,8 @@ export default function Edit() {
       const have_add_one = document.getElementById("have-add-ons");
       have_add_one.checked = true;
     }
+    console.log(editT?.allDates, ">>>>");
+    console.log(editT?.allDates?.length, ">>><<<<");
     if (editT?.allDates?.length > 0) {
       document.getElementById("yesDate").checked = true;
       setPredefinedDates(true);
@@ -738,6 +751,7 @@ export default function Edit() {
   const addAllSame = () => {
     addSameRating();
     addSamePackageOptions();
+
     addSameName();
     addSamePrice();
     addSameAddons();
@@ -762,6 +776,7 @@ export default function Edit() {
     setExc();
     setCar();
     setImg();
+    addSameDiscount();
   };
   const Loader = () => <div className="loader"></div>;
 
@@ -927,16 +942,17 @@ export default function Edit() {
                           </div>
                         ))}
 
-                      {allDates.map((e, idx) => (
-                        <div key={idx} className="allDates">
-                          <div>
-                            {e.startDate} - {e.endDate}{" "}
+                      {allDates.length > 0 &&
+                        allDates.map((e, idx) => (
+                          <div key={idx} className="allDates">
+                            <div>
+                              {e.startDate} - {e.endDate}{" "}
+                            </div>
+                            <button onClick={() => handleRemoveDate(idx)}>
+                              Remove
+                            </button>
                           </div>
-                          <button onClick={() => handleRemoveDate(idx)}>
-                            Remove
-                          </button>
-                        </div>
-                      ))}
+                        ))}
 
                       <button onClick={addDateButton}>Add Date</button>
                     </>

@@ -72,12 +72,16 @@
   }
 }
 @media (max-width: 768px) {
+  .popularTreksHeading {
+    font-size: 24px;
+    padding-bottom: 4px;
+  }
   .popularTrekCards {
     justify-content: center;
     overflow: hidden;
   }
   .popularTreks {
-    padding: 2rem 0 0 0;
+    padding: 1rem 0 0 0;
   }
   .splide__arrow--prev {
     left: 0 !important;
@@ -86,7 +90,7 @@
     right: 0 !important;
   }
   .popularTreksDetails {
-    font-size: var(--secondaryHeading);
+    font-size: 16px;
   }
   .splide__track {
     overflow: visible !important;

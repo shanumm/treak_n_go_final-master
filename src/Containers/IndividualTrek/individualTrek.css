@@ -1445,7 +1445,7 @@
     flex: 1 1 20rem;
   }
   .individualTrekTopLeft {
-    margin: 1rem;
+    margin: 1rem 0;
   }
   .carrythingsDetails > div {
     width: 100%;
@@ -1516,6 +1516,12 @@
     width: 90%;
     justify-content: space-around;
   }
+  .overViewContainer > div li div:nth-of-type(1) {
+    width: auto;
+  }
+  .label-toggle {
+    padding: 16px 0;
+  }
   .trekFeatures img {
     width: 1.8rem;
     height: 1.8rem;
@@ -1526,6 +1532,7 @@
   .overViewContainer > div li {
     width: 90%;
     font-size: 14px;
+    justify-content: space-between;
   }
   .accordion {
     width: 100%;
@@ -1571,6 +1578,7 @@
   }
   .extraTrekDetails > div {
     width: auto;
+    flex: 1;
   }
   .individualTrekHighlight h3,
   .overViewContainer > h3,

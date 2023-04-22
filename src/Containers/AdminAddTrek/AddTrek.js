@@ -79,6 +79,7 @@ export default function AddTrek({ searchQueryData }) {
   const [nearestHighlight, setNearestHighlight] = useState("");
   const [itineraryNumber, setItineraryNumber] = useState(1);
   const [itineraries, setItineraries] = useState([{ id: 1 }]);
+  const [liveBar, setLiveBar] = useState("");
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -264,6 +265,10 @@ export default function AddTrek({ searchQueryData }) {
   };
 
   const DateRange = () => {
+    // Create a new Date object for tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     return (
       <>
         <DatePicker
@@ -274,6 +279,7 @@ export default function AddTrek({ searchQueryData }) {
           endDate={endDate}
           value={startDate}
           className="startDate"
+          minDate={tomorrow} // Set the minimum selectable date as tomorrow
         />
         <DatePicker
           selected={endDate}
@@ -499,6 +505,7 @@ export default function AddTrek({ searchQueryData }) {
             trekData.allSelectedCategory = allSelectedCategory;
 
             if (uploadCategorySelectedLength > 0) {
+              console.log(trekData, "checing");
               trekData.SLI = "";
               uploadCategory.forEach((m) => {
                 if (m.checked) {
@@ -527,6 +534,7 @@ export default function AddTrek({ searchQueryData }) {
                 }
               });
             } else {
+              console.log(trekData, "checing");
               db.collection(`All ${editType}`)
                 .doc(name.trim())
                 .set({
@@ -656,6 +664,7 @@ export default function AddTrek({ searchQueryData }) {
   }, [allDates]);
 
   const handleRemoveDate = (idx) => {
+    console.log(idx);
     // assigning the list to temp variable
     const temp = [...allDates];
 
@@ -747,6 +756,18 @@ export default function AddTrek({ searchQueryData }) {
       .add({
         banner: c ? c : "",
       })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleLiveBarUpdate = () => {
+    const d = db
+      .collection("liveBar")
+      .doc("liveBar")
+      .set({
+        liveBar,
+      })
+      .then(() => window.alert("Updated"))
       .catch((err) => {
         console.log(err);
       });
@@ -965,10 +986,19 @@ export default function AddTrek({ searchQueryData }) {
           </div>
 
           <div className="uploadBannerImages">
-            <div>Update Banner Images</div>
-            <input type="file" onChange={(e) => bannerImage(e, 1)} />
-            <input type="file" onChange={(e) => bannerImage(e, 2)} />
-            <input type="file" onChange={(e) => bannerImage(e, 3)} />
+            <div>
+              <div>Update Banner Images</div>
+              <input type="file" onChange={(e) => bannerImage(e, 1)} />
+              <input type="file" onChange={(e) => bannerImage(e, 2)} />
+              <input type="file" onChange={(e) => bannerImage(e, 3)} />
+            </div>
+          </div>
+          <div className="uploadBannerImages">
+            <div>
+              <div>Update Live Bar</div>
+              <input type="text" onChange={(e) => setLiveBar(e.target.value)} />
+              <button onClick={handleLiveBarUpdate}>Update</button>
+            </div>
           </div>
 
           <div>

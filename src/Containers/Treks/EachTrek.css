@@ -207,6 +207,6 @@
 
 @media (max-width: 768px) {
   .eachTrekContainer {
-    flex: 1 1 14rem;
+    flex: 1 1 9rem;
   }
 }

@@ -163,6 +163,7 @@ export default function IndividualPeacefulStays() {
 
     return (
       <div
+        className="rulesContainer"
         style={{
           marginTop: "10px",
           display: "flex",

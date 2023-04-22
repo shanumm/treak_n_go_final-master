@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import AddBlog from "./Components/Add Blog/AddBlog";
 import Allblog from "./Components/AllBlog/Allblog";
 import Blog from "./Components/BlogPage/Blog";
@@ -27,6 +32,34 @@ import AboutUs from "./Containers/PrivacyPolicy/AboutUs";
 import TermsOfUse from "./Containers/PrivacyPolicy/T&C";
 import EditCamps from "./Containers/Edit Camps/EditCamps";
 import EditIndividualCamps from "./Containers/Edit Camps/EditIndividualCamps";
+
+const treksData = [
+  { old: "/tour/kheerganga-trek", new: "/treks/KHEERGANGA%20TREK=trek" },
+  { old: "/tour/kareri-lake-trek", new: "/treks/Kareri%20Lake%20Trek=trek" },
+  { old: "/tour/triund-camping-1n2d", new: "/treks/Triund%20Top%20Trek=trek" },
+  {
+    old: "/tour/kailashmanimaheshparikramatrek",
+    new: "/treks/kailash%20Manimahesh=trek",
+  },
+  { old: "/tour/kugtipass", new: "/treks/Kugti%20Pass%20Trek=trek" },
+  {
+    old: "/tour/chopta-tungnath-trek",
+    new: "/treks/Tungnath%20Chandrashilla%20&%20Deoriatal%20Trek=multiday",
+  },
+  { old: "/tour/kedarkantha-trek", new: "/treks/Kedarkantha%20Trek=trek" },
+  // ... add more mappings as needed ...
+];
+
+function generateRedirectRoutes() {
+  return treksData.map((trek, index) => (
+    <Route
+      key={index}
+      exact
+      path={trek.old}
+      element={<Navigate to={trek.new} replace />}
+    />
+  ));
+}
 
 export default function App() {
   const [{ basket, user }, dispatch] = useStateValue();
@@ -110,9 +143,14 @@ export default function App() {
                 />
                 <Route exact path="/edit/:id" element={<Edit />} />
                 <Route exact path="/editCamps" element={<EditCamps />} />
-                <Route exact path="/editCamps/:id" element={<EditIndividualCamps />} />
+                <Route
+                  exact
+                  path="/editCamps/:id"
+                  element={<EditIndividualCamps />}
+                />
               </>
             )}
+            {generateRedirectRoutes()}
             <Route element={<MainPage data={searchQueryData} />} />
           </Routes>
         </div>

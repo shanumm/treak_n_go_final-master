@@ -171,6 +171,9 @@ export default function PeacefulStays() {
               const matchedAmenity = popularAmenities.find(
                 (amenity) => amenity.name === backendAmenity
               );
+              if (!matchedAmenity) {
+                return null; // Return null if no matching amenity is found
+              }
 
               return (
                 <div

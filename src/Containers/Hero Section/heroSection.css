@@ -170,11 +170,28 @@
 }
 
 @media (max-width: 768px) {
+  .glide {
+    height: 30vh;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    z-index: 500;
+  }
+  .heroSectionContainer {
+    height: 30vh;
+    width: 100%;
+    position: relative;
+    color: #0c171b;
+  }
   .headerSearch {
     width: 80vw;
   }
   .glide__arrow {
     display: none !important;
+  }
+  .glide__slides img {
+    width: 100%;
+    object-fit: cover;
   }
 }
 @media (max-width: 512px) {

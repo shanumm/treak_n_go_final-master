@@ -7,7 +7,7 @@ import "@glidejs/glide/dist/css/glide.theme.min.css";
 
 import ImageBanner from "../Treks/trekBannerBg.jpg";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Banner_1 from "../../Images/banner-1.jpg";
 import Banner_2 from "../../Images/banner-2.jpg";
 import Banner_3 from "../../Images/banner-3.jpg";
@@ -21,6 +21,8 @@ export default function HeroSection({ data }) {
   const [b1, setB1] = useState("");
   const [b2, setB2] = useState("");
   const [b3, setB3] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     const heroSectionGlide = new Glide(".glide").mount();
 
@@ -74,7 +76,7 @@ export default function HeroSection({ data }) {
       <div className="headerSearch">
         <div>
           <div className="headerSearchOuterContainer">
-            <div>
+            <div style={{ width: "100%" }}>
               <img
                 style={{
                   width: "18px",
@@ -90,13 +92,18 @@ export default function HeroSection({ data }) {
                 onChange={(e) => setSearch(e.target.value)}
                 value={search}
                 placeholder="Search “TrekNgo”"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    navigate(`/treks?search=${search}&adults=${noOfAdults}`);
+                  }
+                }}
               />
-            </div>
-
-            <div>
-              <Link to={`/treks?search=${search}&adults=${noOfAdults}`}>
-                <button>Search</button>
-              </Link>
+              <div>
+                <Link to={`/treks?search=${search}&adults=${noOfAdults}`}>
+                  <button>Search</button>
+                </Link>
+              </div>
             </div>
           </div>
           {/* <div className="searchData">

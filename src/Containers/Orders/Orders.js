@@ -35,6 +35,7 @@ export default function Orders() {
             db.collection("Orders")
               .doc(doc.id)
               .collection("All Orders")
+              .orderBy("date", "desc")
               .get()
               .then((s) => {
                 s.forEach((ss) => {
@@ -47,7 +48,6 @@ export default function Orders() {
           });
         });
     }
-
   }, []);
   return (
     <div>

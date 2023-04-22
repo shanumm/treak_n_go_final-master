@@ -92,6 +92,7 @@ export default function IndividualTrek() {
   const [mobileError, setMobileError] = useState("");
   const [day, setDay] = useState(1);
   const [addonsPrice, setAddonsPrice] = useState(0);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
   const [bookingEmail, setBookingEmail] = useState("");
   const [bookingNumber, setBookingNumber] = useState("");
@@ -101,6 +102,8 @@ export default function IndividualTrek() {
   const [confirmedBookingId, setConfirmedBookingId] = useState("");
   const [isPackageSelect, setIsPackageSelected] = useState(false);
   const [packagePrice, setPackagePrice] = useState();
+  const [packageSelectedData, setPackageSelectedData] = useState(null);
+  const [selectedAvailableBatch, setSelectedAvailableBatch] = useState(null);
   const [suggestionId, setSuggestionId] = useState("");
   const [suggestedData, setSuggestedData] = useState();
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -320,14 +323,28 @@ export default function IndividualTrek() {
     today = yyyy + "-" + mm + "-" + dd;
     setCurrentBookingDate(today);
     setCurrentBookingMiniDate(today);
-  });
+  }, []);
+
+  function isValidEmail(email) {
+    // regular expression for checking email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  // example usage
+  const email = "test@example.com";
+  if (isValidEmail(email)) {
+    console.log(`${email} is a valid email`);
+  } else {
+    console.log(`${email} is not a valid email`);
+  }
 
   // payment processing
   async function displayRazorpay(e) {
     e.preventDefault();
     setIsPaymentProcessing(true);
     const mobile = document.querySelector(".mobile");
-    if (mobile.value.length === 10) {
+    if (mobile.value.length === 10 && isValidEmail(bookingEmail)) {
       setMobileError("");
       const res = await loadScript(
         "https://checkout.razorpay.com/v1/checkout.js"
@@ -337,12 +354,25 @@ export default function IndividualTrek() {
         alert("Razorpay SDK failed to load. Are you online?");
         return;
       }
-      console.log("in payment option");
+      const finalSellPrice =
+        addonsPrice +
+        adult *
+          (isPackageSelect
+            ? data?.discountValue
+              ? Math.floor(
+                  ((parseInt(data?.price) + parseInt(packagePrice)) *
+                    (100 - parseInt(data?.discountValue))) /
+                    100
+                )
+              : Math.floor((parseInt(data?.price) + parseInt(packagePrice)) / 2)
+            : data?.discountValue
+            ? Math.floor(
+                (data?.price * (100 - parseInt(data?.discountValue))) / 100
+              )
+            : Math.floor(data?.price / 2));
       const response = await axios({
         method: "post",
-        url: `/payments/create?total=${
-          (isPackageSelect ? packagePrice : data?.price) * 100 * adult
-        }`,
+        url: `/payments/create?total=${finalSellPrice * 100}`,
       });
 
       const options = {
@@ -363,20 +393,32 @@ export default function IndividualTrek() {
               user: bookingEmail,
             })
             .then(() => {
+              const orderDetails = {
+                travelDate: currentBookingDate,
+                date: value,
+                OrderId: response.razorpay_order_id,
+                PaymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+                Adults: adult,
+                data: data,
+                email: bookingEmail,
+                number: mobile.value,
+              };
+
+              if (selectedAddOns) {
+                orderDetails.selectedAddOns = selectedAddOns;
+              }
+              if (packageSelectedData) {
+                orderDetails.packageSelectedData = packageSelectedData;
+              }
+              if (selectedAvailableBatch) {
+                orderDetails.selectedAvailableBatch = selectedAvailableBatch;
+              }
+              console.log(orderDetails, "orderDetails");
               db.collection("Orders")
                 .doc(bookingEmail)
                 .collection("All Orders")
-                .add({
-                  travelDate: currentBookingDate,
-                  date: value,
-                  OrderId: response.razorpay_order_id,
-                  PaymentId: response.razorpay_payment_id,
-                  signature: response.razorpay_signature,
-                  Adults: adult,
-                  data: data,
-                  email: bookingEmail,
-                  number: mobile.value,
-                });
+                .add(orderDetails);
             })
             .then(() => {
               var iti = data?.itinerary
@@ -388,7 +430,11 @@ export default function IndividualTrek() {
                     "&nbsp;";
                   return c;
                 })
-                .toString();
+                .join("<br>");
+
+              var inclusions = data?.inclusion.join("<br>");
+              var exclusions = data?.exclusion.join("<br>");
+
               var params = {
                 name: data?.name,
                 to_name: bookingEmail,
@@ -398,14 +444,23 @@ export default function IndividualTrek() {
                 no_of_people: adult,
                 tour_date: currentBookingDate,
                 itinerary: iti,
-                inclusion: data?.inclusion.toString(),
-                exlusion: data?.exclusion.toString(),
+                inclusion: inclusions,
+                exlusion: exclusions,
                 canvas: data?.images[0],
               };
+              if (selectedAddOns) {
+                params.selectedAddOns = selectedAddOns;
+              }
+              if (packageSelectedData) {
+                params.packageSelectedData = packageSelectedData;
+              }
+              if (selectedAvailableBatch) {
+                params.selectedAvailableBatch = selectedAvailableBatch;
+              }
 
               emailjs
                 .send(
-                  "service_ot4wueo",
+                  "service_p1nqdtc",
                   "template_9ow97wa",
                   params,
                   "dcAj3UwkMO9oYa0NL"
@@ -431,7 +486,7 @@ export default function IndividualTrek() {
       setIsPaymentProcessing(false);
     } else {
       setIsPaymentProcessing(false);
-      setMobileError("Please enter a valid number");
+      setMobileError("Please enter a valid number or email");
     }
   }
 
@@ -441,7 +496,8 @@ export default function IndividualTrek() {
     // return date.toDateString
   };
 
-  const chooseFromExistingDates = (i) => {
+  const chooseFromExistingDates = (i, d) => {
+    setSelectedAvailableBatch(d);
     const dateContainer = document.querySelectorAll(".eachDateContainer img");
     dateContainer.forEach((d) => {
       d.src = "https://cdn-icons-png.flaticon.com/512/148/148764.png";
@@ -465,7 +521,7 @@ export default function IndividualTrek() {
         {data.allDates.map((d, i) => (
           <div
             className="eachDateContainer"
-            onClick={(e) => chooseFromExistingDates(i)}
+            onClick={(e) => chooseFromExistingDates(i, d)}
           >
             <img
               src="https://cdn-icons-png.flaticon.com/512/148/148764.png"
@@ -494,24 +550,46 @@ export default function IndividualTrek() {
 
   const addAddon = (e, id) => {
     const addOndata = document.querySelector(`#addOndata${id}`);
-    if (parseInt(addOndata.innerHTML) >= 0) {
-      addOndata.innerHTML = parseInt(addOndata.innerHTML) + 1;
-      const price = addonsPrice + parseInt(e.price);
-      console.log(price);
-      setAddonsPrice(() => price);
+    const addon = {
+      name: e.name,
+      price: parseInt(e.price),
+      quantity: 1,
+    };
+    const existingIndex = selectedAddOns.findIndex(
+      (item) => item.name === addon.name
+    );
+    if (existingIndex !== -1) {
+      const updatedAddons = [...selectedAddOns];
+      updatedAddons[existingIndex].quantity += 1;
+      setSelectedAddOns(updatedAddons);
+    } else {
+      setSelectedAddOns((prevState) => [...prevState, addon]);
     }
+    setAddonsPrice((prevPrice) => prevPrice + parseInt(e.price));
+    addOndata.innerHTML = parseInt(addOndata.innerHTML) + 1;
   };
+
   const removeAddon = (e, id) => {
     const addOndata = document.querySelector(`#addOndata${id}`);
     if (parseInt(addOndata.innerHTML) >= 1) {
       addOndata.innerHTML = parseInt(addOndata.innerHTML) - 1;
+      const addonIndex = selectedAddOns.findIndex(
+        (addon) => addon.name === e.name
+      );
+      if (addonIndex !== -1) {
+        const selectedAddOnsCopy = [...selectedAddOns];
+        selectedAddOnsCopy[addonIndex].quantity -= 1;
+        if (selectedAddOnsCopy[addonIndex].quantity === 0) {
+          selectedAddOnsCopy.splice(addonIndex, 1);
+        }
+        setSelectedAddOns(selectedAddOnsCopy);
+      }
       const price = addonsPrice - parseInt(e.price);
-      setAddonsPrice(() => price);
+      setAddonsPrice(price);
     }
   };
 
   const handleAddOnOpen = () => {
-    // document.removeEventListener("mouseup");
     document
       .querySelector(".addOnContainer")
       .classList.toggle("addOnContainerActive");
@@ -547,6 +625,7 @@ export default function IndividualTrek() {
     const data = JSON.parse(e.target.value);
     setIsPackageSelected(true);
     setPackagePrice(data?.price);
+    setPackageSelectedData(data);
   };
 
   useEffect(() => {
@@ -1082,12 +1161,29 @@ export default function IndividualTrek() {
                   <h2>
                     INR{" "}
                     {isPackageSelect
-                      ? parseInt(data?.price) + parseInt(packagePrice)
-                      : data?.price}
+                      ? data?.discountValue
+                        ? Math.floor(
+                            ((parseInt(data?.price) + parseInt(packagePrice)) *
+                              (100 - parseInt(data?.discountValue))) /
+                              100
+                          )
+                        : Math.floor(
+                            (parseInt(data?.price) + parseInt(packagePrice)) / 2
+                          )
+                      : data?.discountValue
+                      ? Math.floor(
+                          (data?.price *
+                            (100 - parseInt(data?.discountValue))) /
+                            100
+                        )
+                      : Math.floor(data?.price / 2)}
                     /-
                   </h2>
-                  <h5>ratings</h5>
+                  {isPackageSelect && (
+                    <h5 style={{ fontWeight: 500 }}>Package Selected</h5>
+                  )}
                 </div>
+
                 <div className="dateAndAdult">
                   <div>
                     {data?.allDates && data?.allDates?.length > 1 ? null : (
@@ -1097,6 +1193,9 @@ export default function IndividualTrek() {
                           type="date"
                           id="checkingg"
                           min={currentBookingMiniDate}
+                          onChange={(e) =>
+                            setCurrentBookingDate(e.target.value)
+                          }
                         />
                       </>
                     )}
@@ -1189,9 +1288,26 @@ export default function IndividualTrek() {
                     <div>
                       {addonsPrice +
                         adult *
-                          parseInt(
-                            isPackageSelect ? packagePrice : data?.price
-                          )}{" "}
+                          (isPackageSelect
+                            ? data?.discountValue
+                              ? Math.floor(
+                                  ((parseInt(data?.price) +
+                                    parseInt(packagePrice)) *
+                                    (100 - parseInt(data?.discountValue))) /
+                                    100
+                                )
+                              : Math.floor(
+                                  (parseInt(data?.price) +
+                                    parseInt(packagePrice)) /
+                                    2
+                                )
+                            : data?.discountValue
+                            ? Math.floor(
+                                (data?.price *
+                                  (100 - parseInt(data?.discountValue))) /
+                                  100
+                              )
+                            : Math.floor(data?.price / 2))}{" "}
                       INR
                     </div>
                   </div>
