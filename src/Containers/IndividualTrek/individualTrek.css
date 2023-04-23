@@ -198,10 +198,11 @@
 }
 .individualTrekTop {
   display: flex;
-  width: 90%;
+
   margin: auto;
   padding: 1.5rem 0;
   flex-wrap: wrap;
+  margin: 0 2.5rem 0 3rem;
 }
 
 .individualTrekTop > div {
@@ -511,7 +512,7 @@
 
 .packageOptionBigContainer {
   width: 90%;
-  margin: 1rem auto;
+  margin: 0 auto 1rem auto;
 }
 .packageOptionBigContainer h3 {
   background-color: #ff5e00;
@@ -619,7 +620,7 @@
 }
 
 .individualTrekTopRightContent {
-  width: 85%;
+  width: 90%;
   height: fit-content;
   margin-left: auto;
   /* color: white; */
@@ -823,7 +824,7 @@
 }
 
 .addonDetails {
-  margin: 1rem 0;
+  margin: 1rem 0 0 0;
   width: 80%;
   position: relative;
 }
@@ -915,7 +916,7 @@
 }
 
 .bookTrekButton > button {
-  background-color: #ff5e00;
+  background-color: #138944;
   border: none;
   outline: none;
   color: white;
@@ -1178,6 +1179,9 @@
 }
 
 @media (max-width: 768px) {
+  .individualTrekTop {
+    margin: 0 1rem;
+  }
   .individualTrekTopLeft > div > div > div:nth-of-type(1) span {
     margin-right: 0.2rem;
   }
@@ -1341,6 +1345,7 @@
   font-size: var(--subHeading) !important;
   color: #ff5e00;
   margin: 1rem 1rem;
+  font-weight: 600;
 }
 .cancelationPolicyDetails {
   display: flex;
@@ -1348,6 +1353,8 @@
 }
 .cancelationPolicyDetails > div {
   flex: 1;
+  text-align: center;
+  font-weight: 500;
 }
 
 .cancelationPolicyDetails > div div {
@@ -1358,6 +1365,7 @@
   font-size: 0.8rem;
   width: 90%;
   margin: 0.5rem 0;
+  font-weight: 500;
 }
 
 .cancelationPolicyDetails > div:nth-of-type(1) div {

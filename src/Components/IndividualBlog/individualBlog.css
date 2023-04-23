@@ -1,5 +1,9 @@
 .individualBlog {
   min-height: 100vh;
+  background: white;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 10px;
 }
 .individualBlogBy {
   /* text-align: center; */
@@ -16,7 +20,7 @@
 }
 
 .individualBlogHeading {
-  padding-top: 3rem;
+  padding-top: 1rem;
   text-align: center;
   font-size: 2rem;
   color: #ff5e00;

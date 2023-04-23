@@ -180,14 +180,12 @@ export default function IndividualTrek() {
   useEffect(() => {
     const terms = ["short", "long", "isolated"];
     const terms2 = ["trek", "winter", "multiday", "spiritual"];
-    console.log("id->", id);
 
     const checkingId = id.substring(id.indexOf("="));
     if (
       !terms.some((term) => checkingId.includes(term)) &&
       !terms2.some((term) => checkingId.includes(term))
     ) {
-      console.log(id, ">>>>><<<<<");
       setSuggestionId("All Trek");
       const trekData = db
         .collection("All Trek")
@@ -674,6 +672,27 @@ export default function IndividualTrek() {
 
   return (
     <div className="individualTrek">
+      <div
+        style={{
+          position: "fixed",
+          bottom: "5%",
+          right: "1%",
+          zIndex: "100000",
+        }}
+      >
+        <div className="whatsAppFloatingIcon">
+          <a
+            href="https://wa.me/+919654749746" // Replace 1234567890 with the desired phone number (including country code)
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://img.icons8.com/color/256/whatsapp.png"
+              style={{ width: "80px", height: "80px", objectFit: "contain" }}
+            />
+          </a>
+        </div>
+      </div>
       <div className="imageModal">
         <Modal
           isOpen={modalIsOpen}
@@ -719,6 +738,9 @@ export default function IndividualTrek() {
         <div className="backgroundOverlay"></div>
         <div className="individualTopNav">
           <div>
+            <a href="/">
+              <div>Home</div>
+            </a>
             <a
               className={activeNav == 1 && "activeindividualTopNav"}
               onClick={() => setActiveNav(1)}
@@ -1381,10 +1403,16 @@ export default function IndividualTrek() {
               </form>
             </div>
             <div className="taxExtra">
+              <div>Need Support</div>
+              <hr />
+              <div>trekngotravels@gmail.com</div>
+              <div>+91-9654749746</div>
+            </div>
+            {/* <div className="taxExtra">
               <div>Tax Extra</div>
               <hr />
               <div>5% GST on TREK FEE</div>
-            </div>
+            </div> */}
             <div className="groupDiscount">
               <div>GROUP DISCOUNTS</div>
               <hr />
@@ -1640,7 +1668,7 @@ export default function IndividualTrek() {
               </>
             ) : (
               <div id="itinerary" className="itnerary">
-                <h3>Faq</h3>
+                <h3>FAQs</h3>
                 <div className="faqAllContainer">
                   <div class="wrapper">
                     <div class="container">

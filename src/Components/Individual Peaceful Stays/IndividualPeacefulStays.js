@@ -58,7 +58,6 @@ export default function IndividualPeacefulStays() {
   const { id } = useParams();
   useEffect(() => {
     const idArray = id.split("-");
-    console.log(id);
     var d = "";
     if (id.includes("camp")) {
       d = "Camps";
@@ -70,7 +69,6 @@ export default function IndividualPeacefulStays() {
       .doc(idArray[1])
       .get()
       .then((snapshot) => {
-        console.log(snapshot.data());
         setData(snapshot.data().Details);
       });
   }, []);
@@ -306,6 +304,20 @@ export default function IndividualPeacefulStays() {
 
   return (
     <div className="individualPeacefulStays">
+      <div className="fixed-bottom-right">
+        <div className="whatsAppFloatingIcon">
+          <a
+            href="https://wa.me/+919654749746" // Replace 1234567890 with the desired phone number (including country code)
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://img.icons8.com/color/256/whatsapp.png"
+              style={{ width: "80px", height: "80px", objectFit: "contain" }}
+            />
+          </a>
+        </div>
+      </div>
       {modalVisible && (
         <div className="modal">
           <span className="close" onClick={closeModal}>
@@ -394,7 +406,9 @@ export default function IndividualPeacefulStays() {
         </div>
       </div>
       <div>
-        <div style={{ marginBottom: "5px" }}>All Amenities</div>
+        <div style={{ marginBottom: "5px", fontWeight: "500" }}>
+          All Amenities
+        </div>
         <div className="AmenityContainer">
           {data?.amenities &&
             data?.amenities?.map((backendAmenity, index) => {
@@ -420,46 +434,64 @@ export default function IndividualPeacefulStays() {
       </div>
       <div className="ipsDescription">
         <div>
-          {data?.campDesc ? (
-            data?.campDesc
-          ) : (
-            <>
-              Capital O 89808 Sk Residency features air-conditioned rooms with
-              TV in the South West district of New Delhi. Among the facilities
-              at this property are a shared kitchen and room service, along with
-              free WiFi throughout the property. Local points of interest like
-              Gurudwara Bangla Sahib and Qutub Minar are reachable within 13 km
-              and 14 km, respectively. <br />
-              Rashtrapati Bhavan is 12 km from the hotel, while Gandhi Smriti is
-              13 km away. The nearest airport is Delhi International, 6 km from
-              Capital O 89808 Sk Residency, and the property offers a paid
-              airport shuttle service. Capital O 89808 Sk Residency has been
-              welcoming Booking.com guests since 10 Jun 2022. Hotel chain/brand:
-              OYO Rooms
-              <br />
-              Distance in property description is calculated using ©
-              OpenStreetMap
-            </>
-          )}
+          <div style={{ marginBottom: "5px", fontWeight: "500" }}>
+            Highlights of the property
+          </div>
+          <div>
+            {data?.campDesc ? (
+              data?.campDesc
+            ) : (
+              <>
+                Capital O 89808 Sk Residency features air-conditioned rooms with
+                TV in the South West district of New Delhi. Among the facilities
+                at this property are a shared kitchen and room service, along
+                with free WiFi throughout the property. Local points of interest
+                like Gurudwara Bangla Sahib and Qutub Minar are reachable within
+                13 km and 14 km, respectively. <br />
+                Rashtrapati Bhavan is 12 km from the hotel, while Gandhi Smriti
+                is 13 km away. The nearest airport is Delhi International, 6 km
+                from Capital O 89808 Sk Residency, and the property offers a
+                paid airport shuttle service. Capital O 89808 Sk Residency has
+                been welcoming Booking.com guests since 10 Jun 2022. Hotel
+                chain/brand: OYO Rooms
+                <br />
+                Distance in property description is calculated using ©
+                OpenStreetMap
+              </>
+            )}
+          </div>
         </div>
         <div className="ipsPropertyHighlight">
           <div>
             <div style={{ margin: "5px 0" }}>
-              {data?.highlightHeading
-                ? data.highlightHeading
-                : "Property highlights"}
+              {data?.name ? data?.name : "Capital O 89808 Sk Residency"}
             </div>
             <div style={{ margin: "5px 0" }}>
-              <div>Starting from - Rs. {data?.price}</div>
+              <div>
+                Starting from{" "}
+                <span style={{ color: "#ff5e00" }}>INR {data?.price} /-</span>
+              </div>
             </div>
             <div style={{ margin: "5px 0" }}>
               <span>
                 Number of rooms:{" "}
-                <button onClick={decrementRoomsCount}>-</button> {roomsCount}{" "}
-                <button onClick={incrementRoomsCount}>+</button>
+                <button
+                  onClick={decrementRoomsCount}
+                  style={{ padding: "0 .4rem" }}
+                >
+                  -
+                </button>{" "}
+                {roomsCount}{" "}
+                <button
+                  onClick={incrementRoomsCount}
+                  style={{ padding: "0 .4rem" }}
+                >
+                  +
+                </button>
               </span>
             </div>
             <div style={{ margin: "10px 0" }}>
+              Date:
               <DatePicker
                 value={startDate}
                 onChange={setStartDate}

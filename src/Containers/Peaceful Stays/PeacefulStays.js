@@ -30,6 +30,13 @@ export default function PeacefulStays() {
   const [uniqueLocations, setUniqueLocations] = useState([]);
   const [campData, setCampData] = useState();
   const [getLocationFilter, setLocationFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+
+  const handleNameFilter = (e) => {
+    console.log(e);
+    setNameFilter(e.target.value);
+  };
+
   const image1 =
     "https://cdn.pixabay.com/photo/2016/10/14/19/21/canyon-1740973_960_720.jpg";
   const image2 =
@@ -116,105 +123,107 @@ export default function PeacefulStays() {
   };
 
   const PeacefulStayComponent = ({ data }) => (
-    <div className="peacefulStayComponent">
-      <div>
-        <img src={data?.Details?.images[0]} />
-      </div>
-      <div>
-        <h4>{data?.Details?.name}</h4>
-        <h4 style={{ display: "flex", alignItems: "center" }}>
-          {data?.Details?.rating
-            ? Array.from({ length: parseInt(data?.Details?.rating) }).map(
-                () => <Star style={{ color: "#ff5e00" }} />
-              )
-            : Array.from({ length: 4 }).map(() => (
-                <Star style={{ color: "#ff5e00" }} />
-              ))}
-          <img
-            style={{ height: "20px", width: "20px", marginLeft: "4px" }}
-            src="https://cdn-icons-png.flaticon.com/512/6114/6114604.png"
-            alt=""
-          />
-        </h4>
-        <h4 style={{ display: "flex", alignItems: "baseline" }}>
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: "#ff5e00",
-              textTransform: "capitalize",
-              textDecoration: "underline",
-              fontSize: "16px",
-              marginRight: "6px",
-            }}
-            className="reviewTitle"
-          >
-            {data?.Details?.area}{" "}
-          </span>{" "}
-          <span
-            style={{
-              fontSize: "14px",
-              color: "#595959",
-              textDecoration: "underline",
-            }}
-          >
-            {data?.Details?.nearestHighlight
-              ? data?.Details?.nearestHighlight
-              : "3K.M from the city center"}
-          </span>
-        </h4>
-        <div> Popular Amenities</div>
+    <Link to={`/stays/${id}-${data?.Details?.name}`}>
+      <div className="peacefulStayComponent">
         <div>
-          {data?.Details?.amenities
-            ?.slice(0, 4)
-            .map((backendAmenity, index) => {
-              const matchedAmenity = popularAmenities.find(
-                (amenity) => amenity.name === backendAmenity
-              );
-              if (!matchedAmenity) {
-                return null; // Return null if no matching amenity is found
-              }
-
-              return (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginRight: "10px",
-                  }}
-                >
-                  {matchedAmenity.icon}
-                </div>
-              );
-            })}
+          <img src={data?.Details?.images[0]} />
         </div>
-        <div style={{ color: "#ff5e00", fontSize: "14px" }}>
-          {Math.floor(Math.random() * (50 - 10 + 1)) + 10} people are looking at
-          this deal
-        </div>
-      </div>
+        <div>
+          <h4>{data?.Details?.name}</h4>
+          <h4 style={{ display: "flex", alignItems: "center" }}>
+            {data?.Details?.rating
+              ? Array.from({ length: parseInt(data?.Details?.rating) }).map(
+                  () => <Star style={{ color: "#ff5e00" }} />
+                )
+              : Array.from({ length: 4 }).map(() => (
+                  <Star style={{ color: "#ff5e00" }} />
+                ))}
+            <img
+              style={{ height: "20px", width: "20px", marginLeft: "4px" }}
+              src="https://cdn-icons-png.flaticon.com/512/6114/6114604.png"
+              alt=""
+            />
+          </h4>
+          <h4 style={{ display: "flex", alignItems: "baseline" }}>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: "#ff5e00",
+                textTransform: "capitalize",
+                textDecoration: "underline",
+                fontSize: "16px",
+                marginRight: "6px",
+              }}
+              className="reviewTitle"
+            >
+              {data?.Details?.area}{" "}
+            </span>{" "}
+            <span
+              style={{
+                fontSize: "14px",
+                color: "#595959",
+                textDecoration: "underline",
+              }}
+            >
+              {data?.Details?.nearestHighlight
+                ? data?.Details?.nearestHighlight
+                : "3K.M from the city center"}
+            </span>
+          </h4>
+          <div> Popular Amenities</div>
+          <div>
+            {data?.Details?.amenities
+              ?.slice(0, 4)
+              .map((backendAmenity, index) => {
+                const matchedAmenity = popularAmenities.find(
+                  (amenity) => amenity.name === backendAmenity
+                );
+                if (!matchedAmenity) {
+                  return null; // Return null if no matching amenity is found
+                }
 
-      <div>
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {matchedAmenity.icon}
+                  </div>
+                );
+              })}
+          </div>
+          <div style={{ color: "#ff5e00", fontSize: "14px" }}>
+            {Math.floor(Math.random() * (50 - 10 + 1)) + 10} people are looking
+            at this deal
+          </div>
+        </div>
+
         <div>
           <div>
-            <div>Good</div>
-            <div>5367 reviews</div>
+            <div>
+              <div>Good</div>
+              <div>5367 reviews</div>
+            </div>
+            <div>{data?.Details?.rating ? data?.Details?.rating : "4.5"}</div>
           </div>
-          <div>{data?.Details?.rating ? data?.Details?.rating : "4.5"}</div>
-        </div>
 
-        <div>
-          <Link to={`/stays/${id}-${data?.Details?.name}`}>
-            <button>Show Details</button>
-          </Link>
-        </div>
-        <div className="peacefulStayPageStartingFrom">
-          <div>Starting From</div>
-          <div>Rs. {data?.Details?.price}</div>
+          <div>
+            <Link to={`/stays/${id}-${data?.Details?.name}`}>
+              <button>Show Details</button>
+            </Link>
+          </div>
+          <div className="peacefulStayPageStartingFrom">
+            <div>Starting From</div>
+            <div>INR {data?.Details?.price} /-</div>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 
   return (
@@ -223,6 +232,14 @@ export default function PeacefulStays() {
         <img src={image2} alt="" />
       </div>
       <div className="peacefulStayHeadingTop">{id}</div>
+      <div
+        className="peacefulStaySubHeadingTop"
+        style={{ textAlign: "center", fontSize: "16px", color: "gray" }}
+      >
+        {id === "camps"
+          ? "Discover Cozy Escapes: Unwind at Our Charming Camps"
+          : "Discover Cozy Escapes: Unwind at Our Charming Homestays"}
+      </div>
       <div className="peacefulStayBottom">
         <div className="treksFilter">
           <div>
@@ -256,26 +273,29 @@ export default function PeacefulStays() {
           </div>
         </div>
         <div className="peacefulStayBottomRight">
-          <Filter isPeaceful={true} />
+          <Filter
+            isPeaceful={true}
+            handleNameFilter={handleNameFilter}
+            nameFilter={nameFilter}
+          />
           <div>
-            {campData && getLocationFilter === ""
-              ? campData?.map((c) => <PeacefulStayComponent data={c} />)
-              : campData
-                  ?.filter((c) => {
-                    console.log(
-                      c.Details.area.toLowerCase(),
-                      " -filter- ",
-                      getLocationFilter.toLowerCase()
-                    );
-                    if (
-                      c.Details.area
-                        .toLowerCase()
-                        .includes(getLocationFilter.toLowerCase())
-                    ) {
-                      return c;
-                    }
-                  })
-                  .map((data) => <PeacefulStayComponent data={data} />)}
+            {campData &&
+              (getLocationFilter === "" && nameFilter === ""
+                ? campData.map((c) => <PeacefulStayComponent data={c} />)
+                : campData
+                    .filter((c) => {
+                      if (
+                        c.Details.area
+                          .toLowerCase()
+                          .includes(getLocationFilter.toLowerCase()) &&
+                        c.Details.name
+                          .toLowerCase()
+                          .includes(nameFilter.toLowerCase())
+                      ) {
+                        return c;
+                      }
+                    })
+                    .map((data) => <PeacefulStayComponent data={data} />))}
           </div>
         </div>
       </div>

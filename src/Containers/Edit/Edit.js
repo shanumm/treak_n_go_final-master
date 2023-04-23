@@ -403,23 +403,6 @@ export default function Edit() {
     ) {
       setIsAdding(false);
       setSuccess("Fill All Details");
-      console.log(highlights);
-      if (name === "") console.log("name is missing");
-      if (price === "") console.log("price is missing");
-      if (duration === "") console.log("duration is missing");
-      if (area === "") console.log("area is missing");
-      if (season === "") console.log("season is missing");
-      if (difficulty === "") console.log("difficulty is missing");
-      if (route === "") console.log("route is missing");
-      if (accommodation === "") console.log("accommodation is missing");
-      if (transport === "") console.log("transport is missing");
-      if (meal === "") console.log("meal is missing");
-      if (highlights.length === 0) console.log("highlights is missing");
-      if (exclusion.length === 0) console.log("exclusion is missing");
-      if (inclusion.length === 0) console.log("inclusion is missing");
-      if (carry.length === 0) console.log("carry is missing");
-      if (image.length === 0) console.log("image is missing");
-      if (itineraryData.length === 0) console.log("itineraryData is missing");
     } else {
       if (editType != "Edit") {
         setTimeout(() => {
@@ -1189,7 +1172,11 @@ export default function Edit() {
                       <option value="no" disabled selected>
                         Select
                       </option>
-                      <option value="25">25%</option>
+                      <option value="5">5%</option>
+                      <option value="10">10%</option>
+                      <option value="15">15%</option>
+                      <option value="20">20%</option>
+                      <option value="30">30%</option>
                       <option value="50">50%</option>
                     </select>
                   </div>

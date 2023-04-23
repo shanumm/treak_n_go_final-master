@@ -30,7 +30,8 @@
   text-align: center;
 }
 .treksTopLeft p {
-  font-size: var(--smallText);
+  font-size: 16px;
+  color: gray;
   text-align: center;
   width: 80%;
 }

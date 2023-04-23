@@ -1,7 +1,6 @@
 .peacefulStay {
   min-height: 60vh;
   position: relative;
-  padding-bottom: 2rem;
 }
 
 .peacefulStayImage {
@@ -17,7 +16,7 @@
   color: #ff5e00;
   text-transform: capitalize;
   text-align: center;
-  padding: 1rem 0;
+  padding: 1rem 0 0 0;
 }
 
 .peacefulStayImage > img {
@@ -26,8 +25,8 @@
   object-fit: cover;
 }
 .peacefulStayContainer {
-  padding-top: 3rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   height: 100%;
   width: 60%;
   margin: auto;
@@ -40,7 +39,6 @@
   font-weight: 600;
   text-align: center;
   text-transform: uppercase;
-  padding-bottom: 2rem;
 }
 
 .peacefulStayContainerImages {
@@ -96,7 +94,7 @@
   font-size: 12px;
 }
 .peacefulStayPageStartingFrom > div:nth-of-type(2) {
-  font-size: 32px;
+  font-size: 38px;
   color: #ff5e00;
 }
 

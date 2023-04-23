@@ -18,7 +18,9 @@ const Privacy = () => {
         policy periodically.
       </p>
 
-      <h2>1. Personally Identifiable Information Collection</h2>
+      <h2 style={{ textAlign: "center" }}>
+        Personally Identifiable Information Collection
+      </h2>
       <p>
         We collect personally identifiable information (email address, name,
         phone number, etc.) from you when you set up a free account with
@@ -26,7 +28,7 @@ const Privacy = () => {
         on your interests.
       </p>
 
-      <h2>2. Security Precautions</h2>
+      <h2 style={{ textAlign: "center" }}>Security Precautions</h2>
       <p>
         Our site has stringent security measures in place to protect against the
         loss, misuse, and alteration of the information under our control.
@@ -35,7 +37,7 @@ const Privacy = () => {
         adhere to strict guidelines, protecting it against unauthorized access.
       </p>
 
-      <h2>3. Questions?</h2>
+      <h2 style={{ textAlign: "center" }}>Questions?</h2>
       <p>
         Questions regarding this statement should be directed to the following
         address: support@trekngo.com

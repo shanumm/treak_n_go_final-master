@@ -24,6 +24,18 @@ import TextColorPlugin from "editorjs-text-color-plugin";
 import ImageGallery from "@rodrigoodhin/editorjs-image-gallery";
 import { db } from "../../firebase";
 
+function useApplyImageBorderRadius(individualBlog) {
+  useEffect(() => {
+    const applyBorderRadius = () => {
+      const images = document.querySelectorAll("#editorjs img");
+      images.forEach((img) => {
+        img.style.borderRadius = "10px";
+      });
+    };
+    applyBorderRadius();
+  }, [individualBlog]);
+}
+
 function Output({ data }) {
   const renderBlock = (block) => {
     switch (block.type) {
@@ -72,7 +84,6 @@ export default function IndividualBlog() {
   }, []);
 
   useEffect(() => {
-    console.log(individualBlog);
     if (individualBlog && Object.keys(individualBlog).length) {
       const content = JSON.parse(individualBlog.content);
       const editorJS = new EditorJS({
@@ -173,12 +184,13 @@ export default function IndividualBlog() {
         },
         onChange: async (api, event) => {
           let content = await editorJS.saver.save();
-          console.log(content);
           setEditorData(content);
         },
       });
     }
   }, [individualBlog, isNotEditable]);
+
+  useApplyImageBorderRadius(individualBlog); // Call the custom hook here
 
   const getTime = (value) => {
     const timestamp = value;
@@ -203,20 +215,24 @@ export default function IndividualBlog() {
   };
 
   return (
-    <div className="individualBlog">
-      <div className="individualBlogHeading">{individualBlog?.title}</div>
-      <div id="editorjs"></div>
-      <div className="individualBlogBy">Author : {individualBlog?.author}</div>
-      <div className="individualBlogTime">
-        {getTime(individualBlog?.uploadTime)}
-      </div>
-      {user?.email === "test@example.com" ? (
-        <div style={{ width: "80%", margin: "auto", padding: "1rem 0" }}>
-          <button onClick={handleButtonClick}>
-            {isNotEditable ? "Update Blog" : "Confirm"}
-          </button>
+    <div style={{ background: "#F7F7F8", padding: "2rem" }}>
+      <div className="individualBlog">
+        <div className="individualBlogHeading">{individualBlog?.title}</div>
+        <div id="editorjs"></div>
+        <div className="individualBlogBy">
+          Author : {individualBlog?.author}
         </div>
-      ) : null}
+        <div className="individualBlogTime">
+          {getTime(individualBlog?.uploadTime)}
+        </div>
+        {user?.email === "test@example.com" ? (
+          <div style={{ width: "80%", margin: "auto", padding: "1rem 0" }}>
+            <button onClick={handleButtonClick}>
+              {isNotEditable ? "Update Blog" : "Confirm"}
+            </button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

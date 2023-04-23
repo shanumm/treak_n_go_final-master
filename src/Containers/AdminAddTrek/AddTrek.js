@@ -11,9 +11,6 @@ import "./AddTrek.css";
 import EditTreksPackages from "./EditTreksPackages";
 
 export default function AddTrek({ searchQueryData }) {
-  useEffect(() => {
-    console.log("searchQueryData", searchQueryData);
-  }, [searchQueryData]);
   const location = useLocation();
 
   const [sliderImageURL, setSliderImageURL] = useState({});
@@ -352,10 +349,8 @@ export default function AddTrek({ searchQueryData }) {
     const packageOption2 = document.querySelectorAll(".packageInput2");
     for (let i = 0; i < packageOption.length; i++) {
       var p = {};
-      console.log(packageOption.value, ">><<");
       p.description = packageOption[i].value;
       p.price = packageOption2[i].value;
-      console.log(p, "......");
       packages.push(p);
     }
     setPackageOption(packages);
@@ -446,8 +441,6 @@ export default function AddTrek({ searchQueryData }) {
         setIsAdding(false);
 
         // Log the missing fields
-
-        console.log("Missing fields: ", highlights);
       } else {
         if (editType != "Edit") {
           setTimeout(() => {
@@ -505,7 +498,6 @@ export default function AddTrek({ searchQueryData }) {
             trekData.allSelectedCategory = allSelectedCategory;
 
             if (uploadCategorySelectedLength > 0) {
-              console.log(trekData, "checing");
               trekData.SLI = "";
               uploadCategory.forEach((m) => {
                 if (m.checked) {
@@ -534,7 +526,6 @@ export default function AddTrek({ searchQueryData }) {
                 }
               });
             } else {
-              console.log(trekData, "checing");
               db.collection(`All ${editType}`)
                 .doc(name.trim())
                 .set({
@@ -664,7 +655,6 @@ export default function AddTrek({ searchQueryData }) {
   }, [allDates]);
 
   const handleRemoveDate = (idx) => {
-    console.log(idx);
     // assigning the list to temp variable
     const temp = [...allDates];
 
@@ -816,8 +806,6 @@ export default function AddTrek({ searchQueryData }) {
 
   useEffect(() => {
     const i = "1";
-
-    console.log(Object.values(sliderImageURL));
   }, [sliderImageURL]);
 
   const handleUploadSliderImages = () => {
@@ -930,10 +918,6 @@ export default function AddTrek({ searchQueryData }) {
     { name: "Housekeeping" },
     { name: "Airport Shuttle" },
   ];
-
-  useEffect(() => {
-    console.log(highlights.length);
-  }, [highlights]);
 
   const toolbarOptions = [
     ["bold", "italic", "underline", "strike"], // Standard text formatting options
@@ -1625,7 +1609,11 @@ export default function AddTrek({ searchQueryData }) {
                           <option value="no" disabled selected>
                             Select
                           </option>
-                          <option value="25">25%</option>
+                          <option value="5">5%</option>
+                          <option value="10">10%</option>
+                          <option value="15">15%</option>
+                          <option value="20">20%</option>
+                          <option value="30">30%</option>
                           <option value="50">50%</option>
                         </select>
                       </div>

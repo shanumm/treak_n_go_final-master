@@ -60,9 +60,24 @@ export default function PerfectEscape() {
         <div className="perfectEscapeHeading">
           <div>
             <div>
-              {id === "shortTreks" && "Short Treks"}
-              {id === "longTreks" && "Long Treks"}
-              {id === "isolatedTreks" && "Isolated Treks"}
+              {id === "shortTreks" && (
+                <div>
+                  <span>Short</span>{" "}
+                  <span style={{ color: "black" }}>Treks</span>
+                </div>
+              )}
+              {id === "longTreks" && (
+                <div>
+                  <span>Long</span>{" "}
+                  <span style={{ color: "black" }}>Treks</span>
+                </div>
+              )}
+              {id === "isolatedTreks" && (
+                <div>
+                  <span>Isolated</span>{" "}
+                  <span style={{ color: "black" }}>Treks</span>
+                </div>
+              )}
             </div>
             <div className="perfectdes">
               {id === "shortTreks" &&

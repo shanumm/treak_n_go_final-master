@@ -1,7 +1,7 @@
 .ite {
-  min-height: 100vh;
+  min-height: 80vh;
   position: relative;
-  padding-top: 4rem;
+  padding-top: 1rem;
   background: #e8e9ea59;
 }
 
@@ -17,7 +17,7 @@
   font-size: 2rem;
 }
 .iteSubHeading {
-  margin: 10px auto 20px auto;
+  margin: 0 auto 5px auto;
   width: 40%;
   text-align: center;
 }

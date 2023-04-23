@@ -64,17 +64,13 @@ export default function AddBlog() {
   const editorRef = useRef();
 
   useEffect(() => {
-    console.log(editorRef, editorRef.current, "editor");
     if (
       editorRef.current === null ||
       editorRef.current === "undefined" ||
       editorRef.current === undefined
     ) {
-      console.log("this should be working");
       initiator();
     }
-
-    console.log("this is not working");
 
     return () => {
       editorRef?.current?.destroy();
@@ -83,7 +79,6 @@ export default function AddBlog() {
   }, []);
 
   const initiator = () => {
-    console.log("enterned");
     const editor = new EditorJS({
       holder: "editorjs",
       autofocus: true,
@@ -184,7 +179,6 @@ export default function AddBlog() {
       },
       onChange: async (api, event) => {
         let content = await editor.saver.save();
-        console.log(content);
         setEditorData(content);
       },
     });

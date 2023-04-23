@@ -1,7 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
 
 .nav {
-  background: #e8e9ea59;
+  background: #ffffff;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100000;
 }
 
 .navTop > div {
@@ -41,8 +47,10 @@
   /* margin-right: auto; */
   flex: 0 1 30rem;
   position: absolute;
-  top: 50%;
+  top: 53%;
   left: 1%;
+  display: flex;
+  align-items: center;
   transform: translateY(-50%);
 }
 #logo img {
@@ -111,6 +119,15 @@
 @media (max-width: 550px) {
   .navTop {
     display: none;
+  }
+}
+@media (max-width: 769px) {
+  #logo {
+    justify-content: center;
+    display: flex;
+  }
+  #logo img {
+    width: 95%;
   }
 }
 

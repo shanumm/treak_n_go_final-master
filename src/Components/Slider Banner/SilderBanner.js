@@ -46,7 +46,7 @@ export default function SilderBanner() {
                   <Link to={e.sliderImageURL}>
                     <li class="glide__slide">
                       <img src={e.banner} alt="" />
-                      <button>explore</button>
+                      <button>See More</button>
                     </li>
                   </Link>
                 ))

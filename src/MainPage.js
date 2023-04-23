@@ -17,7 +17,7 @@ const liveBarContainerStyle = {
   whiteSpace: "nowrap",
   backgroundColor: "#f1c40f",
   color: "#000",
-  fontWeight: "bold",
+  fontWeight: "500",
   padding: "5px",
   position: "relative",
   height: "5vh",
@@ -48,11 +48,19 @@ const LiveBar = () => {
             transform: translateX(-100%);
           }
         }
+        @media (max-width: 768px) {
+          @keyframes marquee {
+            0% {
+              transform: translateX(100%);
+            }
+            100% {
+              transform: translateX(-100%);
+            }
+          }
+        }
         `}
       </style>
-      <div style={liveBarContentStyle}>
-        Live 🔴 It's snowing at Kheerganga and Tosh 20 April 2023
-      </div>
+      <div style={liveBarContentStyle}>{liveBarData}</div>
     </div>
   );
 };
@@ -66,7 +74,6 @@ export default function MainPage({ data }) {
       .get()
       .then((snapshot) => {
         setIsWinterAvailable(snapshot.data().availability);
-        console.log(snapshot.data());
       });
     db.collection(`Trek Availability`)
       .doc("spiritualTrek")
@@ -107,7 +114,7 @@ export default function MainPage({ data }) {
       {isSpiritualAvailable === "show" && <SpiritualTrek />}
       <PeacefulStay />
       <ITE />
-      {/* <WhyTrekNgo /> */}
+      <WhyTrekNgo />
     </div>
   );
 }

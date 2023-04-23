@@ -37,7 +37,7 @@
 .topBlog {
   padding: 2rem 1rem;
   border-radius: 8px;
-  min-height: 70vh;
+  min-height: 35vh;
   background: white;
 }
 .topBlogContent {
@@ -67,7 +67,7 @@
 }
 .topBlogContentContainer > div:nth-of-type(2) {
   text-transform: capitalize;
-  font-size: 72px;
+  font-size: 28px;
 }
 .topBlogContentContainer > div:nth-of-type(3) {
   color: rgb(79, 79, 79);
@@ -82,7 +82,7 @@
 .allOtherBlogs {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 5rem;
+  margin-top: 2rem;
 }
 
 .eachBlog {

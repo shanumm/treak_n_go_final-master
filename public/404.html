@@ -4,10 +4,43 @@
     <meta charset="utf-8" />
     <title>TrekNGo</title>
     <script type="text/javascript">
-      var pathSegmentsToKeep = 1;
+      const treksData = [
+        { old: "/tour/kheerganga-trek", new: "/treks/KHEERGANGA%20TREK=trek" },
+        {
+          old: "/tour/triund-camping-1n2d",
+          new: "/treks/Triund%20Top%20Trek=trek",
+        },
+        {
+          old: "/tour/kareri-lake-trek",
+          new: "/treks/Kareri%20Lake%20Trek=trek",
+        },
+        {
+          old: "/tour/kailashmanimaheshparikramatrek",
+          new: "/treks/kailash%20Manimahesh=trek",
+        },
+        { old: "/tour/kugtipass", new: "/treks/Kugti%20Pass%20Trek=trek" },
+        {
+          old: "/tour/chopta-tungnath-trek",
+          new: "/treks/Tungnath%20Chandrashilla%20&%20Deoriatal%20Trek=multiday",
+        },
+        {
+          old: "/tour/kedarkantha-trek",
+          new: "/treks/Kedarkantha%20Trek=trek",
+        },
+        // ... add more mappings as needed ...
+      ];
 
-      var l = window.location;
-      l.replace(l.protocol + "//" + l.hostname);
+      const currentPath = window.location.pathname;
+
+      const redirect = treksData.find((trek) => trek.old === currentPath);
+
+      if (redirect) {
+        window.location.href = window.location.origin + redirect.new;
+      } else {
+        var pathSegmentsToKeep = 1;
+        var l = window.location;
+        l.replace(l.protocol + "//" + l.hostname);
+      }
     </script>
   </head>
   <body></body>

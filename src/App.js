@@ -32,6 +32,7 @@ import AboutUs from "./Containers/PrivacyPolicy/AboutUs";
 import TermsOfUse from "./Containers/PrivacyPolicy/T&C";
 import EditCamps from "./Containers/Edit Camps/EditCamps";
 import EditIndividualCamps from "./Containers/Edit Camps/EditIndividualCamps";
+import { useNavigate } from "react-router-dom";
 
 const treksData = [
   { old: "/tour/kheerganga-trek", new: "/treks/KHEERGANGA%20TREK=trek" },
@@ -50,17 +51,25 @@ const treksData = [
   // ... add more mappings as needed ...
 ];
 
+function RedirectToNewUrl({ to }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate(to, { replace: true });
+  }, [navigate, to]);
+
+  return null;
+}
+
 function generateRedirectRoutes() {
   return treksData.map((trek, index) => (
     <Route
       key={index}
       exact
       path={trek.old}
-      element={<Navigate to={trek.new} replace />}
+      element={<RedirectToNewUrl to={trek.new} />}
     />
   ));
 }
-
 export default function App() {
   const [{ basket, user }, dispatch] = useStateValue();
   const [searchQueryData, setSearchQueryData] = useState();

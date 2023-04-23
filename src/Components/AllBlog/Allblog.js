@@ -17,7 +17,6 @@ const stripHTML = (html) => {
 };
 function extractTextFromHTML(content) {
   const outputData = JSON.parse(content);
-  console.log(outputData, ">>>");
   let extractedText = "";
   let firstImage = "";
 
@@ -83,10 +82,6 @@ export default function Allblog() {
           <div className="topBlog">
             {filteredBlogs?.length > 0
               ? filteredBlogs?.map((b, i) => {
-                  console.log(
-                    extractTextFromHTML(b?.content).firstImage.length,
-                    ",,,,,,"
-                  );
                   if (i === 0)
                     return (
                       <div className="topBlogContent">
@@ -114,12 +109,27 @@ export default function Allblog() {
                               .map((para, index) => (
                                 <p key={index}>{para}</p>
                               ))}
-                            <span style={{ color: "#ff5e00" }}>
+                            <span>
                               <Link
                                 style={{ color: "#ff5e00" }}
                                 to={`/blog/${b?.title}`}
                               >
-                                Read more
+                                <button
+                                  style={{
+                                    color: "white",
+                                    marginTop: "1rem",
+                                    padding: "8px 12px",
+                                    background: "#ff5e00",
+                                    border: "none",
+                                    overflow: "none",
+                                    marginTop: "4px",
+                                    borderRadius: "2px",
+                                    marginTop:"1rem"
+                                  }}
+                                >
+                                  {" "}
+                                  Read more
+                                </button>
                               </Link>
                             </span>
                           </div>
@@ -167,7 +177,7 @@ export default function Allblog() {
                               </p>
                             ))}
                         </div>
-                        <div>
+                        <div style={{ marginTop: "1rem" }}>
                           <Link to={`/blog/${b?.title}`}>
                             <button>Read more</button>
                           </Link>

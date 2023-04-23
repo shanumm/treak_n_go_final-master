@@ -28,9 +28,6 @@ export default function Footer() {
                     About Us
                   </Link>
                 </li>
-                <li>FAQ</li>
-                <li>Login</li>
-                <li>Register</li>
                 <li>
                   <Link style={{ color: "inherit" }} to="privacy">
                     Privacy Policy
@@ -48,9 +45,9 @@ export default function Footer() {
               <h3>Discover</h3>
               <ul>
                 <li>Blog</li>
-                <li>Tour Guide</li>
-                <li>Wishlist</li>
-                <li>Gallary</li>
+                <li>Short Treks</li>
+                <li>Long Treks</li>
+                <li>Isolated Treks</li>
               </ul>
             </div>
             <div>

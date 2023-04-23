@@ -79,9 +79,11 @@ export default function ITE() {
     <div className="ite">
       <div className="ite1">
         <div className="iteHeading">
-          <span className="popularTreksHeading">Popular Blogs</span>
+          <span className="popularTreksHeading">
+            Popular <span style={{ color: "black" }}>Blogs</span>
+          </span>
         </div>
-        <div className="iteSubHeading">
+        <div style={{ color: "gray" }} className="iteSubHeading">
           Adventure Unleashed: Explore the Wild Side of Travel with Our
           Trailblazing Treks and Cozy Campstays!
         </div>
@@ -143,7 +145,7 @@ export default function ITE() {
                               .length >= 100
                               ? extractParagraphs(
                                   m.content
-                                ).extractedText.slice(0, 100) + "..."
+                                ).extractedText.slice(0, 150) + "..."
                               : extractParagraphs(m.content).extractedText}
                           </p>
                           <button>Read More</button>
@@ -199,7 +201,7 @@ export default function ITE() {
                           color: "gray",
                           flex: "1",
                           display: "grid",
-                          placeItems: "center",
+                          marginTop: "6px",
                           fontSize: "14px",
                           wordBreak: "break-all",
                         }}
@@ -208,7 +210,7 @@ export default function ITE() {
                         100
                           ? extractParagraphs(m.content).extractedText.slice(
                               0,
-                              100
+                              106
                             ) + "..."
                           : extractParagraphs(m.content).extractedText}
                       </p>

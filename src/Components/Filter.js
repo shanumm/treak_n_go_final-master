@@ -1,8 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./filter.css";
 import FilterContext from "../FilterContext";
+import SearchIcon from "@mui/icons-material/Search";
 
-export default function Filter({ dayFilterTrek ,isPeaceful}) {
+export default function Filter({
+  dayFilterTrek,
+  isPeaceful,
+  handleNameFilter,
+  nameFilter,
+}) {
   const { updateDayFilter, categoryUpdate, updateSort } =
     useContext(FilterContext);
 
@@ -15,7 +21,10 @@ export default function Filter({ dayFilterTrek ,isPeaceful}) {
   }, [categoryUpdate]);
 
   return (
-    <div className="filter customFilterHeight">
+    <div
+      className="filter customFilterHeight"
+      style={isPeaceful ? { width: "100%" } : {}}
+    >
       <div>
         <select
           className="dayFilterSelect"
@@ -43,6 +52,29 @@ export default function Filter({ dayFilterTrek ,isPeaceful}) {
           <option value="desc">High To Low</option>
         </select>
       </div>
+      {isPeaceful && (
+        <div style={{ position: "relative" }}>
+          <input
+            style={{
+              borderRadius: "4px",
+              background: "white",
+              paddingLeft: "35px", // Add padding to make space for the icon
+            }}
+            type="text"
+            onChange={handleNameFilter}
+            placeholder="Search by name"
+          />
+          <SearchIcon
+            style={{
+              position: "absolute",
+              left: "8px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "gray",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

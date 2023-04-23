@@ -1,12 +1,12 @@
 .popularTreks {
   background: #e8e9ea59;
-  padding: 2rem 0 0 0;
+  padding: 1rem 0 0 0;
 }
 
 .popularTreksHeading {
   text-align: center;
   font-size: var(--heading);
-  padding: 0.6rem 0;
+  padding: 0.6rem 0 0 0;
   z-index: 10;
   color: #ff5e00;
   font-weight: 600;
@@ -18,7 +18,8 @@
   z-index: 10;
   padding-bottom: 4px;
   /* font-size: var(--subHeading); */
-  font-size: 18px;
+  font-size: 16px;
+  color: #646464;
 }
 
 .popularTrekCards {

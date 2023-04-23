@@ -37,7 +37,6 @@ export default function EachTrek({
   };
 
   const handleClone = () => {
-
     if (cloneName != "") {
       if (data?.allSelectedCategory.length > 0) {
         data?.allSelectedCategory.forEach((e) => {
@@ -88,7 +87,7 @@ export default function EachTrek({
                 console.log(err);
               });
           }
-        })
+        });
       } else {
         const d = db
           .collection(`All ${data?.category}`)

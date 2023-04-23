@@ -15,7 +15,7 @@ const TermsOfUse = () => {
         Services’.
       </p>
 
-      <h2>1. Bookings</h2>
+      <h2> Bookings</h2>
       <p>
         Visitors on our website are kindly requested to fill the Enquiry Form
         with all necessary fields mentioned there and submit the same to be sent
@@ -30,9 +30,9 @@ const TermsOfUse = () => {
         account.
       </p>
 
-      <h2>2. Payments</h2>
+      <h2> Payments</h2>
       <p>
-        <strong>I) Deposit</strong>
+        <strong>Deposit</strong>
         <br />
         Our tours are subject to availability. To make reservation for a tour
         with us, the customer requires depositing advance payments as may be
@@ -42,7 +42,7 @@ const TermsOfUse = () => {
         payments for the trip.
       </p>
       <p>
-        <strong>II) Balance Payments</strong>
+        <strong>Balance Payments</strong>
         <br />
         It is the sole responsibility of the customer to make the balance
         payments at least 15 days prior to the start of the tour or as may be
@@ -52,7 +52,7 @@ const TermsOfUse = () => {
         bookings as cancelled and the advance payment may be forfeited.
       </p>
       <p>
-        <strong>III) How to pay for your travel bookings</strong>
+        <strong>How to pay for your travel bookings</strong>
         <br />
         To reserve tour package or travel services with us upon demand from our
         office our customers may deposit the payments option mentioned in the
@@ -63,7 +63,7 @@ const TermsOfUse = () => {
         your private information please read our ‘Privacy Policy’.
       </p>
 
-      <h2>3. Cancellation and Refund</h2>
+      <h2> Cancellation and Refund</h2>
       <p>
         All cancellations must be intimated to our head office on phone followed
         by a written confirmation via email. Telephonic cancellation will not be
@@ -76,10 +76,10 @@ const TermsOfUse = () => {
       <p>
         <strong>Please Note:</strong>
         <br />
-        I) Amount will be refunded through Electronic Transfer or by the card
+        Amount will be refunded through Electronic Transfer or by the card
         (Debit/Credit).
         <br />
-        II) Refund of amount will initiate after deducting the applicable
+        Refund of amount will initiate after deducting the applicable
         cancellation Charges and service charge and both will be settled within
         7 to 21 days of the day of cancellation request approved by TREKNGO
         TRAVEL AND TOURISM.

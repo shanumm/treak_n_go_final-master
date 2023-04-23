@@ -12,9 +12,6 @@ export default function AllTreks({
   trekType,
   editSearch,
 }) {
-  useEffect(() => {
-    console.log(data, ":::::::");
-  }, [data]);
   const { DayFilter } = useContext(FilterContext);
 
   return (

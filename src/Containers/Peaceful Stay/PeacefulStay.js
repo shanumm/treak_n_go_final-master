@@ -19,6 +19,17 @@ export default function PeacefulStay() {
           <span style={{ color: "#ff5e00" }}>Peaceful</span>{" "}
           <span style={{ color: "black" }}>Stays</span>
         </div>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "10px",
+            fontSize: "16px",
+            color: "gray",
+          }}
+        >
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam,
+          tenetur.
+        </div>
         <div className="peacefulStayContainerImages">
           <div>
             <img

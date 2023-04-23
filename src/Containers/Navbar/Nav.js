@@ -9,7 +9,17 @@ import { Facebook, Instagram, Person, YouTube } from "@material-ui/icons";
 export default function Nav() {
   const [{ basket, user }, dispatch] = useStateValue();
   const [clickedNav, setClickedNav] = useState(null);
+  const [isSticky, setIsSticky] = useState(true);
+
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes("/treks/")) {
+      setIsSticky(false);
+    } else {
+      setIsSticky(true);
+    }
+  }, [location]);
 
   const handleAuth = () => {
     if (user) {
@@ -56,7 +66,8 @@ export default function Nav() {
     });
   };
   return (
-    <div className="nav">
+    <div className={`nav${isSticky ? " sticky" : ""}`}>
+      {" "}
       <div>
         <div className="navTop"></div>
       </div>
