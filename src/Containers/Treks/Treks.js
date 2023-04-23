@@ -4,6 +4,7 @@ import { db } from "../../firebase";
 import AllTreks from "./AllTreks";
 import "./Treks.css";
 import FilterContext from "../../FilterContext";
+import { Star } from "@material-ui/icons";
 export default function Treks() {
   const [alltreks, setAllTreks] = useState([]);
   const [allPackages, setAllPackages] = useState([]);
@@ -257,7 +258,12 @@ export default function Treks() {
       </div>
 
       <div className="trekReviews">
-        <h3>Review</h3>
+        <h3>
+          Google Reviews  4.9{" "}
+          <span>
+            <Star style={{ color: "#ff5e00" }} />
+          </span>
+        </h3>
         <div className="reviewContainer">
           <div>
             <div>
@@ -283,7 +289,10 @@ export default function Treks() {
               adventure planning.
             </div>
             <div className="reviewImage">
-              <img src={reviewImage} alt="" />
+              <img
+                src="https://cdn.pixabay.com/photo/2015/08/05/01/12/phone-875488_960_720.jpg"
+                alt=""
+              />
             </div>
             <div>
               <h3>krishan kumar</h3>
@@ -298,7 +307,12 @@ export default function Treks() {
               Amar, making the solo trek enjoyable.
             </div>
             <div className="reviewImage">
-              <img src={reviewImage} alt="" />
+              <img
+                src={
+                  "https://cdn.pixabay.com/photo/2017/04/01/21/06/portrait-2194457_960_720.jpg"
+                }
+                alt=""
+              />
             </div>
             <div>
               <h3>Sonam Seth</h3>

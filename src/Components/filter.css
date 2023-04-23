@@ -30,13 +30,12 @@
   .filter {
     height: 20vh;
     width: auto;
-    justify-content: center;
   }
   .filter > div {
-    flex: 1;
+    flex: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin: 0;
   }
   .filter > div > select {
     flex: 1;

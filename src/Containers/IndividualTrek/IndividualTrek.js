@@ -753,7 +753,7 @@ export default function IndividualTrek() {
               className={activeNav == 2 && "activeindividualTopNav"}
               href="#destination"
             >
-              <div>Destination Brief</div>
+              <div>Brief</div>
             </a>
             <a
               className={activeNav == 3 && "activeindividualTopNav"}
@@ -781,7 +781,7 @@ export default function IndividualTrek() {
               onClick={() => setActiveNav(6)}
               href="#inclusion"
             >
-              <div>Inclusion/Exclusion</div>
+              <div>Inc/Exc</div>
             </a>
             <a
               className={activeNav == 7 && "activeindividualTopNav"}
@@ -1527,11 +1527,20 @@ export default function IndividualTrek() {
                     <AccordionItemHeading>
                       <AccordionItemButton>
                         <AddCircleOutlineRounded />{" "}
-                        <span style={{ fontWeight: 500 }}>
-                          {" "}
-                          Day {index + 1}{" "}
+                        <span
+                          style={{
+                            display: "flex",
+                          }}
+                        >
+                          <span
+                            style={{
+                              whiteSpace: "nowrap",
+                              fontWeight: 500,
+                              marginRight: "2px",
+                            }}
+                          >{`Day ${index + 1}`}</span>
+                          <span>: {i?.heading}</span>
                         </span>
-                        : {i?.heading}
                       </AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel>
@@ -1815,7 +1824,7 @@ export default function IndividualTrek() {
                 gap: "2rem",
                 breakpoints: {
                   380: {
-                    perPage: 1,
+                    perPage: 1.5,
                   },
                   768: {
                     perPage: 2,

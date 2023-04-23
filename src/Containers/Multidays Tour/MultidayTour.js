@@ -29,8 +29,8 @@ export default function MultidayTour() {
           <span style={{ color: "black" }}>tours</span>
         </div>
         <div className="popularTreksDetails">
-          Mixed with adventure and relaxation, choose a category of tour <br />{" "}
-          that is fully customizable and flexible.
+          Mixed with adventure and relaxation, choose a category of tour that is
+          fully customizable and flexible.
         </div>
         <div className="popularTrekCards">
           <Splide

@@ -28,7 +28,7 @@ export default function MultidayTour() {
         </div>
         <div className="popularTreksDetails">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet,
-          temporibus. <br /> Lorem ipsum dolor sit.
+          temporibus. Lorem ipsum dolor sit.
         </div>
         <div className="popularTrekCards">
           <Splide

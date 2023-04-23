@@ -196,6 +196,6 @@
 }
 @media (max-width: 512px) {
   .headerSearch {
-    display: none;
+    bottom: 12%;
   }
 }

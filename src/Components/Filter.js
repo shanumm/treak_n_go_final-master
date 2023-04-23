@@ -53,7 +53,9 @@ export default function Filter({
         </select>
       </div>
       {isPeaceful && (
-        <div style={{ position: "relative" }}>
+        <div
+          style={{ position: "relative", margin: "1rem 0", flex: "0 0 15rem" }}
+        >
           <input
             style={{
               borderRadius: "4px",

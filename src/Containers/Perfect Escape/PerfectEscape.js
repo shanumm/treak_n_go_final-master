@@ -4,6 +4,7 @@ import Filter from "../../Components/Filter";
 import { db } from "../../firebase";
 import AllTreks from "../Treks/AllTreks";
 import "./perfectEscape.css";
+import { Star } from "@material-ui/icons";
 export default function PerfectEscape() {
   const [alltreks, setAllTreks] = useState([]);
   const [allPackages, setAllPackages] = useState([]);
@@ -141,7 +142,13 @@ export default function PerfectEscape() {
             </div>
           </div> */}
           <div className="trekReviews">
-            <h3>Review</h3>
+            <h3>
+              Google Reviews  4.9
+              <span>
+                {" "}
+                <Star style={{ color: "#ff5e00" }} />
+              </span>
+            </h3>
             <div className="reviewContainer">
               <div>
                 <div>
@@ -167,7 +174,10 @@ export default function PerfectEscape() {
                   Highly recommended for reliable adventure planning.
                 </div>
                 <div className="reviewImage">
-                  <img src={reviewImage} alt="" />
+                  <img
+                    src="https://cdn.pixabay.com/photo/2015/08/05/01/12/phone-875488_960_720.jpg"
+                    alt=""
+                  />
                 </div>
                 <div>
                   <h3>krishan kumar</h3>
@@ -182,7 +192,12 @@ export default function PerfectEscape() {
                   support, especially Amar, making the solo trek enjoyable.
                 </div>
                 <div className="reviewImage">
-                  <img src={reviewImage} alt="" />
+                  <img
+                    src={
+                      "https://cdn.pixabay.com/photo/2017/04/01/21/06/portrait-2194457_960_720.jpg"
+                    }
+                    alt=""
+                  />
                 </div>
                 <div>
                   <h3>Sonam Seth</h3>

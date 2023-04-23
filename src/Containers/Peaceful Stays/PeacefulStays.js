@@ -197,7 +197,7 @@ export default function PeacefulStays() {
                 );
               })}
           </div>
-          <div style={{ color: "#ff5e00", fontSize: "14px" }}>
+          <div style={{ color: "gray", fontSize: "14px" }}>
             {Math.floor(Math.random() * (50 - 10 + 1)) + 10} people are looking
             at this deal
           </div>

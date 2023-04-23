@@ -205,11 +205,41 @@
     flex: 1 1 20rem;
   }
   .peacefulStayComponent > div:nth-of-type(2) {
-    flex: 1;
+    flex: 1 1 20rem;
+  }
+  .peacefulStayComponent > div:nth-of-type(2) > * {
+    text-align: center;
+    justify-content: center;
   }
   .peacefulStayComponent > div:last-child {
     text-align: left;
     margin-left: 0;
-    width: auto;
+    justify-content: center;
+    width: 100%;
+  }
+  .peacefulStayComponent > div:last-child > div:nth-of-type(1) {
+    justify-content: center;
+  }
+  .peacefulStayComponent > div:last-child > div {
+    display: flex;
+    justify-content: center;
+  }
+  .peacefulStayPageStartingFrom {
+    justify-content: center !important;
+    text-align: center;
+  }
+  .peacefulStayComponent
+    > div:last-child
+    > div:nth-of-type(1)
+    > div:nth-of-type(1) {
+    flex-direction: row;
+    align-items: center;
+  }
+  .peacefulStayComponent
+    > div:last-child
+    > div:nth-of-type(1)
+    > div:nth-of-type(1)
+    :nth-child(1) {
+    margin: 0 4px;
   }
 }

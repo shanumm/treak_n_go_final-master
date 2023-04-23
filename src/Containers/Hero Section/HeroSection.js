@@ -106,40 +106,6 @@ export default function HeroSection({ data }) {
               </div>
             </div>
           </div>
-          {/* <div className="searchData">
-            {search.length != 0 &&
-              data &&
-              data
-                .filter((d) => {
-                  if (
-                    d.query.Details.name
-                      .toLowerCase()
-                      .includes(search.toLowerCase())
-                  ) {
-                    return d;
-                  } else if (search.length > 0 && search.length < 2) {
-                    return d;
-                  }
-                })
-                .map((d) => (
-                  <Link to={`/treks/${d.query.Details.name}`}>
-                    <div>
-                      <div>
-                        <img src={d.query.Details.images[0]} />
-                      </div>
-                      <div>
-                        <div>{d.query.Details.name}</div>
-                        <div style={{ fontSize: ".8rem" }}>
-                          {d.query.Details.area}
-                        </div>
-                      </div>
-                      <div style={{ color: "red" }}>
-                        {d.query.Details.price.replace(/[^0-9]/g, "")}₹
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-          </div> */}
         </div>
       </div>
     </div>
