@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../../firebase";
 import PopularTrekCards from "./PopularTrekCards";
@@ -12,35 +12,83 @@ export default function PopularTreks() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
   useEffect(() => {
-    setIsLoading(true);
-    setIsCustomLoading(true);
-    const trekData = db
-      .collection("All Trek")
-      .get()
-      .then((snapshot) => {
-        let d = [];
-        snapshot.docs.forEach((snap) => {
-          d.push(snap.data());
-          if (d.length === snapshot.docs.length) {
-            setData(d);
-            setIsLoading(false);
-          }
-        });
-      });
-    const customTreks = db
-      .collection("CustomPopularTreks")
-      .get()
-      .then((snapshot) => {
-        let d = [];
-        snapshot.docs.forEach((snap) => {
-          setIsCustom(snap.data().isCustom);
-          d.push(snap.data().selectedPopularTreks);
-          if (d.length === snapshot.docs.length) {
-            setCustomTreks(d[0]);
-            setIsCustomLoading(false);
-          }
-        });
-      });
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsCustomLoading(true);
+      const startTime = Date.now();
+      console.log(
+        `🚀 [PopularTreks] Starting data fetch at ${new Date().toISOString()}`
+      );
+
+      try {
+        // Fetch data in parallel for better performance
+        console.log(
+          `📡 [PopularTreks] Initiating parallel Firebase queries...`
+        );
+        const queryStartTime = Date.now();
+
+        const [trekSnapshot, customSnapshot] = await Promise.all([
+          db.collection("All Trek").get(),
+          db.collection("CustomPopularTreks").get(),
+        ]);
+
+        const queryEndTime = Date.now();
+        console.log(
+          `✅ [PopularTreks] Parallel queries completed in ${
+            queryEndTime - queryStartTime
+          }ms`
+        );
+        console.log(
+          `📊 [PopularTreks] Results: ${trekSnapshot.docs.length} treks, ${customSnapshot.docs.length} custom configs`
+        );
+
+        // Process trek data
+        const trekProcessStart = Date.now();
+        const trekData = trekSnapshot.docs.map((snap) => snap.data());
+        setData(trekData);
+        setIsLoading(false);
+        console.log(
+          `⚡ [PopularTreks] Trek data processed in ${
+            Date.now() - trekProcessStart
+          }ms`
+        );
+
+        // Process custom treks data
+        const customProcessStart = Date.now();
+        if (customSnapshot.docs.length > 0) {
+          const customData = customSnapshot.docs.map((snap) => snap.data());
+          setIsCustom(customData[0].isCustom);
+          setCustomTreks(customData[0].selectedPopularTreks);
+          console.log(
+            `🎯 [PopularTreks] Custom treks enabled: ${customData[0].isCustom}`
+          );
+        } else {
+          console.log(`🎯 [PopularTreks] No custom trek configuration found`);
+        }
+        setIsCustomLoading(false);
+        console.log(
+          `⚡ [PopularTreks] Custom data processed in ${
+            Date.now() - customProcessStart
+          }ms`
+        );
+
+        const totalTime = Date.now() - startTime;
+        console.log(
+          `🎉 [PopularTreks] Total data fetch completed in ${totalTime}ms`
+        );
+      } catch (error) {
+        console.error(
+          `❌ [PopularTreks] Error fetching data after ${
+            Date.now() - startTime
+          }ms:`,
+          error
+        );
+        setIsLoading(false);
+        setIsCustomLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
   const Loader = () => (
     <div

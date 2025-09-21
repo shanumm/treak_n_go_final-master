@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Filter from "../../Components/Filter";
 import { Link, useParams } from "react-router-dom";
 import "./peacefulstays.css";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
 import { LocationOn } from "@mui/icons-material";
 import { db } from "../../firebase";
 import WifiIcon from "@mui/icons-material/Wifi";

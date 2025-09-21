@@ -5,7 +5,7 @@ import { db } from "../../firebase";
 import LongTrekImage from "../../Images/LongTrek.jpg";
 import AllTreks from "../Treks/AllTreks";
 import "./perfectEscape.css";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
 export default function PerfectEscape() {
   const [alltreks, setAllTreks] = useState([]);
   const [allPackages, setAllPackages] = useState([]);

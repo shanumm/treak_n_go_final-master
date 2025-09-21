@@ -1,6 +1,6 @@
 import React from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
 
 export default function Modal({
   modalIsOpen,

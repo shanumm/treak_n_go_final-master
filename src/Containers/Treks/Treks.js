@@ -1,10 +1,67 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import Filter from "../../Components/Filter";
 import { db } from "../../firebase";
 import AllTreks from "./AllTreks";
 import "./Treks.css";
 import FilterContext from "../../FilterContext";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
+
+// Loading skeleton component
+const CardSkeleton = () => (
+  <div className="eachTrekContainer" style={{ opacity: 0.7 }}>
+    <div className="eachTrekImg">
+      <div
+        style={{
+          width: "100%",
+          height: "200px",
+          backgroundColor: "#f0f0f0",
+          borderRadius: "8px",
+          animation: "pulse 1.5s ease-in-out infinite",
+        }}
+      ></div>
+    </div>
+    <div className="eachTrekDetails">
+      <div
+        style={{
+          height: "20px",
+          backgroundColor: "#f0f0f0",
+          marginBottom: "10px",
+          borderRadius: "4px",
+          animation: "pulse 1.5s ease-in-out infinite",
+        }}
+      ></div>
+      <div
+        style={{
+          height: "16px",
+          backgroundColor: "#f0f0f0",
+          marginBottom: "10px",
+          borderRadius: "4px",
+          animation: "pulse 1.5s ease-in-out infinite",
+        }}
+      ></div>
+      <div
+        style={{
+          height: "16px",
+          backgroundColor: "#f0f0f0",
+          marginBottom: "15px",
+          borderRadius: "4px",
+          animation: "pulse 1.5s ease-in-out infinite",
+        }}
+      ></div>
+    </div>
+  </div>
+);
+
+const LoadingSkeleton = () => (
+  <div
+    className="allTreks"
+    style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}
+  >
+    {Array.from({ length: 6 }).map((_, index) => (
+      <CardSkeleton key={index} />
+    ))}
+  </div>
+);
 export default function Treks() {
   const [alltreks, setAllTreks] = useState([]);
   const [allPackages, setAllPackages] = useState([]);
@@ -28,96 +85,137 @@ export default function Treks() {
     sort,
   } = useContext(FilterContext);
 
-  useEffect(() => {
-    const trekData = db
-      .collection("All Trek")
-      .orderBy("price", sort)
-      .get()
-      .then((snapshot) => {
-        let allTrek = [];
-        snapshot.docs.forEach((doc) => {
-          allTrek.push(doc.data().Details);
-          if (allTrek.length == snapshot.docs.length) {
-            setAllTreks(allTrek);
-          }
-        });
-      });
+  const [isLoading, setIsLoading] = useState(true);
 
-    const fetchAvailabilityData = async () => {
-      const availabilityDataSnapshot = await db
-        .collection("Trek Availability")
-        .doc("winterTrek")
-        .get();
-      const availabilityData = availabilityDataSnapshot.data();
-      if (availabilityData.availability === "show") {
-        const packageData = db
-          .collection("All Winter Trek")
-          .orderBy("price", sort)
-          .get()
-          .then((snapshot) => {
-            let allPackage = [];
-            snapshot.docs.forEach((doc) => {
-              allPackage.push(doc.data().Details);
-              if (allPackage.length == snapshot.docs.length) {
-                setAllPackages(allPackage);
-              }
-            });
-          });
+  useEffect(() => {
+    const fetchAllData = async () => {
+      setIsLoading(true);
+      const startTime = Date.now();
+      console.log(
+        `🚀 [Treks] Starting data fetch at ${new Date().toISOString()}`
+      );
+
+      try {
+        // Fetch all data in parallel for better performance
+        console.log(`📡 [Treks] Initiating parallel Firebase queries...`);
+        const queryStartTime = Date.now();
+
+        const [trekSnapshot, availabilitySnapshot, multidaySnapshot] =
+          await Promise.all([
+            db.collection("All Trek").orderBy("price", sort).get(),
+            db.collection("Trek Availability").doc("winterTrek").get(),
+            db.collection("All MultiDay").orderBy("price", sort).get(),
+          ]);
+
+        const queryEndTime = Date.now();
+        console.log(
+          `✅ [Treks] Parallel queries completed in ${
+            queryEndTime - queryStartTime
+          }ms`
+        );
+        console.log(
+          `📊 [Treks] Results: ${trekSnapshot.docs.length} treks, ${multidaySnapshot.docs.length} multiday tours`
+        );
+
+        // Process trek data
+        const trekProcessStart = Date.now();
+        const allTrek = trekSnapshot.docs.map((doc) => doc.data().Details);
+        setAllTreks(allTrek);
+        console.log(
+          `⚡ [Treks] Trek data processed in ${Date.now() - trekProcessStart}ms`
+        );
+
+        // Process multiday data
+        const multidayProcessStart = Date.now();
+        const allMultidayData = multidaySnapshot.docs.map(
+          (doc) => doc.data().Details
+        );
+        setAllMultiday(allMultidayData);
+        console.log(
+          `⚡ [Treks] Multiday data processed in ${
+            Date.now() - multidayProcessStart
+          }ms`
+        );
+
+        // Process winter trek data if available
+        const availabilityData = availabilitySnapshot.data();
+        if (availabilityData.availability === "show") {
+          console.log(
+            `❄️ [Treks] Winter treks available, fetching winter data...`
+          );
+          const winterStartTime = Date.now();
+          const winterSnapshot = await db
+            .collection("All Winter Trek")
+            .orderBy("price", sort)
+            .get();
+          const winterEndTime = Date.now();
+          console.log(
+            `❄️ [Treks] Winter trek query completed in ${
+              winterEndTime - winterStartTime
+            }ms`
+          );
+
+          const winterProcessStart = Date.now();
+          const allPackage = winterSnapshot.docs.map(
+            (doc) => doc.data().Details
+          );
+          setAllPackages(allPackage);
+          console.log(
+            `⚡ [Treks] Winter data processed in ${
+              Date.now() - winterProcessStart
+            }ms`
+          );
+        } else {
+          console.log(`❄️ [Treks] Winter treks not available`);
+        }
+
+        const totalTime = Date.now() - startTime;
+        console.log(`🎉 [Treks] Total data fetch completed in ${totalTime}ms`);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(
+          `❌ [Treks] Error fetching data after ${Date.now() - startTime}ms:`,
+          error
+        );
+        setIsLoading(false);
       }
     };
-    fetchAvailabilityData();
 
-    const mulidayData = db
-      .collection("All MultiDay")
-      .orderBy("price", sort)
-      .get()
-      .then((snapshot) => {
-        let allPackage = [];
-        snapshot.docs.forEach((doc) => {
-          allPackage.push(doc.data().Details);
-          if (allPackage.length == snapshot.docs.length) {
-            setAllMultiday(allPackage);
-          }
-        });
-      });
+    fetchAllData();
   }, [sort]);
+
+  // Memoize filter values for better performance
+  const dayFilterValues = useMemo(() => {
+    if (!alltreks?.length) return [];
+
+    const uniqueDays = [
+      ...new Set(
+        alltreks.map((trek) => trek?.itinerary?.length).filter(Boolean)
+      ),
+    ];
+    return uniqueDays.sort((a, b) => a - b);
+  }, [alltreks]);
+
+  const locationFilterValues = useMemo(() => {
+    if (!alltreks?.length) return [];
+
+    const uniqueLocations = [
+      ...new Set(alltreks.map((trek) => trek?.area).filter(Boolean)),
+    ];
+    return uniqueLocations;
+  }, [alltreks]);
 
   useEffect(() => {
     setSearchParams("");
-    var dayFilterValue = [];
-    if (categoryFilter === "Trek" || categoryFilter === "AllCategory") {
-      for (let i = 0; i < alltreks?.length; i++) {
-        if (dayFilterValue.indexOf(alltreks[i]?.itinerary.length) === -1) {
-          dayFilterValue.push(alltreks[i]?.itinerary.length);
-        }
-      }
-    } else {
-      for (let i = 0; i < allPackages?.length; i++) {
-        if (dayFilterValue.indexOf(allPackages[i]?.itinerary.length) === -1) {
-          dayFilterValue.push(allPackages[i]?.itinerary.length);
-        }
-      }
-    }
-    setDayFilterTrek(dayFilterValue);
+    setDayFilterTrek(dayFilterValues);
     updateDayFilter("Days");
-
     isCategoryUpdated(!categoryUpdate);
-  }, [categoryFilter]);
+  }, [categoryFilter, dayFilterValues]);
+
   useEffect(() => {
-    var dayFilterValue = [];
-    var locationFilterValue = [];
-    for (let i = 0; i < alltreks?.length; i++) {
-      if (dayFilterValue.indexOf(alltreks[i]?.itinerary.length) === -1) {
-        dayFilterValue.push(alltreks[i]?.itinerary.length);
-      }
-    }
-    for (let i = 0; i < alltreks?.length; i++) {
-      if (locationFilterValue.indexOf(alltreks[i]?.area) === -1) {
-        locationFilterValue.push(alltreks[i]?.area);
-      }
-    }
-    setDayFilterTrek(dayFilterValue);
-  }, [alltreks]);
+    setDayFilterTrek(dayFilterValues);
+    setLocationFilterTrek(locationFilterValues);
+  }, [dayFilterValues, locationFilterValues]);
 
   const image1 =
     "https://cdn.pixabay.com/photo/2016/10/14/19/21/canyon-1740973_960_720.jpg";
@@ -243,27 +341,37 @@ export default function Treks() {
             dayFilterTrek={dayFilterTrek}
             locationFilterTrek={locationFilterTrek}
           />
-          {categoryFilter != "" && categoryFilter === "AllCategory" ? (
-            <AllTreks
-              packageData={allPackages}
-              data={alltreks}
-              trekType="trek"
-              editSearch={searchParams === "" ? "" : searchParams}
-            />
-          ) : categoryFilter === "Trek" ? (
-            <AllTreks packageData={alltreks} trekType="trek" editSearch={""} />
-          ) : categoryFilter === "Winter Trek" ? (
-            <AllTreks
-              packageData={allPackages}
-              trekType="winter"
-              editSearch={searchParams === "" ? "" : searchParams}
-            />
+          {isLoading ? (
+            <LoadingSkeleton />
           ) : (
-            <AllTreks
-              packageData={allMultiday}
-              trekType="multiday"
-              editSearch={searchParams === "" ? "" : searchParams}
-            />
+            <>
+              {categoryFilter != "" && categoryFilter === "AllCategory" ? (
+                <AllTreks
+                  packageData={allPackages}
+                  data={alltreks}
+                  trekType="trek"
+                  editSearch={searchParams === "" ? "" : searchParams}
+                />
+              ) : categoryFilter === "Trek" ? (
+                <AllTreks
+                  packageData={alltreks}
+                  trekType="trek"
+                  editSearch={""}
+                />
+              ) : categoryFilter === "Winter Trek" ? (
+                <AllTreks
+                  packageData={allPackages}
+                  trekType="winter"
+                  editSearch={searchParams === "" ? "" : searchParams}
+                />
+              ) : (
+                <AllTreks
+                  packageData={allMultiday}
+                  trekType="multiday"
+                  editSearch={searchParams === "" ? "" : searchParams}
+                />
+              )}
+            </>
           )}
         </div>
       </div>

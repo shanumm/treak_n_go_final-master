@@ -1,8 +1,9 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, memo, useMemo } from "react";
 import { Link } from "react-router-dom";
 import EachTrek from "./EachTrek";
 import FilterContext from "../../FilterContext";
-export default function AllTreks({
+
+const AllTreks = memo(function AllTreks({
   data,
   packageData,
   isEditable,
@@ -14,71 +15,66 @@ export default function AllTreks({
 }) {
   const { DayFilter } = useContext(FilterContext);
 
+  // Memoize filtered data to prevent unnecessary re-renders
+  const filteredData = useMemo(() => {
+    if (!data?.length) return [];
+
+    if (id) {
+      return data.filter((d) => id.includes(d.SLI));
+    }
+
+    if (DayFilter === "Days") {
+      return data;
+    }
+
+    return data.filter((f) => f.itinerary?.length === DayFilter);
+  }, [data, DayFilter, id]);
+
+  const filteredPackageData = useMemo(() => {
+    if (!packageData?.length) return [];
+
+    if (DayFilter === "Days") {
+      return packageData;
+    }
+
+    return packageData.filter((f) => f.itinerary?.length === DayFilter);
+  }, [packageData, DayFilter]);
+
   return (
     <div className="allTreks">
-      {data?.length > 0 &&
-        id &&
-        data
-          ?.filter((d) => {
-            if (id.includes(d.SLI)) {
-              console.log("true");
-              return d;
-            }
-          })
-          .map((trekData) => (
-            <EachTrek
-              editSearch={editSearch}
-              data={trekData}
-              isEditable={isEditable}
-              trek="trek"
-              trekType="trek"
-              escape={escape}
-              id={id}
-            />
-          ))}
-      {data?.length > 0 &&
-        !id &&
-        data
-          ?.filter((f) => {
-            console.log("first");
-            if (f.itinerary.length == DayFilter) {
-              return f;
-            }
-            if (DayFilter == "Days") return data;
-          })
-          ?.map((trekData) => (
-            <EachTrek
-              editSearch={editSearch}
-              data={trekData}
-              isEditable={isEditable}
-              trek="trek"
-              trekType="trek"
-              escape={escape}
-            />
-          ))}
-      {packageData?.length > 0 &&
-        !id &&
-        packageData
-          ?.filter((f) => {
-            if (f.itinerary.length == DayFilter) {
-              return f;
-            }
-            if (DayFilter == "Days") return packageData;
-          })
-          ?.map((trekData) => (
-            <EachTrek
-              editSearch={editSearch}
-              data={trekData}
-              isEditable={isEditable}
-              trek="winter"
-              escape={escape}
-              trekType={trekType}
-            />
-          ))}
+      {/* Render filtered data */}
+      {filteredData.map((trekData, index) => (
+        <EachTrek
+          key={`trek-${trekData.name}-${index}`}
+          editSearch={editSearch}
+          data={trekData}
+          isEditable={isEditable}
+          trek="trek"
+          trekType="trek"
+          escape={escape}
+          id={id}
+        />
+      ))}
+
+      {/* Render filtered package data */}
+      {filteredPackageData.map((trekData, index) => (
+        <EachTrek
+          key={`package-${trekData.name}-${index}`}
+          editSearch={editSearch}
+          data={trekData}
+          isEditable={isEditable}
+          trek="winter"
+          escape={escape}
+          trekType={trekType}
+        />
+      ))}
+
+      {/* Render camps package data */}
       {campsPackage?.length > 0 &&
         !id &&
-        campsPackage?.map((trekData) => (
+        campsPackage.map((trekData, index) => (
           <EachTrek
+            key={`camps-${trekData.name}-${index}`}
             editSearch={editSearch}
             data={trekData}
             isEditable={isEditable}
@@ -89,4 +85,6 @@ export default function AllTreks({
         ))}
     </div>
   );
-}
+});
+
+export default AllTreks;

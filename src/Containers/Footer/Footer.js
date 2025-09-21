@@ -1,4 +1,4 @@
-import { Facebook, Instagram, YouTube } from "@material-ui/icons";
+import { Facebook, Instagram, YouTube } from "@mui/icons-material";
 import React from "react";
 import { Link } from "react-router-dom";
 import "./footer.css";

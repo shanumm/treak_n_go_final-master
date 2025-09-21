@@ -8,7 +8,7 @@ import {
   KeyboardArrowDownRounded,
   LocationOn,
   Star,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { useSwipeable } from "react-swipeable";
 
 import LuggageIcon from "@mui/icons-material/Luggage";
@@ -28,7 +28,7 @@ import { useParams } from "react-router";
 import React, { useEffect, useRef, useState } from "react";
 import Nav from "../Navbar/Nav";
 import "./individualTrek.css";
-import DatePicker from "react-date-picker";
+import DatePicker from "react-datepicker";
 import { db } from "../../firebase";
 import { useStateValue } from "../../StateProvider";
 import axios from "../../axios";

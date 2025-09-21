@@ -4,8 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStateValue } from "../../StateProvider";
 import { auth } from "../../firebase";
 import Logo from "../../Images/logo.png";
-import { IconButton, InputBase } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+import { IconButton, InputBase } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function Nav() {
   const [{ basket, user, isPaymentModalOpen }, dispatch] = useStateValue();

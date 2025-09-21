@@ -1,7 +1,8 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import the styles
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-date-picker";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { Link, useLocation } from "react-router-dom";
 import { auth, db } from "../../firebase";
 import { storage } from "../../firebase";

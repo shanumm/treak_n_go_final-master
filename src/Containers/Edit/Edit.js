@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-date-picker";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useLocation, useParams } from "react-router-dom";
 import { db, storage } from "../../firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";

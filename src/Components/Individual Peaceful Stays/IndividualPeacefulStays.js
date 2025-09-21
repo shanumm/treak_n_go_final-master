@@ -6,7 +6,7 @@ import {
   SportsGolf,
   Star,
   Wifi,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import WifiIcon from "@mui/icons-material/Wifi";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
@@ -26,7 +26,8 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import GolfCourseIcon from "@mui/icons-material/GolfCourse";
 import SpaIcon from "@mui/icons-material/Spa";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
-import DatePicker from "react-date-picker";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "../../axios";
 
 import { AirplaneTicket } from "@mui/icons-material";

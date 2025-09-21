@@ -40,11 +40,32 @@ const liveBarContentStyle = {
 
 const LiveBar = () => {
   const [liveBarData, setLiveBarData] = useState("");
-  const liveText = db
-    .collection("liveBar")
-    .doc("liveBar")
-    .get()
-    .then((snapshot) => setLiveBarData(snapshot.data().liveBar));
+
+  useEffect(() => {
+    const fetchLiveBarData = async () => {
+      const startTime = Date.now();
+      console.log(
+        `🚀 [LiveBar] Starting data fetch at ${new Date().toISOString()}`
+      );
+
+      try {
+        const snapshot = await db.collection("liveBar").doc("liveBar").get();
+        const data = snapshot.data().liveBar;
+        setLiveBarData(data);
+
+        const totalTime = Date.now() - startTime;
+        console.log(`🎉 [LiveBar] Data fetch completed in ${totalTime}ms`);
+      } catch (error) {
+        console.error(
+          `❌ [LiveBar] Error fetching data after ${Date.now() - startTime}ms:`,
+          error
+        );
+      }
+    };
+
+    fetchLiveBarData();
+  }, []);
+
   if (!liveBarData.length) return;
 
   return (
@@ -81,18 +102,57 @@ export default function MainPage({ data }) {
   const [isSpiritualAvailable, setIsSpiritualAvailable] = useState(false);
 
   useEffect(() => {
-    db.collection(`Trek Availability`)
-      .doc("winterTrek")
-      .get()
-      .then((snapshot) => {
-        setIsWinterAvailable(snapshot.data().availability);
-      });
-    db.collection(`Trek Availability`)
-      .doc("spiritualTrek")
-      .get()
-      .then((snapshot) => {
-        setIsSpiritualAvailable(snapshot.data().availability);
-      });
+    const fetchAvailabilityData = async () => {
+      const startTime = Date.now();
+      console.log(
+        `🚀 [MainPage] Starting availability check at ${new Date().toISOString()}`
+      );
+
+      try {
+        console.log(`📡 [MainPage] Initiating availability queries...`);
+        const queryStartTime = Date.now();
+
+        const [winterSnapshot, spiritualSnapshot] = await Promise.all([
+          db.collection(`Trek Availability`).doc("winterTrek").get(),
+          db.collection(`Trek Availability`).doc("spiritualTrek").get(),
+        ]);
+
+        const queryEndTime = Date.now();
+        console.log(
+          `✅ [MainPage] Availability queries completed in ${
+            queryEndTime - queryStartTime
+          }ms`
+        );
+
+        // Process winter availability
+        const winterAvailability = winterSnapshot.data().availability;
+        setIsWinterAvailable(winterAvailability);
+        console.log(
+          `❄️ [MainPage] Winter treks availability: ${winterAvailability}`
+        );
+
+        // Process spiritual availability
+        const spiritualAvailability = spiritualSnapshot.data().availability;
+        setIsSpiritualAvailable(spiritualAvailability);
+        console.log(
+          `🧘 [MainPage] Spiritual treks availability: ${spiritualAvailability}`
+        );
+
+        const totalTime = Date.now() - startTime;
+        console.log(
+          `🎉 [MainPage] Total availability check completed in ${totalTime}ms`
+        );
+      } catch (error) {
+        console.error(
+          `❌ [MainPage] Error checking availability after ${
+            Date.now() - startTime
+          }ms:`,
+          error
+        );
+      }
+    };
+
+    fetchAvailabilityData();
   }, []);
 
   return (

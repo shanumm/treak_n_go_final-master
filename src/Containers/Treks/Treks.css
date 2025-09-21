@@ -4,6 +4,19 @@
   /* padding: 2rem 0; */
 }
 
+/* Loading skeleton animation */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .treksTop {
   background: white;
   padding-bottom: 15px;

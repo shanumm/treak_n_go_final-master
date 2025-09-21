@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { Star } from "@material-ui/icons";
+import { Star } from "@mui/icons-material";
 import WifiIcon from "@mui/icons-material/Wifi";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import AcUnitIcon from "@mui/icons-material/AcUnit";

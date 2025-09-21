@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   KeyboardArrowDownRounded,
   KeyboardArrowUpRounded,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
