@@ -212,14 +212,14 @@ export default function PeacefulStays() {
             <div>{data?.Details?.rating ? data?.Details?.rating : "4.5"}</div>
           </div>
 
+          <div className="peacefulStayPageStartingFrom">
+            <div>Starting From (per night / 2 adults)</div>
+            <div>INR {data?.Details?.price}/-</div>
+          </div>
           <div>
             <Link to={`/stays/${id}-${data?.Details?.name}`}>
               <button>Show Details</button>
             </Link>
-          </div>
-          <div className="peacefulStayPageStartingFrom">
-            <div>Starting From</div>
-            <div>INR {data?.Details?.price} /-</div>
           </div>
         </div>
       </div>
@@ -231,14 +231,39 @@ export default function PeacefulStays() {
       <div className="peacefulStayPageTop">
         <img src={image2} alt="" />
       </div>
-      <div className="peacefulStayHeadingTop">{id}</div>
+      <div className="peacefulStayHeadingTop">
+        <div
+          style={{
+            margin: "auto",
+            background: "white",
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+          }}
+        >
+          {id}
+        </div>
+      </div>
       <div
         className="peacefulStaySubHeadingTop"
-        style={{ textAlign: "center", fontSize: "16px", color: "gray" }}
+        style={{
+          textAlign: "center",
+          fontSize: "16px",
+          color: "gray",
+        }}
       >
-        {id === "camps"
-          ? "Discover Cozy Escapes: Unwind at Our Charming Camps"
-          : "Discover Cozy Escapes: Unwind at Our Charming Homestays"}
+        <div
+          style={{
+            margin: "auto",
+            background: "white",
+            paddingBottom: "10px",
+            borderBottomRightRadius: "8px",
+            borderBottomLeftRadius: "8px",
+          }}
+        >
+          {id === "camps"
+            ? "Discover Cozy Escapes: Unwind at Our Charming Camps"
+            : "Discover Cozy Escapes: Unwind at Our Charming Homestays"}
+        </div>
       </div>
       <div className="peacefulStayBottom">
         <div className="treksFilter">

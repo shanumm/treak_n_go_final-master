@@ -27,12 +27,31 @@ import GolfCourseIcon from "@mui/icons-material/GolfCourse";
 import SpaIcon from "@mui/icons-material/Spa";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import DatePicker from "react-date-picker";
+import axios from "../../axios";
 
 import { AirplaneTicket } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import "./individualPeacefulStays.css";
+import PaymentBox from "../../Payment/PaymentBox";
+
+function loadScript(src) {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+}
+
+const __DEV__ = document.domain === "localhost";
+
 export default function IndividualPeacefulStays() {
   const [data, setData] = useState();
 
@@ -40,6 +59,21 @@ export default function IndividualPeacefulStays() {
   const [modalVisible, setModalVisible] = useState(false);
   const [roomsCount, setRoomsCount] = useState(1);
   const [startDate, setStartDate] = useState(new Date());
+  const [numberOfPeople, setNumberOfPeople] = useState(2);
+  const [currentBookingMiniDate, setCurrentBookingMiniDate] = useState();
+  const [bookingNumber, setBookingNumber] = useState("");
+  const [bookingEmail, setBookingEmail] = useState("");
+  const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+
+  // useEffect(() => {
+  //   const individualPeacefulStays = document.querySelector(
+  //     ".individualPeacefulStays"
+  //   );
+  //   const peacefulPaymentContainer = document.querySelector(
+  //     ".peacefulPaymentContainer"
+  //   );
+  //   peacefulPaymentContainer.style.height = `calc(${individualPeacefulStays.clientHeight}px - 210vh)`;
+  // }, []);
 
   const incrementRoomsCount = () => {
     if (roomsCount < 3) {
@@ -94,6 +128,135 @@ export default function IndividualPeacefulStays() {
       return newIndex;
     });
   };
+
+  function isValidEmail(email) {
+    // regular expression for checking email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  async function displayRazorpay(e) {
+    e.preventDefault();
+    // setIsPaymentProcessing(true);
+    // const mobile = bookingNumber;
+    // if (mobile.length === 10 && isValidEmail(bookingEmail)) {
+    //   const res = await loadScript(
+    //     "https://checkout.razorpay.com/v1/checkout.js"
+    //   );
+
+    //   if (!res) {
+    //     alert("Razorpay SDK failed to load. Are you online?");
+    //     return;
+    //   }
+    //   const finalSellPrice = Math.floor(data?.price) * roomsCount;
+    //   const response = await axios({
+    //     method: "post",
+    //     url: `/payments/create?total=${finalSellPrice * 100}`,
+    //   });
+
+    //   const options = {
+    //     key: __DEV__ ? "rzp_test_pJnACGFAMxAceV" : "PRODUCTION_KEY",
+    //     currency: "INR",
+    //     amount: response.data.amount.toString(),
+    //     order_id: response.data.id,
+    //     name: "TreknGo",
+    //     description: "Thank you for booking from us. ",
+    //     image: "http://localhost:3000/logo.png",
+    //     handler: function (response) {
+    //       setConfirmedBookingId(response.razorpay_order_id);
+    //       setIsOrderConfirmed(true);
+    //       const orders = db
+    //         .collection("Orders")
+    //         .doc(bookingEmail)
+    //         .set({
+    //           user: bookingEmail,
+    //         })
+    //         .then(() => {
+    //           const orderDetails = {
+    //             travelDate: currentBookingDate,
+    //             date: value,
+    //             OrderId: response.razorpay_order_id,
+    //             PaymentId: response.razorpay_payment_id,
+    //             signature: response.razorpay_signature,
+    //             Adults: adult,
+    //             data: data,
+    //             email: bookingEmail,
+    //             number: bookingNumber,
+    //           };
+
+    //           db.collection("Orders")
+    //             .doc(bookingEmail)
+    //             .collection("All Orders")
+    //             .add(orderDetails);
+    //         })
+    //         .then(() => {
+    //           var iti = data?.itinerary
+    //             .map((i) => {
+    //               const c =
+    //                 i.heading.toString() +
+    //                 "&nbsp;" +
+    //                 i.description.toString() +
+    //                 "&nbsp;";
+    //               return c;
+    //             })
+    //             .join("<br>");
+
+    //           var inclusions = data?.inclusion.join("<br>");
+    //           var exclusions = data?.exclusion.join("<br>");
+
+    //           var params = {
+    //             name: data?.name,
+    //             to_name: bookingEmail,
+    //             booking_id: response.razorpay_order_id,
+    //             email_to: bookingEmail,
+    //             contact_number: mobile.value,
+    //             no_of_people: adult,
+    //             tour_date: currentBookingDate,
+    //             itinerary: iti,
+    //             inclusion: inclusions,
+    //             exlusion: exclusions,
+    //             canvas: data?.images[0],
+    //           };
+    //           if (selectedAddOns) {
+    //             params.selectedAddOns = selectedAddOns;
+    //           }
+    //           if (packageSelectedData) {
+    //             params.packageSelectedData = packageSelectedData;
+    //           }
+    //           if (selectedAvailableBatch) {
+    //             params.selectedAvailableBatch = selectedAvailableBatch;
+    //           }
+
+    //           emailjs
+    //             .send(
+    //               "service_p1nqdtc",
+    //               "template_9ow97wa",
+    //               params,
+    //               "dcAj3UwkMO9oYa0NL"
+    //             )
+    //             .then(
+    //               (result) => {
+    //                 console.log(result.text);
+    //               },
+    //               (error) => {
+    //                 console.log(error.text);
+    //               }
+    //             );
+    //         });
+    //     },
+    //     prefill: {
+    //       name: "",
+    //       email: bookingEmail,
+    //       contact: mobile.value,
+    //     },
+    //   };
+    //   const paymentObject = new window.Razorpay(options);
+    //   paymentObject.open();
+    //   setIsPaymentProcessing(false);
+    // } else {
+    //   setIsPaymentProcessing(false);
+    //   setMobileError("Please enter a valid number or email");
+    // }
+  }
 
   const popularAmenities = [
     { icon: <WifiIcon style={{ color: "#ff5e00" }} />, name: "Wi-Fi" },
@@ -154,11 +317,16 @@ export default function IndividualPeacefulStays() {
     const listStyle = {
       fontSize: "14px",
       color: "#333",
-      listStyleType: "circle",
-      listStylePosition: "inside",
       marginBottom: "5px",
+      position: "relative",
+      // paddingLeft: "20px",
+      // textIndent: "-20px",
     };
 
+    const ulStyle = {
+      listStyleType: "disc",
+      paddingLeft: "1.2em",
+    };
     return (
       <div
         className="rulesContainer"
@@ -171,7 +339,7 @@ export default function IndividualPeacefulStays() {
         {data?.propertyRules && (
           <>
             <div>
-              <ul>
+              <ul style={ulStyle}>
                 {leftRules.map((rule, index) => (
                   <li key={index} style={listStyle}>
                     {rule.trim()}
@@ -180,7 +348,7 @@ export default function IndividualPeacefulStays() {
               </ul>
             </div>
             <div>
-              <ul>
+              <ul style={ulStyle}>
                 {rightRules.map((rule, index) => (
                   <li key={index} style={listStyle}>
                     {rule.trim()}
@@ -201,13 +369,18 @@ export default function IndividualPeacefulStays() {
     const midIndex = Math.ceil(propertyRules.length / 2);
     const leftRules = propertyRules.slice(0, midIndex);
     const rightRules = propertyRules.slice(midIndex);
-
     const listStyle = {
       fontSize: "14px",
       color: "#333",
-      listStyleType: "circle",
-      listStylePosition: "inside",
       marginBottom: "5px",
+      position: "relative",
+      // paddingLeft: "20px",
+      // textIndent: "-20px",
+    };
+
+    const ulStyle = {
+      listStyleType: "disc",
+      paddingLeft: "1.2em",
     };
 
     return (
@@ -221,7 +394,7 @@ export default function IndividualPeacefulStays() {
         {data?.propertyPoints && (
           <>
             <div style={{ marginRight: "20px" }}>
-              <ul>
+              <ul style={ulStyle}>
                 {leftRules.map((rule, index) => (
                   <li key={index} style={listStyle}>
                     {rule.trim()}
@@ -252,8 +425,9 @@ export default function IndividualPeacefulStays() {
       </div>
     );
   };
-  const StaffInfo = () => {
-    const staffList = [
+
+  const StaffInfo = (list = []) => {
+    const staffList = list?.list || [
       {
         role: "Caretaker",
         language: "Speaks English, Hindi",
@@ -278,9 +452,15 @@ export default function IndividualPeacefulStays() {
     const listStyle = {
       fontSize: "14px",
       color: "#333",
-      listStyleType: "circle",
-      listStylePosition: "inside",
       marginBottom: "5px",
+      position: "relative",
+      // paddingLeft: "20px",
+      // textIndent: "-20px",
+    };
+
+    const ulStyle = {
+      listStyleType: "disc",
+      paddingLeft: "1.2em",
     };
 
     return (
@@ -288,9 +468,9 @@ export default function IndividualPeacefulStays() {
         <div style={titleStyle}>Staff available at the Property</div>
         <div style={{ display: "flex" }}>
           {staffList.map((staff, index) => (
-            <div style={{ marginLeft: index != 0 ? "40px" : "0" }} key={index}>
+            <div style={{ marginLeft: index !== 0 ? "40px" : "0" }} key={index}>
               <div>{staff.role}</div>
-              <ul>
+              <ul style={ulStyle}>
                 <li style={listStyle}>{staff.language}</li>
                 <li style={listStyle}>{staff.availability}</li>
                 <li style={listStyle}>{staff.responsibilities}</li>
@@ -359,247 +539,310 @@ export default function IndividualPeacefulStays() {
           <img src={data?.images[0]} alt="" />
           <img src={data?.images[1]} alt="" />
           <img src={data?.images[2]} alt="" />
+          <img src={data?.images[4]} alt="" />
           <div className="view-more-container">
             <img src={data?.images[3]} alt="" onClick={() => openModal(3)} />
             <button onClick={() => openModal(3)}>View More Photos</button>
           </div>
         </div>
       </div>
-      <div className="ipsDetails">
-        <div id="infoPrice" className="ipsDetailsHeading">
-          <div>
-            <div>
-              {data?.name ? data?.name : "Capital O 89808 Sk Residency"}
-            </div>
-            <div>
-              {data?.rating ? (
-                <>
-                  {Array.from({ length: parseInt(data?.rating) }).map(() => (
-                    <Star style={{ color: "#ff5e00" }} />
-                  ))}
-                </>
-              ) : (
-                <>
-                  <Star style={{ color: "#F7BB44" }} />
-                  <Star style={{ color: "#F7BB44" }} />
-                  <Star style={{ color: "#F7BB44" }} />
-                </>
-              )}
-            </div>
-          </div>
-          <div className="ipslocation">
-            <LocationOn style={{ color: "#2378CC" }} />{" "}
-            {data?.area ? data?.area : "New Delhi"} |
-            <span
-              style={{
-                color: "gray",
-                marginLeft: "4px",
-                textDecoration: "underline",
-              }}
-            >
-              {data?.nearestHighlight || "5Km From Mall"}
-            </span>
-          </div>
-          <div className="ipsCompleteAddress">
-            {data?.completeAddress ? data?.completeAddress : "New Delhi"}{" "}
-          </div>
-        </div>
-      </div>
-      <div>
-        <div style={{ marginBottom: "5px", fontWeight: "500" }}>
-          All Amenities
-        </div>
-        <div className="AmenityContainer">
-          {data?.amenities &&
-            data?.amenities?.map((backendAmenity, index) => {
-              const matchedAmenity = popularAmenities.find(
-                (amenity) => amenity.name === backendAmenity
-              );
 
-              return (
-                <div
-                  key={index}
+      <div className="ipsDetailsContainerParent" style={{ display: "flex", position: "relative" }}>
+        <div className="ipsDetailsContainer" style={{ marginRight: "1rem" }}>
+          <div className="ipsDetails">
+            <div id="infoPrice" className="ipsDetailsHeading">
+              <div>
+                <div>
+                  {data?.name ? data?.name : "Capital O 89808 Sk Residency"}
+                </div>
+                <div>
+                  {data?.rating ? (
+                    <>
+                      {Array.from({ length: parseInt(data?.rating) }).map(
+                        () => (
+                          <Star style={{ color: "#ff5e00" }} />
+                        )
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Star style={{ color: "#F7BB44" }} />
+                      <Star style={{ color: "#F7BB44" }} />
+                      <Star style={{ color: "#F7BB44" }} />
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="ipslocation">
+                <LocationOn style={{ color: "#2378CC" }} />{" "}
+                {data?.area ? data?.area : "New Delhi"} |
+                <span
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginRight: "10px",
+                    color: "gray",
+                    marginLeft: "4px",
+                    textDecoration: "underline",
                   }}
                 >
-                  {matchedAmenity && matchedAmenity.icon}
-                  <div>{matchedAmenity && matchedAmenity.name}</div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-      <div className="ipsDescription">
-        <div>
-          <div style={{ marginBottom: "5px", fontWeight: "500" }}>
-            Highlights of the property
-          </div>
-          <div>
-            {data?.campDesc ? (
-              data?.campDesc
-            ) : (
-              <>
-                Capital O 89808 Sk Residency features air-conditioned rooms with
-                TV in the South West district of New Delhi. Among the facilities
-                at this property are a shared kitchen and room service, along
-                with free WiFi throughout the property. Local points of interest
-                like Gurudwara Bangla Sahib and Qutub Minar are reachable within
-                13 km and 14 km, respectively. <br />
-                Rashtrapati Bhavan is 12 km from the hotel, while Gandhi Smriti
-                is 13 km away. The nearest airport is Delhi International, 6 km
-                from Capital O 89808 Sk Residency, and the property offers a
-                paid airport shuttle service. Capital O 89808 Sk Residency has
-                been welcoming Booking.com guests since 10 Jun 2022. Hotel
-                chain/brand: OYO Rooms
-                <br />
-                Distance in property description is calculated using ©
-                OpenStreetMap
-              </>
-            )}
-          </div>
-        </div>
-        <div className="ipsPropertyHighlight">
-          <div>
-            <div style={{ margin: "5px 0" }}>
-              {data?.name ? data?.name : "Capital O 89808 Sk Residency"}
-            </div>
-            <div style={{ margin: "5px 0" }}>
-              <div>
-                Starting from{" "}
-                <span style={{ color: "#ff5e00" }}>INR {data?.price} /-</span>
+                  {data?.nearestHighlight || "5Km From Mall"}
+                </span>
+              </div>
+              <div className="ipsCompleteAddress">
+                {data?.completeAddress ? data?.completeAddress : "New Delhi"}{" "}
               </div>
             </div>
-            <div style={{ margin: "5px 0" }}>
-              <span>
-                Number of rooms:{" "}
-                <button
-                  onClick={decrementRoomsCount}
-                  style={{ padding: "0 .4rem" }}
-                >
-                  -
-                </button>{" "}
-                {roomsCount}{" "}
-                <button
-                  onClick={incrementRoomsCount}
-                  style={{ padding: "0 .4rem" }}
-                >
-                  +
-                </button>
-              </span>
+          </div>
+          <div>
+            <div style={{ marginBottom: "5px", fontWeight: "500" }}>
+              All Amenities
             </div>
-            <div style={{ margin: "10px 0" }}>
-              Date:
-              <DatePicker
-                value={startDate}
-                onChange={setStartDate}
-                minDate={new Date()}
-                format="y-MM-dd"
-              />
+            <div className="AmenityContainer">
+              {data?.amenities &&
+                data?.amenities?.map((backendAmenity, index) => {
+                  const matchedAmenity = popularAmenities.find(
+                    (amenity) => amenity.name === backendAmenity
+                  );
+
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {matchedAmenity && matchedAmenity.icon}
+                      <div>{matchedAmenity && matchedAmenity.name}</div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="ipsDescription">
+            <div>
+              <div
+                style={{
+                  marginBottom: "5px",
+                  fontWeight: "500",
+                  fontSize: "19.2px",
+                  fontWeight: "bold",
+                }}
+              >
+                Highlights of the property
+              </div>
+              <div style={{ fontSize: "14px" }}>
+                {data?.campDesc ? (
+                  data?.campDesc
+                ) : (
+                  <>
+                    Capital O 89808 Sk Residency features air-conditioned rooms
+                    with TV in the South West district of New Delhi. Among the
+                    facilities at this property are a shared kitchen and room
+                    service, along with free WiFi throughout the property. Local
+                    points of interest like Gurudwara Bangla Sahib and Qutub
+                    Minar are reachable within 13 km and 14 km, respectively.{" "}
+                    <br />
+                    Rashtrapati Bhavan is 12 km from the hotel, while Gandhi
+                    Smriti is 13 km away. The nearest airport is Delhi
+                    International, 6 km from Capital O 89808 Sk Residency, and
+                    the property offers a paid airport shuttle service. Capital
+                    O 89808 Sk Residency has been welcoming Booking.com guests
+                    since 10 Jun 2022. Hotel chain/brand: OYO Rooms
+                    <br />
+                    Distance in property description is calculated using ©
+                    OpenStreetMap
+                  </>
+                )}
+              </div>
             </div>
 
-            <button>Book Now</button>
-          </div>
-        </div>
-      </div>
-      <StaffInfo />
-      <div id="ipsFacility">
-        <div
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.2rem",
-            marginBottom: "5px",
-            paddingBottom: "5px",
-          }}
-        >
-          About {data?.name || "Name"}
-        </div>
-        <div>
-          <div>{data?.propertySubheading || ""}</div>
-          {<PropertyPoints />}
-        </div>
-      </div>
-      <div
-        id="rules"
-        className="propertyRules"
-        style={{ marginBottom: "20px" }}
-      >
-        <div
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.2rem",
-            marginBottom: "15px",
-            borderBottom: "2px solid #333",
-            paddingBottom: "5px",
-          }}
-        >
-          Property Rules
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{ fontSize: "16px", fontWeight: "600" }}>
-            Check In
-            <br />
-            <span
-              style={{ fontSize: "18px", fontWeight: "500", color: "#3C3C3C" }}
-            >
-              {data?.checkIn}
-            </span>
-          </div>
-          <div style={{ fontSize: "16px", fontWeight: "600" }}>
-            Check Out
-            <br />
-            <span
-              style={{ fontSize: "18px", fontWeight: "500", color: "#3C3C3C" }}
-            >
-              {data?.checkOut}
-            </span>
-          </div>
-        </div>
-        <PropertyRules />
-      </div>
+            {/* <div> */}
+            {/* <div className="peacefulPaymentContainer"> */}
 
-      <div className="ipsSurroundings">
-        <h5>Hotel surroundings *</h5>
-        <div>
-          <div>
+            {/* </div> */}
+            {/* </div> */}
+          </div>
+          <StaffInfo list={data?.staffList} />
+          {data?.whatsIncluded && (
             <div>
-              <DirectionsWalk /> What's Nearby
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.2rem",
+                  marginBottom: "5px",
+                  paddingBottom: "5px",
+                }}
+              >
+                What's Included
+              </div>
+              <div>
+                {data?.whatsIncluded.split(";").map((item) => (
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      color: "#333",
+                      marginBottom: "5px",
+                      position: "relative",
+                    }}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div id="ipsFacility">
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                marginBottom: "5px",
+                paddingBottom: "5px",
+              }}
+            >
+              About {data?.name || "Name"}
             </div>
             <div>
-              {data?.whatsNearby?.map((m) => (
-                <div>
-                  <div>{m}</div>
-                </div>
-              ))}
+              <div>{data?.propertySubheading || ""}</div>
+              {<PropertyPoints />}
             </div>
           </div>
-          <div>
-            <div>
-              <SportsGolf /> Top Attractions
+          <div
+            id="rules"
+            className="propertyRules"
+            style={{ marginBottom: "20px" }}
+          >
+            <div
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                marginBottom: "15px",
+                borderBottom: "2px solid #333",
+                paddingBottom: "5px",
+              }}
+            >
+              Property Rules
             </div>
-            <div>
-              {data?.topAttraction?.map((m) => (
-                <div>
-                  <div>{m}</div>
-                </div>
-              ))}
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div style={{ fontSize: "16px", fontWeight: "600" }}>
+                Check In
+                <br />
+                <span
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "500",
+                    color: "#3C3C3C",
+                  }}
+                >
+                  {data?.checkIn}
+                </span>
+              </div>
+              <div style={{ fontSize: "16px", fontWeight: "600" }}>
+                Check Out
+                <br />
+                <span
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "500",
+                    color: "#3C3C3C",
+                  }}
+                >
+                  {data?.checkOut}
+                </span>
+              </div>
             </div>
+            <PropertyRules />
           </div>
-          <div>
+
+          {data?.cancellationPoints && (
             <div>
-              <AirplaneTicket /> Airport / Public Transport
-            </div>
-            <div>
-              {data?.publicTransport?.map((m) => (
-                <div>
-                  <div>{m}</div>
-                </div>
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "1.2rem",
+                  marginBottom: "5px",
+                  paddingBottom: "5px",
+                }}
+              >
+                Cancellation Policy
+              </div>
+              {data?.cancellationPoints.split(";").map((item) => (
+                <li
+                  style={{
+                    fontSize: "14px",
+                    color: "#333",
+                    marginBottom: "5px",
+                    position: "relative",
+                  }}
+                >
+                  {item}
+                </li>
               ))}
+            </div>
+          )}
+          <div className="ipsSurroundings">
+            <h5>Hotel surroundings *</h5>
+            <div>
+              <div>
+                <div>
+                  <DirectionsWalk /> What's nearby
+                </div>
+                <div>
+                  {data?.whatsNearby?.map((m) => (
+                    <div>
+                      <div style={{ fontSize: "14px" }}>{m}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div>
+                  <SportsGolf /> Top Attractions
+                </div>
+                <div>
+                  {data?.topAttraction?.map((m) => (
+                    <div>
+                      <div style={{ fontSize: "14px" }}>{m}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div>
+                  <AirplaneTicket /> Airport / Public Transport
+                </div>
+                <div>
+                  {data?.publicTransport?.map((m) => (
+                    <div>
+                      <div style={{ fontSize: "14px" }}>{m}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <PaymentBox
+          data={data}
+          isTrekPage={false}
+          roomsCount={roomsCount}
+          setRoomsCount={setRoomsCount}
+          numberOfPeople={numberOfPeople}
+          setNumberOfPeople={setNumberOfPeople}
+          currentBookingMiniDate={startDate}
+          setCurrentBookingDate={setStartDate}
+          fromIndividualPeacefulStays={true}
+          isPaymentProcessing={isPaymentProcessing}
+          name={data?.name}
+          displayRazorpay={displayRazorpay}
+          maxRooms={data?.numRooms}
+          maxPeople={data?.maxPeople}
+          bookingNumber={bookingNumber}
+          setBookingNumber={setBookingNumber}
+          bookingEmail={bookingEmail}
+          setBookingEmail={setBookingEmail}
+        />
       </div>
     </div>
   );

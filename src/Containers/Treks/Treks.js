@@ -17,7 +17,6 @@ export default function Treks() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get("search");
-    console.log(myParam);
     if (myParam) setSearchParams(myParam);
   });
 
@@ -43,19 +42,31 @@ export default function Treks() {
           }
         });
       });
-    const packageData = db
-      .collection("All Winter Trek")
-      .orderBy("price", sort)
-      .get()
-      .then((snapshot) => {
-        let allPackage = [];
-        snapshot.docs.forEach((doc) => {
-          allPackage.push(doc.data().Details);
-          if (allPackage.length == snapshot.docs.length) {
-            setAllPackages(allPackage);
-          }
-        });
-      });
+
+    const fetchAvailabilityData = async () => {
+      const availabilityDataSnapshot = await db
+        .collection("Trek Availability")
+        .doc("winterTrek")
+        .get();
+      const availabilityData = availabilityDataSnapshot.data();
+      if (availabilityData.availability === "show") {
+        const packageData = db
+          .collection("All Winter Trek")
+          .orderBy("price", sort)
+          .get()
+          .then((snapshot) => {
+            let allPackage = [];
+            snapshot.docs.forEach((doc) => {
+              allPackage.push(doc.data().Details);
+              if (allPackage.length == snapshot.docs.length) {
+                setAllPackages(allPackage);
+              }
+            });
+          });
+      }
+    };
+    fetchAvailabilityData();
+
     const mulidayData = db
       .collection("All MultiDay")
       .orderBy("price", sort)
@@ -115,11 +126,11 @@ export default function Treks() {
   return (
     <div className="treks">
       <div className="treksTop">
-        <div className="treksTopRight">
+        {/* <div className="treksTopRight">
           <div style={{ width: "100%", height: "50vh" }}>
             <img src={image1} alt="" />
           </div>
-        </div>
+        </div> */}
         <div className="treksTopLeft">
           <h2>TREKS</h2>
           <h5>Discover the Wonders of Nature</h5>
@@ -259,7 +270,7 @@ export default function Treks() {
 
       <div className="trekReviews">
         <h3>
-          Google Reviews  4.9{" "}
+          Google Reviews 4.9{" "}
           <span>
             <Star style={{ color: "#ff5e00" }} />
           </span>

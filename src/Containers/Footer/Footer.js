@@ -2,8 +2,11 @@ import { Facebook, Instagram, YouTube } from "@material-ui/icons";
 import React from "react";
 import { Link } from "react-router-dom";
 import "./footer.css";
+import { useStateValue } from "../../StateProvider";
 export default function Footer() {
-  return (
+  const [{ isPaymentModalOpen }] = useStateValue();
+
+  return !isPaymentModalOpen ? (
     <div className="footer">
       <img
         src="https://cdn.pixabay.com/photo/2020/06/09/08/20/egypt-5277521_960_720.jpg"
@@ -15,7 +18,7 @@ export default function Footer() {
             <div>Need Help?</div>
             <div>
               <h3>+91-9654749746</h3>
-              <h3>trekngotravels@gmail.com</h3>
+              <h3>contact@trekngo.com</h3>
             </div>
           </div>
           <div>
@@ -44,10 +47,28 @@ export default function Footer() {
             <div>
               <h3>Discover</h3>
               <ul>
-                <li>Blog</li>
-                <li>Short Treks</li>
-                <li>Long Treks</li>
-                <li>Isolated Treks</li>
+                <Link style={{ color: "inherit" }} to="blog">
+                  <li>Blog</li>
+                </Link>
+
+                <Link
+                  style={{ color: "inherit" }}
+                  to="/perfectEscape/shortTreks"
+                >
+                  <li>Short Treks</li>
+                </Link>
+                <Link
+                  style={{ color: "inherit" }}
+                  to="/perfectEscape/longTreks"
+                >
+                  <li>Long Treks</li>
+                </Link>
+                <Link
+                  style={{ color: "inherit" }}
+                  to="/perfectEscape/isolatedTreks"
+                >
+                  <li>Isolated Treks</li>
+                </Link>
               </ul>
             </div>
             <div>
@@ -77,5 +98,5 @@ export default function Footer() {
         <div className="footerRight"></div>
       </div>
     </div>
-  );
+  ) : null;
 }

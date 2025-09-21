@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-.react-date-picker {
+/* .react-date-picker {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -68,7 +68,7 @@
 .react-calendar__navigation__label,
 .react-calendar__navigation__arrow {
   color: #fff !important;
-}
+} */
 
 .individualPeacefulStays {
   min-height: 100vh;
@@ -76,8 +76,8 @@
   background: #f0f0f0;
 }
 
-.individualPeacefulStays .modal {
-  display: flex;
+.modal {
+  display: flex !important;
   position: fixed;
   z-index: 100000;
   left: 0;
@@ -115,7 +115,7 @@
   object-fit: contain;
 }
 
-.individualPeacefulStays .close {
+.close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -150,7 +150,14 @@
   padding-top: 10px;
 }
 
-.individualPeacefulStays > div:not(:nth-child(1), :nth-child(2)) {
+.individualPeacefulStays .ipsDetailsContainer > div {
+  margin: 0 auto 10px auto !important;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.individualPeacefulStays > div:nth-of-type(3) {
   background: white;
   padding: 1rem;
   border-radius: 10px;
@@ -195,7 +202,7 @@
 }
 
 .ipsGallary {
-  min-height: 60vh;
+  min-height: 50vh;
   width: 100%;
   margin: 10px 0;
 }
@@ -205,7 +212,7 @@
 
 .ipsGallary > div {
   display: grid;
-  height: 60vh;
+  height: 50vh;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
   gap: 10px;
@@ -219,20 +226,24 @@
 }
 
 .ipsGallary > div > img:nth-of-type(1) {
-  grid-column: 1/5;
-  grid-row: 1 / span 2;
+  grid-column: 1 / 3;
+  grid-row: 1 / 5;
 }
 .ipsGallary > div > img:nth-of-type(2) {
-  grid-column: 1 / 3;
-  grid-row: 3 / span 5;
+  grid-column: 3 / 4;
+  grid-row: 1 / span 2;
 }
 .ipsGallary > div > img:nth-of-type(3) {
+  grid-column: 4 / 5;
+  grid-row: 1 / span 2;
+}
+.ipsGallary > div > img:nth-of-type(4) {
   grid-column: 3 / 4;
-  grid-row: 3 / span 5;
+  grid-row: 3 / span 2;
 }
 .ipsGallary > div > div {
   grid-column: 4 / 5;
-  grid-row: 3 / span 5;
+  grid-row: 3 / span 2;
   border-radius: 4px;
 }
 .ipsGallary > div > div img {
@@ -262,22 +273,22 @@
 }
 
 .ipsDescription > div:nth-of-type(1) {
-  width: 60%;
+  width: 70%;
 }
 
 .ipsDescription > div:nth-of-type(2) {
-  width: 40%;
+  width: 30%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.ipsDescription > div:nth-of-type(2) > div {
+/* .ipsDescription > div:nth-of-type(2) > div {
   width: 80%;
   min-height: 80%;
   background: #f0f0f0;
   border-radius: 10px;
   padding: 1rem;
-}
+} */
 
 .ipsPropertyHighlight > div {
   display: flex;
@@ -286,22 +297,65 @@
 .ipsPropertyHighlight > div > div:nth-of-type(1) {
   font-weight: 600;
   margin-bottom: 10px;
-  font-size: 1.1rem;
+  font-size: 22px;
+  text-align: center;
 }
 .ipsPropertyHighlight > div > div:nth-of-type(2) {
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 600;
+  text-align: center;
 }
 
 .ipsPropertyHighlight > div > div:nth-of-type(3) {
   margin: 10px 0;
 }
+.ipsPropertyHighlight > div > div:nth-of-type(3) input {
+  width: 75%;
+  border-radius: 4px;
+  background-color: white;
+  margin-left: auto;
+  padding: auto 10px;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(4) {
+  margin: 10px 0;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(4) input {
+  width: 75%;
+  border-radius: 4px;
+  background-color: white;
+  margin-left: auto;
+  padding: auto 10px;
+}
 
-.ipsPropertyHighlight > div > div:nth-of-type(3) li {
+.ipsPropertyHighlight > div > div:nth-of-type(5) span,
+.ipsPropertyHighlight > div > div:nth-of-type(6) span {
   display: flex;
-  align-items: center;
-  margin: 5px 0;
-  font-size: 14px;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(5) span > div,
+.ipsPropertyHighlight > div > div:nth-of-type(6) span > div {
+  display: flex;
+  width: 50%;
+  margin-left: 4px;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(5) span > div button,
+.ipsPropertyHighlight > div > div:nth-of-type(6) span > div button,
+.ipsHightlightButton {
+  background-color: #ff5e00;
+  color: #ffffff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(5) span > div button:hover,
+.ipsPropertyHighlight > div > div:nth-of-type(6) span > div button:hover,
+.ipsHightlightButton {
+  background-color: #e65a00;
+  padding: 0.5rem;
+}
+.ipsPropertyHighlight > div > div:nth-of-type(5) span > div > div,
+.ipsPropertyHighlight > div > div:nth-of-type(6) span > div > div {
+  flex: 1;
+  text-align: center;
 }
 
 .ipsPropertyHighlight {
@@ -314,22 +368,8 @@
   flex-direction: column;
   align-items: center;
 }
-
-.ipsPropertyHighlight div {
-}
-
-.ipsPropertyHighlight button {
-  background-color: #ff5e00;
-  color: #ffffff;
-  padding: 0.2rem 0.8rem;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.ipsPropertyHighlight button:hover {
-  background-color: #e65a00;
+.ipsPropertyHighlight .react-date-picker {
+  margin-left: 10px;
 }
 
 .roomsCountControl {
@@ -396,6 +436,15 @@
 .ipsSurroundings > div > div > div:nth-of-type(2) > div > div:last-of-type {
   color: #232323;
 }
+
+/* .peacefulPaymentContainer {
+  position: absolute;
+  top: 75vh;
+}
+.peacefulPaymentContainer > div {
+  position: sticky;
+  top: 12vh;
+} */
 
 /* Responsive Design - Media Queries */
 
@@ -465,13 +514,24 @@
     gap: 1rem;
   }
 
+  .trekBooking {
+    margin: 0 !important;
+  }
+  .ipsDetailsContainerParent {
+    flex-wrap: wrap;
+  }
   .ipsGallary > img {
     flex: 1 0 calc(50% - 1rem);
+  }
+  .ipsDetailsHeading > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
   }
 }
 
 /* DatePicker Styles */
-.react-date-picker {
+/* .react-date-picker {
   font-family: Arial, Helvetica, sans-serif;
   width: 60%;
   margin-left: 10px;
@@ -544,7 +604,7 @@
 .react-calendar__navigation__label,
 .react-calendar__navigation__arrow {
   color: #fff !important;
-}
+} */
 .fixed-bottom-right {
   position: fixed;
   bottom: 5%;

@@ -35,10 +35,27 @@
 }
 
 .ce-block__content {
-  width: 80%;
-  max-width: 80%;
+  width: 90%;
+  max-width: 90%;
 }
 
 .individualBlog .codex-editor__redactor {
   padding-bottom: 50px !important;
+}
+
+@media (max-width: 769px) {
+  .individualBlogCcontainer {
+    padding: 2rem 0 !important;
+  }
+  .individualBlogHeading {
+    font-size: 22px;
+  }
+  .ce-block__content {
+    width: 100%;
+    max-width: 100%;
+  }
+  .individualBlog {
+    width: 95%;
+    padding: 0 4px;
+  }
 }

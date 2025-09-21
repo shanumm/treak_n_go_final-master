@@ -48,6 +48,8 @@ import Whatsapp from "../../Images/whatsapp.png";
 import PhoneCall from "../../Images/phone-call.png";
 import CheckImg from "../../Images/check.png";
 import emailjs from "@emailjs/browser";
+import { ArrowDropDown } from "@mui/icons-material";
+import PaymentBox from "../../Payment/PaymentBox";
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -117,6 +119,8 @@ export default function IndividualTrek() {
   const itineraryRef = useRef(null);
   const overviewRef = useRef(null);
   const faqRef = useRef(null);
+  const bookingDetailsRef = useRef(null);
+  const enquireRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -358,23 +362,24 @@ export default function IndividualTrek() {
           (isPackageSelect
             ? data?.discountValue
               ? Math.floor(
-                  ((parseInt(data?.price) + parseInt(packagePrice)) *
+                  (parseInt(packagePrice) *
                     (100 - parseInt(data?.discountValue))) /
                     100
                 )
-              : Math.floor((parseInt(data?.price) + parseInt(packagePrice)) / 2)
+              : Math.floor(parseInt(packagePrice))
             : data?.discountValue
             ? Math.floor(
                 (data?.price * (100 - parseInt(data?.discountValue))) / 100
               )
             : Math.floor(data?.price / 2));
+
       const response = await axios({
         method: "post",
         url: `/payments/create?total=${finalSellPrice * 100}`,
       });
 
       const options = {
-        key: __DEV__ ? "rzp_test_pJnACGFAMxAceV" : "PRODUCTION_KEY",
+        key: __DEV__ ? "rzp_test_pJnACGFAMxAceV" : "rzp_test_pJnACGFAMxAceV",
         currency: "INR",
         amount: response.data.amount.toString(),
         order_id: response.data.id,
@@ -620,6 +625,8 @@ export default function IndividualTrek() {
   };
 
   const handlePackageChange = (e) => {
+    scrollToBookingDetails();
+
     const data = JSON.parse(e.target.value);
     setIsPackageSelected(true);
     setPackagePrice(data?.price);
@@ -627,8 +634,11 @@ export default function IndividualTrek() {
   };
 
   useEffect(() => {
-    const checkingg = document.querySelector("#checkingg");
-    if (checkingg) checkingg.value = currentBookingDate;
+    const checkingg = document.querySelectorAll("#checkingg");
+    if (checkingg)
+      checkingg.forEach((checking) => {
+        checking.value = currentBookingDate;
+      });
   }, [currentBookingDate]);
 
   function openModal(img, index) {
@@ -669,6 +679,28 @@ export default function IndividualTrek() {
 
     return htmlDoc.body.innerHTML;
   }
+
+  const scrollToBookingDetails = (gettingEnquire = false) => {
+    if (gettingEnquire) {
+      const yOffset = -window.innerHeight * 0.2;
+      const yPosition =
+        enquireRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+      window.scrollTo({ top: yPosition, behavior: "smooth" });
+    } else if (
+      !gettingEnquire &&
+      data?.packagesOption &&
+      data?.packagesOption.length > 0
+    ) {
+      const yOffset = -window.innerHeight * 0.2;
+      const yPosition =
+        bookingDetailsRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+      window.scrollTo({ top: yPosition, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="individualTrek">
@@ -884,8 +916,8 @@ export default function IndividualTrek() {
               </div> */}
             </div>
             <div className="locationAndDifficulty">
-              <span>
-                <LocationOn /> {data?.area}
+              <span style={{ fontSize: "14px", color: "#7B8FA1" }}>
+                <LocationOn color="#7B8FA1" /> {data?.area}
               </span>
             </div>
 
@@ -1091,7 +1123,7 @@ export default function IndividualTrek() {
                               (100 - parseInt(data?.discountValue))) /
                               100
                           )
-                        : Math.floor(data?.price / 2)}{" "}
+                        : Math.floor(data?.price)}{" "}
                       /-
                     </span>
                   </div>
@@ -1099,17 +1131,19 @@ export default function IndividualTrek() {
                     <div></div>
                     <div></div>
                   </div>
-                  <div
-                    style={{
-                      marginLeft: "10px",
-                      padding: "8px 12px",
-                      background: "#fff5db",
-                      borderRadius: "4px",
-                      color: "#ff5e00",
-                    }}
-                  >
-                    {data?.discountValue || "50"}% off
-                  </div>
+                  {data?.discountValue && (
+                    <div
+                      style={{
+                        marginLeft: "10px",
+                        padding: "8px 12px",
+                        background: "#fff5db",
+                        borderRadius: "4px",
+                        color: "#ff5e00",
+                      }}
+                    >
+                      {data?.discountValue}% off
+                    </div>
+                  )}
                 </div>
               )}
               <div
@@ -1145,14 +1179,21 @@ export default function IndividualTrek() {
                 </a>
               </div>
               <a
-                href={
-                  data?.isBookingAvailable === "Enquiry"
-                    ? "#enquiry"
-                    : "#bookingDeatils"
-                }
+                // href={
+                //   data?.isBookingAvailable === "Enquiry"
+                //     ? "#enquiry"
+                //     : "#bookingDeatils"
+                // }
                 style={{ color: "white" }}
               >
-                <button style={{ marginTop: "10px" }}>
+                <button
+                  onClick={() =>
+                    scrollToBookingDetails(
+                      data?.isBookingAvailable === "Enquiry" ? true : false
+                    )
+                  }
+                  style={{ marginTop: "10px" }}
+                >
                   {data?.isBookingAvailable !== "Enquiry"
                     ? "Book Now"
                     : "Enquire Now"}
@@ -1176,188 +1217,224 @@ export default function IndividualTrek() {
             )}
             {data?.isBookingAvailable != "Enquiry" ||
             data?.isBookingAvailable === null ? (
-              <div id="bookingDeatils" className="trekBooking">
-                <h2>BOOKING</h2>
-                <div>
-                  <h3>Trekking Fee</h3>
-                  <h2>
-                    INR{" "}
-                    {isPackageSelect
-                      ? data?.discountValue
-                        ? Math.floor(
-                            ((parseInt(data?.price) + parseInt(packagePrice)) *
-                              (100 - parseInt(data?.discountValue))) /
-                              100
-                          )
-                        : Math.floor(
-                            (parseInt(data?.price) + parseInt(packagePrice)) / 2
-                          )
-                      : data?.discountValue
-                      ? Math.floor(
-                          (data?.price *
-                            (100 - parseInt(data?.discountValue))) /
-                            100
-                        )
-                      : Math.floor(data?.price / 2)}
-                    /-
-                  </h2>
-                  {isPackageSelect && (
-                    <h5 style={{ fontWeight: 500 }}>Package Selected</h5>
-                  )}
-                </div>
+              // <div
+              //   id="bookingDeatils"
+              //   className="trekBooking"
+              //   ref={bookingDetailsRef}
+              // >
+              //   <h2>BOOKING</h2>
+              //   <div>
+              //     <h3>Trekking Fee</h3>
+              //     <h2>
+              //       INR{" "}
+              //       {isPackageSelect
+              //         ? data?.discountValue
+              //           ? Math.floor(
+              //               (parseInt(packagePrice) *
+              //                 (100 - parseInt(data?.discountValue))) /
+              //                 100
+              //             )
+              //           : Math.floor(parseInt(packagePrice))
+              //         : data?.discountValue
+              //         ? Math.floor(
+              //             (data?.price *
+              //               (100 - parseInt(data?.discountValue))) /
+              //               100
+              //           )
+              //         : Math.floor(data?.price / 2)}
+              //       /-
+              //     </h2>
+              //     {isPackageSelect ? (
+              //       <h5 style={{ fontWeight: 500 }}>
+              //         {packageSelectedData.description.split(";")[0]}
+              //       </h5>
+              //     ) : (
+              //       <h5 style={{ fontWeight: 500 }}>Original Price</h5>
+              //     )}
+              //   </div>
 
-                <div className="dateAndAdult">
-                  <div>
-                    {data?.allDates && data?.allDates?.length > 1 ? null : (
-                      <>
-                        <h5>Select Date</h5>
-                        <input
-                          type="date"
-                          id="checkingg"
-                          min={currentBookingMiniDate}
-                          onChange={(e) =>
-                            setCurrentBookingDate(e.target.value)
-                          }
-                        />
-                      </>
-                    )}
-                  </div>
-                  <div>
-                    <h5>Adult</h5>
-                    <div className="adultPicker">
-                      <div
-                        onClick={() => setAdults(adult + 1)}
-                        className="addAdults"
-                      >
-                        +
-                      </div>
-                      <div>{adult}</div>
-                      <div
-                        onClick={() => {
-                          if (adult > 1) setAdults(adult - 1);
-                        }}
-                        className="addAdults"
-                      >
-                        -
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {data?.addone ? (
-                  <>
-                    <div className="addonDetails">
-                      <h4 onClick={handleAddOnOpen}>
-                        Add Ons <KeyboardArrowDownRounded />
-                      </h4>
-                      <div className="addOnContainer" id="addOnContainerId">
-                        {data?.addone?.map((e, id) => (
-                          <div className="addOnsCheckboxContainer">
-                            <div className="addOnsCheckbox">
-                              <div>
-                                {e?.name} ({`${e?.price}/-`})
-                              </div>
-                              <div>
-                                <DoneIcon
-                                  key={`add${id}`}
-                                  onClick={() => addAddon(e, id)}
-                                />
-                                <CancelIcon
-                                  key={`remove${id}`}
-                                  onClick={() => removeAddon(e, id)}
-                                />
-                                <div
-                                  className="addAdults"
-                                  id={`addOndata${id}`}
-                                >
-                                  0
-                                </div>
-                              </div>
-                            </div>
-                            <div className="isAddonAdded"></div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-                <form onSubmit={displayRazorpay} className="bookingDeatils">
-                  <div>
-                    <input
-                      type="number"
-                      className="mobile"
-                      minLength={10}
-                      maxLength={10}
-                      style={{ marginLeft: "1rem" }}
-                      placeholder="number"
-                      value={bookingNumber}
-                      onChange={(e) => setBookingNumber(e.target.value)}
-                      required
-                    ></input>
-                    <input
-                      type="email"
-                      className="mobile"
-                      style={{ marginLeft: "1rem" }}
-                      placeholder="email"
-                      value={bookingEmail}
-                      onChange={(e) => setBookingEmail(e.target.value)}
-                      required
-                    ></input>
-                  </div>
-                  <div>
-                    <h5>Total Amount</h5>
-                    <div>
-                      {addonsPrice +
-                        adult *
-                          (isPackageSelect
-                            ? data?.discountValue
-                              ? Math.floor(
-                                  ((parseInt(data?.price) +
-                                    parseInt(packagePrice)) *
-                                    (100 - parseInt(data?.discountValue))) /
-                                    100
-                                )
-                              : Math.floor(
-                                  (parseInt(data?.price) +
-                                    parseInt(packagePrice)) /
-                                    2
-                                )
-                            : data?.discountValue
-                            ? Math.floor(
-                                (data?.price *
-                                  (100 - parseInt(data?.discountValue))) /
-                                  100
-                              )
-                            : Math.floor(data?.price / 2))}{" "}
-                      INR
-                    </div>
-                  </div>
-                  <h4 style={{ color: "Red" }}>{mobileError}</h4>
-                  <div className="bookTrekButton">
-                    <button type="submit">
-                      {isPaymentProcessing ? (
-                        <Loader />
-                      ) : user ? (
-                        "Book Now"
-                      ) : (
-                        "Book as guest"
-                      )}
-                    </button>
-                  </div>
-                  <div className="bookTrekButton">
-                    <button>Support</button>
-                  </div>
-                </form>
-              </div>
+              //   <div className="dateAndAdult">
+              //     <div>
+              //       {data?.allDates && data?.allDates?.length > 1 ? null : (
+              //         <>
+              //           <h5>Select Date</h5>
+              //           <input
+              //             type="date"
+              //             id="checkingg"
+              //             min={currentBookingMiniDate}
+              //             onChange={(e) =>
+              //               setCurrentBookingDate(e.target.value)
+              //             }
+              //           />
+              //         </>
+              //       )}
+              //     </div>
+              //     <div>
+              //       <h5>Adult</h5>
+              //       <div className="adultPicker">
+              //         <div
+              //           onClick={() => setAdults(adult + 1)}
+              //           className="addAdults"
+              //         >
+              //           +
+              //         </div>
+              //         <div>{adult}</div>
+              //         <div
+              //           onClick={() => {
+              //             if (adult > 1) setAdults(adult - 1);
+              //           }}
+              //           className="addAdults"
+              //         >
+              //           -
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+              //   {data?.addone ? (
+              //     <>
+              //       <div className="addonDetails">
+              //         <h4 onClick={handleAddOnOpen}>
+              //           Add Ons <KeyboardArrowDownRounded />
+              //         </h4>
+              //         <div className="addOnContainer" id="addOnContainerId">
+              //           {data?.addone?.map((e, id) => (
+              //             <div className="addOnsCheckboxContainer">
+              //               <div className="addOnsCheckbox">
+              //                 <div>
+              //                   {e?.name} ({`${e?.price}/-`})
+              //                 </div>
+              //                 <div>
+              //                   <DoneIcon
+              //                     key={`add${id}`}
+              //                     onClick={() => addAddon(e, id)}
+              //                   />
+              //                   <CancelIcon
+              //                     key={`remove${id}`}
+              //                     onClick={() => removeAddon(e, id)}
+              //                   />
+              //                   <div
+              //                     className="addAdults"
+              //                     id={`addOndata${id}`}
+              //                   >
+              //                     0
+              //                   </div>
+              //                 </div>
+              //               </div>
+              //               <div className="isAddonAdded"></div>
+              //             </div>
+              //           ))}
+              //         </div>
+              //       </div>
+              //     </>
+              //   ) : (
+              //     <></>
+              //   )}
+              //   <form onSubmit={displayRazorpay} className="bookingDeatils">
+              //     <div>
+              //       <input
+              //         type="number"
+              //         className="mobile"
+              //         minLength={10}
+              //         maxLength={10}
+              //         style={{ marginLeft: "1rem" }}
+              //         placeholder="number"
+              //         value={bookingNumber}
+              //         onChange={(e) => setBookingNumber(e.target.value)}
+              //         required
+              //       ></input>
+              //       <input
+              //         type="email"
+              //         className="mobile"
+              //         style={{ marginLeft: "1rem" }}
+              //         placeholder="email"
+              //         value={bookingEmail}
+              //         onChange={(e) => setBookingEmail(e.target.value)}
+              //         required
+              //       ></input>
+              //     </div>
+              //     <div>
+              //       <h5>Total Amount</h5>
+              //       <div>
+              //         {addonsPrice +
+              //           adult *
+              //             (isPackageSelect
+              //               ? data?.discountValue
+              //                 ? Math.floor(
+              //                     (parseInt(packagePrice) *
+              //                       (100 - parseInt(data?.discountValue))) /
+              //                       100
+              //                   )
+              //                 : Math.floor(parseInt(packagePrice))
+              //               : data?.discountValue
+              //               ? Math.floor(
+              //                   (data?.price *
+              //                     (100 - parseInt(data?.discountValue))) /
+              //                     100
+              //                 )
+              //               : Math.floor(data?.price / 2))}
+              //         INR
+              //       </div>
+              //     </div>
+              //     <h4 style={{ color: "Red" }}>{mobileError}</h4>
+              //     <div className="bookTrekButton">
+              //       <button type="submit">
+              //         {isPaymentProcessing ? (
+              //           <Loader />
+              //         ) : user ? (
+              //           "Book Now"
+              //         ) : (
+              //           "Book as guest"
+              //         )}
+              //       </button>
+              //     </div>
+              //     <div className="bookTrekButton">
+              //       <button>
+              //         <a
+              //           href="https://wa.me/+919654749746" // Replace 1234567890 with the desired phone number (including country code)
+              //           target="_blank"
+              //           rel="noopener noreferrer"
+              //           style={{ color: "white" }}
+              //         >
+              //           Support
+              //         </a>
+              //       </button>
+              //     </div>
+              //   </form>
+              // </div>
+              <PaymentBox
+                bookingDetailsRef={bookingDetailsRef}
+                isPackageSelect={isPackageSelect}
+                data={data}
+                packagePrice={packagePrice}
+                packageSelectedData={packageSelectedData}
+                currentBookingMiniDate={currentBookingMiniDate}
+                setCurrentBookingDate={setCurrentBookingDate}
+                adult={adult}
+                setAdults={setAdults}
+                handleAddOnOpen={handleAddOnOpen}
+                addAddon={addAddon}
+                removeAddon={removeAddon}
+                displayRazorpay={displayRazorpay}
+                bookingNumber={bookingNumber}
+                setBookingNumber={setBookingNumber}
+                bookingEmail={bookingEmail}
+                setBookingEmail={setBookingEmail}
+                mobileError={mobileError}
+                isPaymentProcessing={isPaymentProcessing}
+                user={user}
+                addonsPrice={addonsPrice}
+                isTrekPage={true}
+              />
             ) : null}
-            <div id="enquiry" className="knowMoreForm">
+            <div ref={enquireRef} id="enquiry" className="knowMoreForm">
               <form action="https://formspree.io/f/xqknrppk" method="POST">
                 <h5>
                   <span>Enquire About</span>{" "}
                   <span style={{ color: "#ff5e00" }}>{data?.name}</span>
                 </h5>
                 <div>
+                  <input type="hidden" name="trekName" value={data?.name} />
+
                   <input id="name" name="name" type="text" placeholder="Name" />
                   <input
                     id="email"
@@ -1372,10 +1449,12 @@ export default function IndividualTrek() {
                     placeholder="Phone"
                   />
                   <input
+                    style={{ width: "50%" }}
                     type="date"
-                    id="date"
+                    id="checkingg"
+                    min={currentBookingMiniDate}
                     name="date"
-                    placeholder="Date Of Travel"
+                    placeholder="Date"
                   />
                   <input
                     type="text"
@@ -1405,7 +1484,7 @@ export default function IndividualTrek() {
             <div className="taxExtra">
               <div>Need Support</div>
               <hr />
-              <div>trekngotravels@gmail.com</div>
+              <div>contact@trekngo.com</div>
               <div>+91-9654749746</div>
             </div>
             {/* <div className="taxExtra">
@@ -1423,22 +1502,22 @@ export default function IndividualTrek() {
             </div>
           </div>
           <div>
-            {data?.packagesOption && (
+            {data?.packagesOption && data?.packagesOption.length > 0 && (
               <div className="packageOptionBigContainer">
                 {data?.packagesOption && (
                   <div>
-                    <h3>Select Package</h3>
+                    <h3>Available Package options</h3>
                   </div>
                 )}
                 <div className="availablePackageOptionsContainer">
-                  {data?.packagesOption?.map((p) => (
-                    <div className="availablePackageOptions">
+                  {data?.packagesOption?.map((p, index) => (
+                    <div key={index} className="availablePackageOptions">
                       <div className="extraPackage"></div>
                       <div className="availablePackageOptionsDetails">
                         <input
                           type="radio"
-                          id="huey"
-                          name="drone"
+                          id={`package-option-${index}`}
+                          name="package-option"
                           value={JSON.stringify({
                             price: p?.price,
                             description: p?.description,
@@ -1446,20 +1525,73 @@ export default function IndividualTrek() {
                           onChange={(e) => handlePackageChange(e)}
                         />
                         <div>
-                          <div>
-                            <div style={{ fontSize: "18px" }}>
-                              {p?.description}
-                            </div>
-                            <div style={{ fontSize: "14px", color: "gray" }}>
-                              {data?.duration}
-                            </div>
-                          </div>
-
-                          <label
-                            style={{ marginLeft: ".2rem", color: "#ff5e00" }}
+                          <Accordion
+                            style={{ width: "100%" }}
+                            allowZeroExpanded={true}
                           >
-                            INR/- {p?.price} per adult
-                          </label>
+                            <AccordionItem>
+                              <AccordionItemHeading>
+                                <AccordionItemButton
+                                  style={{
+                                    backgroundColor: "transparent",
+                                    border: "none",
+                                    padding: "0",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      flexWrap: "wrap",
+                                      width: "100%",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        fontSize: "18px",
+                                        flex: "1",
+                                        display: "flex",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      {p?.description?.split(";")[0]}{" "}
+                                      <ArrowDropDown
+                                        style={{ color: "green" }}
+                                      />
+                                    </div>
+                                    <label
+                                      style={{
+                                        marginLeft: ".2rem",
+                                        color: "#ff5e00",
+                                        flex: "0 1 8rem",
+                                      }}
+                                    >
+                                      INR/- {p?.price} per adult
+                                    </label>
+                                  </div>
+                                </AccordionItemButton>
+                              </AccordionItemHeading>
+                              <AccordionItemPanel
+                                style={{
+                                  backgroundColor: "transparent",
+                                  border: "none",
+                                  padding: "0",
+                                }}
+                              >
+                                <div
+                                  style={{ fontSize: "14px", color: "gray" }}
+                                >
+                                  {p?.description
+                                    ?.split(";")
+                                    .slice(1)
+                                    .map((item, index) => (
+                                      <>{item}. </>
+                                    ))}
+                                </div>
+                              </AccordionItemPanel>
+                            </AccordionItem>
+                          </Accordion>
                         </div>
                       </div>
                     </div>
@@ -1521,7 +1653,7 @@ export default function IndividualTrek() {
               ref={itineraryRef}
             >
               <h3>Itinerary</h3>
-              <Accordion allowZeroExpanded="true">
+              <Accordion allowMultipleExpanded={true} allowZeroExpanded={true}>
                 {data?.itinerary.map((i, index) => (
                   <AccordionItem>
                     <AccordionItemHeading>
@@ -1535,11 +1667,13 @@ export default function IndividualTrek() {
                           <span
                             style={{
                               whiteSpace: "nowrap",
-                              fontWeight: 500,
+                              fontWeight: 600,
                               marginRight: "2px",
                             }}
                           >{`Day ${index + 1}`}</span>
-                          <span>: {i?.heading}</span>
+                          <span style={{ fontSize: "16px" }}>
+                            : {i?.heading}
+                          </span>
                         </span>
                       </AccordionItemButton>
                     </AccordionItemHeading>
@@ -1600,7 +1734,7 @@ export default function IndividualTrek() {
                 </div>
               </div> */}
             </div>
-            {individualSliderImages?.length ? (
+            {/* {individualSliderImages?.length ? (
               <div className="moreToKnowSlides">
                 <div>
                   <h3>More To Know</h3>
@@ -1626,9 +1760,9 @@ export default function IndividualTrek() {
                     ))}
                 </Splide>
               </div>
-            ) : null}
+            ) : null} */}
 
-            {data?.faq ? (
+            {data?.faq && data?.faq.length > 0 ? (
               <>
                 <div id="faq" className="itnerary scroll-target" ref={faqRef}>
                   <h3>Faq</h3>

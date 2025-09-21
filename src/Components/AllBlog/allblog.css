@@ -132,3 +132,9 @@
 .eachBlog > div div:nth-of-type(5) {
   color: #ff5e00;
 }
+
+@media (max-width: 729px) {
+  .topBlogContentContainer > div:nth-of-type(2) {
+    font-size: 20px;
+  }
+}

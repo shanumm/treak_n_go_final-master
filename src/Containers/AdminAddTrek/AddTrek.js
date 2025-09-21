@@ -42,6 +42,7 @@ export default function AddTrek({ searchQueryData }) {
     useState(null);
   const [completeAddress, setCompleteAddress] = useState("");
   const [numRooms, setNumRooms] = useState(0);
+  const [whatsIncluded, setWhatsIncluded] = useState("");
   const [maxPeople, setMaxPeople] = useState(0);
   const [propertySubheading, setPropertySubheading] = useState("");
   const [propertyPoints, setPropertyPoints] = useState("");
@@ -68,6 +69,8 @@ export default function AddTrek({ searchQueryData }) {
   const [TopAttraction, setTopAttraction] = useState([]);
   const [PublicTransport, setPublicTransport] = useState([]);
   const [campDesc, setCampDesc] = useState("");
+  const [mainLocation, setMainLocation] = useState(""); //
+  const [serviceFees, setServiceFees] = useState(0);
   const [faq, setFaq] = useState([]);
   const [packageOptions, setPackageOption] = useState([]);
   const [additionalPaymentInfo, setAdditionalPaymentInfo] = useState([]);
@@ -77,11 +80,20 @@ export default function AddTrek({ searchQueryData }) {
   const [itineraryNumber, setItineraryNumber] = useState(1);
   const [itineraries, setItineraries] = useState([{ id: 1 }]);
   const [liveBar, setLiveBar] = useState("");
-
+  const [cancellationPoints, setCancellationPoints] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [propertyRules, setPropertyRules] = useState("");
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [extraPersonPrice, setExtraPersonPrice] = useState(1);
+  const [staffList, setStaffList] = useState([
+    {
+      role: "",
+      language: "",
+      availability: "",
+      responsibilities: "",
+    },
+  ]);
 
   const [editSearch, setEditSearch] = useState("");
 
@@ -158,20 +170,43 @@ export default function AddTrek({ searchQueryData }) {
     uploadCategory = document.querySelectorAll(".uploadCategory input");
   });
 
-  useEffect(() => {
-    if (isWinterTrekAvailable) {
+  const handleHideShow = (value, name) => {
+    if (value === "winter") {
       db.collection(`Trek Availability`).doc("winterTrek").set({
         availability: isWinterTrekAvailable,
       });
     }
-  }, [isWinterTrekAvailable]);
-  useEffect(() => {
-    if (isSpiritualTrekAvailable) {
+
+    if (value === "spiritual") {
       db.collection(`Trek Availability`).doc("spiritualTrek").set({
         availability: isSpiritualTrekAvailable,
       });
     }
-  }, [isSpiritualTrekAvailable]);
+  };
+
+  const handleInputChange = (index, property, value) => {
+    const updatedStaffList = [...staffList];
+    updatedStaffList[index][property] = value;
+    setStaffList(updatedStaffList);
+  };
+
+  const addStaff = () => {
+    setStaffList([
+      ...staffList,
+      {
+        role: "",
+        language: "",
+        availability: "",
+        responsibilities: "",
+      },
+    ]);
+  };
+
+  const removeStaff = () => {
+    if (staffList.length > 1) {
+      setStaffList(staffList.slice(0, -1));
+    }
+  };
 
   const addItinerary = () => {
     setItineraryNumber(itineraryNumber + 1);
@@ -351,7 +386,7 @@ export default function AddTrek({ searchQueryData }) {
       var p = {};
       p.description = packageOption[i].value;
       p.price = packageOption2[i].value;
-      packages.push(p);
+      if (p.description.length > 0 && p.price.length > 0) packages.push(p);
     }
     setPackageOption(packages);
     importantNotesInputs.forEach((i) => {
@@ -608,9 +643,13 @@ export default function AddTrek({ searchQueryData }) {
               topAttraction: TopAttraction,
               publicTransport: PublicTransport,
               campDesc: campDesc,
+              mainLocation: mainLocation,
+              serviceFees: serviceFees,
               isBookingAvailable: isBookingAvailable,
               amenities: selectedAmenities,
               numRooms: numRooms,
+              whatsIncluded,
+              cancellationPoints,
               maxPeople: maxPeople,
               nearestHighlight: nearestHighlight,
               rating: rating,
@@ -620,6 +659,8 @@ export default function AddTrek({ searchQueryData }) {
               propertyRules,
               propertySubheading,
               propertyPoints,
+              extraPersonPrice,
+              staffList,
             };
 
             db.collection(`All ${editType}`)
@@ -1034,7 +1075,7 @@ export default function AddTrek({ searchQueryData }) {
           </div>
           <div className="choosePopularTreks">
             <div>
-              <h4>Choose Popular Treks</h4>
+              <h4>Choose Popular Treks (thats shows on the landing page)</h4>
               <select
                 name="choosePopularTrek"
                 id=""
@@ -1087,6 +1128,9 @@ export default function AddTrek({ searchQueryData }) {
                 <option value="show">Show</option>
                 <option value="hide">Hide</option>
               </select>
+              <button onClick={() => handleHideShow("winter", value)}>
+                Update
+              </button>
             </div>
             <div>
               <h4>Spiritual Trek</h4>
@@ -1104,6 +1148,9 @@ export default function AddTrek({ searchQueryData }) {
                 <option value="show">Show</option>
                 <option value="hide">Hide</option>
               </select>
+              <button onClick={() => handleHideShow("spiritual", value)}>
+                Update
+              </button>
             </div>
           </div>
 
@@ -1281,7 +1328,7 @@ export default function AddTrek({ searchQueryData }) {
                       )}
                     </div>
                     <div className="PackageOption">
-                      <h4>Add Package Option</h4>
+                      <h4>Add Package Option (add desc after ";")</h4>
                       <div className="allPackages">
                         <div className="eachPackage">
                           <input
@@ -1388,6 +1435,22 @@ export default function AddTrek({ searchQueryData }) {
                         type="text"
                       />
                     </div>
+                    <div>
+                      <h4>Main Location</h4>
+                      <input
+                        type="text"
+                        value={mainLocation}
+                        onChange={(e) => setMainLocation(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <h4>Service Fees</h4>
+                      <input
+                        type="text"
+                        value={serviceFees}
+                        onChange={(e) => setServiceFees(e.target.value)}
+                      />
+                    </div>
                     {/* Number of Rooms */}
                     <div>
                       <h4>Number of Rooms</h4>
@@ -1395,6 +1458,30 @@ export default function AddTrek({ searchQueryData }) {
                         type="number"
                         value={numRooms}
                         onChange={(e) => setNumRooms(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <h4>Extra Person Price</h4>
+                      <input
+                        type="number"
+                        value={extraPersonPrice}
+                        onChange={(e) => setExtraPersonPrice(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <h4>Cancellation Points (seperate by ;)</h4>
+                      <input
+                        type="text"
+                        value={cancellationPoints}
+                        onChange={(e) => setCancellationPoints(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <h4>Whats Included (seperate by ;)</h4>
+                      <input
+                        type="text"
+                        value={whatsIncluded}
+                        onChange={(e) => setWhatsIncluded(e.target.value)}
                       />
                     </div>
                     <div>
@@ -1422,6 +1509,85 @@ export default function AddTrek({ searchQueryData }) {
                         value={propertySubheading}
                         onChange={(e) => setPropertySubheading(e.target.value)}
                       />
+                    </div>
+                    <div>
+                      <h4>Staff</h4>
+                      {staffList.map((staff, index) => (
+                        <div key={index}>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <label htmlFor={`role-${index}`}>Role:</label>
+                            <input
+                              type="text"
+                              id={`role-${index}`}
+                              value={staff.role}
+                              onChange={(e) =>
+                                handleInputChange(index, "role", e.target.value)
+                              }
+                            />
+                          </div>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <label htmlFor={`language-${index}`}>
+                              Point 1:
+                            </label>
+                            <input
+                              type="text"
+                              id={`language-${index}`}
+                              value={staff.language}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "language",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <label htmlFor={`availability-${index}`}>
+                              Point 2:
+                            </label>
+                            <input
+                              type="text"
+                              id={`availability-${index}`}
+                              value={staff.availability}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "availability",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <label htmlFor={`responsibilities-${index}`}>
+                              Point 3:
+                            </label>
+                            <input
+                              type="text"
+                              id={`responsibilities-${index}`}
+                              value={staff.responsibilities}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "responsibilities",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <button onClick={addStaff}>Add</button>
+                      <button onClick={removeStaff}>Remove</button>
                     </div>
                     <div>
                       <h4>About the Property Points (seperate by ";")</h4>
@@ -1609,6 +1775,7 @@ export default function AddTrek({ searchQueryData }) {
                           <option value="no" disabled selected>
                             Select
                           </option>
+                          <option value="0">0%</option>
                           <option value="5">5%</option>
                           <option value="10">10%</option>
                           <option value="15">15%</option>

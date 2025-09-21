@@ -865,7 +865,6 @@
   transition: all 0.2s ease-in-out;
 }
 .addOnContainerActive {
-  min-height: 10vh;
   height: auto;
 }
 .addOnsCheckboxContainer {
@@ -894,7 +893,7 @@
   width: 90%;
 }
 
-.bookingDeatils > div:nth-of-type(2) {
+.bookingDeatils > div:is(:nth-of-type(2), :nth-of-type(1)) {
   width: 90%;
   padding: 0.6rem 0.6rem;
   display: flex;
@@ -1185,6 +1184,25 @@
     margin: 0 1rem;
   }
 
+  .ipsGallary > div > img:nth-of-type(1) {
+    grid-column: 1/3;
+    grid-row: 1/3;
+  }
+  .ipsGallary > div > img:nth-of-type(2) {
+    grid-column: 1/3;
+    grid-row: 3/5;
+  }
+  .ipsGallary > div > img:nth-of-type(3) {
+    grid-column: 3/5;
+    grid-row: 1 / span 2;
+  }
+  .ipsGallary > div > img:nth-of-type(4) {
+    display: none;
+  }
+  .ipsGallary > div > div {
+    grid-column: 3 / 5;
+    grid-row: 3 / span 2;
+  }
   .availablePackageOptions > div:nth-of-type(2) > div:nth-of-type(1) {
     flex-wrap: wrap;
   }
@@ -1415,7 +1433,7 @@
 }
 .importantNote p {
   padding: 0.5rem 1rem;
-  font-size: var(--primaryText) !important;
+  font-size: 14px !important;
 }
 
 @media (max-width: 1000px) {
@@ -1521,7 +1539,7 @@
     font-size: 14px;
   }
   .individualTrek h3 {
-    font-size: 17px !important;
+    font-size: 22px !important;
   }
   .addOnsCheckbox {
     width: 100%;
@@ -1549,7 +1567,14 @@
     justify-content: space-around;
   }
   .overViewContainer > div li div:nth-of-type(1) {
+    flex: 1 1 10rem;
+    text-align: center;
+    font-weight: 600;
     width: auto;
+  }
+  .overViewContainer > div li div:nth-of-type(2) {
+    flex: 1 1 10rem;
+    text-align: center;
   }
   .label-toggle {
     padding: 16px 0;
@@ -1562,9 +1587,11 @@
     width: 100%;
   }
   .overViewContainer > div li {
-    width: 90%;
+    width: 100%;
+    margin: 0;
     font-size: 14px;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
   .accordion {
     width: 100%;
@@ -1660,6 +1687,28 @@
   }
 }
 @media (max-width: 600px) {
+  .paymentModalImgContainer {
+    flex-wrap: wrap;
+  }
+  .paymentModalSubHeading {
+    font-size: 14px;
+  }
+  .paymentModalImgContent {
+    margin: 0 !important;
+  }
+  .paymentModalParent {
+    width: 100% !important;
+    padding: 10px !important;
+  }
+  .paymentModalImg {
+    width: 100% !important;
+  }
+  .paymentModalContainer {
+    flex-direction: column-reverse;
+  }
+  .paymentModalContainer > div {
+    margin-top: 1rem;
+  }
   .individualTrekTop {
     padding: 0 0 1rem 0;
   }

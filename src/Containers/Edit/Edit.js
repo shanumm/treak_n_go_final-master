@@ -49,7 +49,7 @@ export default function Edit() {
   const [packageOptions, setPackageOption] = useState([]);
   const [itineraryNumber, setItineraryNumber] = useState(1);
   const [itineraries, setItineraries] = useState([]);
-  const [rating, setRating] = useState();
+  const [rating, setRating] = useState(4);
   const getFaq = [];
   const packages = [];
   const getImportantNotes = [];
@@ -332,7 +332,7 @@ export default function Edit() {
 
       p.description = packageOption[i].value;
       p.price = packageOption2[i].value;
-      packages.push(p);
+      if (p.description.length > 0 && p.price.length > 0) packages.push(p);
     }
     setPackageOption(packages);
 
@@ -431,8 +431,8 @@ export default function Edit() {
             durationDays: durationDays,
             isBookingAvailable: isBookingAvailable,
             packagesOption: packageOptions,
-            rating: rating,
-            discountValue,
+            rating: rating || 4,
+            discountValue: discountValue || "no",
           };
           if (predefinedDates) {
             trekData.allDates = allDates;
@@ -456,8 +456,6 @@ export default function Edit() {
           });
 
           trekData.allSelectedCategory = allSelectedCategory;
-
-          console.log(trekData, ">>>><<<<");
           if (uploadCategorySelectedLength > 0) {
             uploadCategory.forEach((m) => {
               if (m.checked) {
@@ -602,7 +600,11 @@ export default function Edit() {
     setName(editT?.name);
   };
   const addSameRating = () => {
-    setRating(editT?.rating);
+    if (editT?.rating) {
+      setRating(editT?.rating);
+    } else {
+      setRating(4);
+    }
   };
   const addSamePrice = () => {
     setPrice(editT?.price);
@@ -692,8 +694,13 @@ export default function Edit() {
   };
 
   const setHigh = () => {
-    setHighlights(editT?.highlights);
+    if (Array.isArray(editT?.highlights)) {
+      setHighlights(editT?.highlights.join(" "));
+    } else {
+      setHighlights(editT?.highlights);
+    }
   };
+
   const setInc = () => {
     const I = document.querySelectorAll(".addInclusion > input");
     for (let i = 0; i < editT?.inclusion?.length; i++) {
@@ -723,8 +730,6 @@ export default function Edit() {
       const have_add_one = document.getElementById("have-add-ons");
       have_add_one.checked = true;
     }
-    console.log(editT?.allDates, ">>>>");
-    console.log(editT?.allDates?.length, ">>><<<<");
     if (editT?.allDates?.length > 0) {
       document.getElementById("yesDate").checked = true;
       setPredefinedDates(true);
@@ -992,7 +997,7 @@ export default function Edit() {
                   )}
                 </div>
                 <div className="PackageOption">
-                  <h4>Add Package Option</h4>
+                  <h4>Add Package Option (add desc after ";")</h4>
                   <div className="allPackages">
                     {editT?.packagesOption &&
                       editT?.packagesOption.map((m) => (
@@ -1142,17 +1147,20 @@ export default function Edit() {
                         <input type="text" placeholder={m} />
                       </>
                     ))} */}
-                    <ReactQuill
-                      theme="snow"
-                      value={
-                        highlights.length === 0 ? editT?.highlights : highlights
-                      }
-                      onChange={(e) => {
-                        console.log(e);
-                        setHighlights(e);
-                      }}
-                      modules={{ toolbar: toolbarOptions }}
-                    />
+                    {highlights && highlights.length > 0 && (
+                      <ReactQuill
+                        theme="snow"
+                        value={
+                          highlights && highlights.length === 0
+                            ? editT?.highlights
+                            : highlights
+                        }
+                        onChange={(e) => {
+                          setHighlights(e);
+                        }}
+                        modules={{ toolbar: toolbarOptions }}
+                      />
+                    )}
                   </div>
 
                   <button onClick={setHigh}>Add Same</button>
@@ -1172,6 +1180,7 @@ export default function Edit() {
                       <option value="no" disabled selected>
                         Select
                       </option>
+                      <option value="0">0%</option>
                       <option value="5">5%</option>
                       <option value="10">10%</option>
                       <option value="15">15%</option>

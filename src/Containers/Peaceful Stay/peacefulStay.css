@@ -17,6 +17,7 @@
   text-transform: capitalize;
   text-align: center;
   padding: 1rem 0 0 0;
+  font-weight: 700;
 }
 
 .peacefulStayImage > img {
@@ -92,9 +93,10 @@
 }
 .peacefulStayPageStartingFrom > div:nth-of-type(1) {
   font-size: 12px;
+  text-transform: capitalize;
 }
 .peacefulStayPageStartingFrom > div:nth-of-type(2) {
-  font-size: 38px;
+  font-size: 28px;
   color: #ff5e00;
 }
 
@@ -111,5 +113,11 @@
   .peacefulStayContainerImages > div {
     margin-right: 0;
     margin-bottom: 1rem;
+  }
+  .peacefulStayContainer > div:nth-of-type(1) {
+    font-size: 24px;
+  }
+  .peacefulStayContainer > div:nth-of-type(2) {
+    font-size: 14px;
   }
 }

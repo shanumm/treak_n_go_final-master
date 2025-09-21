@@ -191,7 +191,15 @@ export default function EachTrek({
           </div>
           <div className="eachTrekDetailsPrice">
             <div>Price -</div>
-            <div> {data?.price} ₹</div>
+            <div>
+              {" "}
+              {data?.discountValue
+                ? Math.floor(
+                    (data?.price * (100 - parseInt(data?.discountValue))) / 100
+                  )
+                : Math.floor(data?.price)}{" "}
+              ₹
+            </div>
           </div>
           <div className="eachTrekDetailsButton">
             <Link
@@ -203,7 +211,7 @@ export default function EachTrek({
                     }?scrollTo=enquiry`
               }
             >
-              <button>Send Enquiry</button>
+              <button className="sendEnquiryButton">Send Enquiry</button>
             </Link>
             <Link
               to={
@@ -231,7 +239,7 @@ export default function EachTrek({
   } else {
     return (
       <>
-        {data?.name.toLowerCase().includes(editSearch) ? (
+        {data?.name.toLowerCase().includes(editSearch.toLowerCase()) ? (
           <div
             className="eachTrekContainer"
             style={
@@ -306,7 +314,7 @@ export default function EachTrek({
                         }?scrollTo=enquiry`
                   }
                 >
-                  <button>Send Enquiry</button>
+                  <button className="sendEnquiryButton">Send Enquiry</button>
                 </Link>
                 <Link
                   to={

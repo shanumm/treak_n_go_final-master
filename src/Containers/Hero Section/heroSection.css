@@ -170,6 +170,10 @@
 }
 
 @media (max-width: 768px) {
+  .headerSearch button {
+    display: none;
+  }
+
   .glide {
     height: 30vh;
     position: absolute !important;
@@ -192,10 +196,12 @@
   .glide__slides img {
     width: 100%;
     object-fit: cover;
+    object-position: left;
   }
 }
 @media (max-width: 512px) {
   .headerSearch {
+    display: none;
     bottom: 12%;
   }
 }

@@ -14,6 +14,7 @@ export default function PopularTrekCards({ data, id }) {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg|JPEG)$/.test(url);
   };
 
+
   const img =
     "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80";
   return (
@@ -63,7 +64,12 @@ export default function PopularTrekCards({ data, id }) {
             style={{ display: "flex", flexWrap: "wrap" }}
           >
             <div style={{ flex: "1 1 5rem" }} className="popularTrekCardPrice">
-              <span style={{ marginRight: ".4rem" }}>₹</span> {data?.price}
+              <span style={{ marginRight: ".4rem" }}>₹</span>{" "}
+              {data?.discountValue
+                ? Math.floor(
+                    (data?.price * (100 - parseInt(data?.discountValue))) / 100
+                  )
+                : Math.floor(data?.price)}
             </div>
             <Link
               to={!id ? `/treks/${data?.name}` : `/treks/${data?.name}=${id}`}

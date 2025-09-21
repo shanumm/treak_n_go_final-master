@@ -7,7 +7,7 @@ export default function PeacefulStay() {
     navigation(url);
   };
   return (
-    <div className="peacefulStay">
+    <div id="peacefulStay" className="peacefulStay">
       <div className="peacefulStayImage">
         <img
           src="https://cdn.pixabay.com/photo/2017/08/02/14/26/winter-landscape-2571788_960_720.jpg"
@@ -22,7 +22,7 @@ export default function PeacefulStay() {
         <div
           style={{
             textAlign: "center",
-            marginBottom: "10px",
+            marginBottom: "20px",
             fontSize: "16px",
             color: "gray",
           }}

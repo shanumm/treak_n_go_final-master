@@ -98,7 +98,6 @@
 }
 
 .eachTrekDetails {
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -150,6 +149,7 @@
 .eachTrekDetailsName > * {
   text-align: center;
   font-size: var(--secondaryText);
+  word-break: break-word;
 }
 
 .eachTrekDetailsDuration {
@@ -208,5 +208,10 @@
 @media (max-width: 768px) {
   .eachTrekContainer {
     flex: 1 1 9rem;
+  }
+}
+@media (max-width: 400px) {
+  .sendEnquiryButton {
+    display: none;
   }
 }

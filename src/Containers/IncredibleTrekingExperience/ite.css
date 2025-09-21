@@ -10,6 +10,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding-bottom: 2rem;
 }
 
 .iteHeading {
@@ -213,7 +214,7 @@
 
   .ite2Details > div:nth-of-type(1) {
     width: 100%;
-    margin: 1rem 0;
+    margin: 0rem 0;
   }
   .ite {
     padding-top: 1rem;
@@ -268,7 +269,7 @@
     background-position: top;
   }
   .ite2Heading {
-    padding: 1rem 0;
+    padding: 0rem 0 1rem 0;
     font-size: var(--subHeading);
   }
 }

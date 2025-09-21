@@ -166,6 +166,8 @@
     margin: 0;
     min-width: 10rem;
     background: transparent;
+    overflow: hidden;
+    width: 10rem;
   }
   .popularTrekCardDetails {
     background-color: white;
@@ -196,12 +198,15 @@
   }
   .popularTrekCardImage {
     border-radius: 25px;
+    height: 10rem;
   }
   .popularTrekCardName {
     font-size: 14px;
+    white-space: nowrap;
   }
   .popularTrekCardLocation {
     font-size: 12px;
+    white-space: nowrap;
   }
   .popularTrekCardDuration,
   .popularTrekCardPrice {

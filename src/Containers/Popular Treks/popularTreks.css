@@ -76,6 +76,8 @@
   .popularTreksHeading {
     font-size: 24px;
     padding-bottom: 4px;
+
+    margin-left: auto;
   }
   .popularTrekCards {
     justify-content: center;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 
 export default function EditIndividualCamps() {
   const popularAmenities = [
@@ -29,10 +29,14 @@ export default function EditIndividualCamps() {
   const [data, setData] = useState(null);
   const [name, setName] = useState("");
   const [campDesc, setCampDesc] = useState("");
+  const [serviceFees, setServiceFees] = useState(0);
+  const [mainLocation, setMainLocation] = useState("");
   const [completeAddress, setCompleteAddress] = useState("");
   const [numRooms, setNumRooms] = useState(0);
   const [maxPeople, setMaxPeople] = useState(0);
   const [nearestHighlight, setNearestHighlight] = useState("");
+  const [whatsIncluded, setWhatsIncluded] = useState("");
+  const [cancellationPoints, setCancellationPoints] = useState("");
   const [propertySubheading, setPropertySubheading] = useState("");
   const [propertyPoints, setPropertyPoints] = useState("");
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -48,7 +52,16 @@ export default function EditIndividualCamps() {
   const [checkOut, setCheckOut] = useState("");
   const [propertyRules, setPropertyRules] = useState("");
   const [rating, setRating] = useState(4);
+  const [extraPersonPrice, setExtraPersonPrice] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [staffList, setStaffList] = useState([
+    {
+      role: "",
+      language: "",
+      availability: "",
+      responsibilities: "",
+    },
+  ]);
 
   const addWhatsNearby = () => {
     const whatsNearby = document.querySelector(".whatsNearby");
@@ -116,10 +129,69 @@ export default function EditIndividualCamps() {
     setImage(updatedImages);
   };
 
+  const onImageChange = (e) => {
+    const len = e.target.files.length;
+    if (name === "") {
+      window.alert("Please provide a trek name");
+    } else {
+      for (let i = 0; i < len; i++) {
+        uploadImage(e.target.files[i], i, len);
+      }
+    }
+  };
+
+  const uploadImage = async (img, i, len = 0) => {
+    const images = document.querySelectorAll(".trekkingImages > input");
+    const storageRef = storage.ref();
+    const fileRef = storageRef.child(`${name}/${i}`);
+    await fileRef.put(img);
+    const c = await fileRef.getDownloadURL();
+    images[i].value = c ? c : "";
+    let finalImages = new Array(10).fill("");
+
+    images &&
+      images.forEach((img, index) => {
+        if (img.value.includes("https")) {
+          finalImages[index] = img.value;
+        }
+      });
+
+    setImage(finalImages);
+  };
+
+  useEffect(() => {
+    console.log(image, "testing");
+  }, [image]);
+
+  const handleInputChange = (index, property, value) => {
+    const updatedStaffList = [...staffList];
+    updatedStaffList[index][property] = value;
+    setStaffList(updatedStaffList);
+  };
+
+  const addStaff = () => {
+    setStaffList([
+      ...staffList,
+      {
+        role: "",
+        language: "",
+        availability: "",
+        responsibilities: "",
+      },
+    ]);
+  };
+
+  const removeStaff = () => {
+    if (staffList.length > 1) {
+      setStaffList(staffList.slice(0, -1));
+    }
+  };
+
   useEffect(() => {
     if (data) {
       setName(data?.name);
       setCampDesc(data?.campDesc);
+
       setNumRooms(data?.numRooms);
       setCompleteAddress(data?.completeAddress);
       setMaxPeople(data?.maxPeople);
@@ -129,21 +201,37 @@ export default function EditIndividualCamps() {
       setPublicTransport(data?.publicTransport || []);
       setSelectedAmenities(data?.amenities || []);
       setPrice(data?.price || 0);
+      setMainLocation(data?.mainLocation || "");
+      setServiceFees(data?.serviceFees || 0);
       setEditType(data?.category || "Camps");
       setArea(data?.area || "");
       setImage(data?.images || []);
       setIsBookingAvailable(data?.isBookingAvailable || false);
       setRating(data?.rating || 4);
+      setWhatsIncluded(data?.whatsIncluded || "");
+      setCancellationPoints(data?.cancellationPoints || "");
       setCheckIn(data?.checkIn || "");
       setCheckOut(data?.checkOut || "");
       setPropertyRules(data?.propertyRules || "");
       setPropertyPoints(data?.propertyPoints || "");
+      setExtraPersonPrice(data?.extraPersonPrice || 1);
       setPropertySubheading(data?.propertySubheading || "");
+      setStaffList(
+        data?.staffList || [
+          {
+            role: "",
+            language: "",
+            availability: "",
+            responsibilities: "",
+          },
+        ]
+      );
     }
   }, [data]);
 
   const updateData = () => {
     setIsLoading(true);
+
     if (id) {
       const idArray = id.split("-");
       if (idArray.length > 0) {
@@ -154,6 +242,8 @@ export default function EditIndividualCamps() {
               Details: {
                 name,
                 campDesc,
+                mainLocation,
+                serviceFees,
                 numRooms,
                 completeAddress,
                 maxPeople,
@@ -168,11 +258,15 @@ export default function EditIndividualCamps() {
                 images: image,
                 isBookingAvailable,
                 rating,
+                whatsIncluded,
+                cancellationPoints,
                 checkIn,
                 checkOut,
                 propertyRules,
                 propertySubheading,
                 propertyPoints,
+                staffList,
+                extraPersonPrice,
               },
             },
             { merge: true }
@@ -209,6 +303,8 @@ export default function EditIndividualCamps() {
                   Details: {
                     name,
                     campDesc,
+                    mainLocation,
+                    serviceFees,
                     numRooms,
                     completeAddress,
                     maxPeople,
@@ -223,11 +319,15 @@ export default function EditIndividualCamps() {
                     images: image,
                     isBookingAvailable,
                     rating,
+                    whatsIncluded,
+                    cancellationPoints,
                     checkIn,
                     checkOut,
                     propertyRules,
                     propertySubheading,
                     propertyPoints,
+                    staffList,
+                    extraPersonPrice,
                   },
                 },
                 { merge: true }
@@ -276,6 +376,24 @@ export default function EditIndividualCamps() {
         />
       </div>
       <div>
+        <h4>Service Fees</h4>
+        <input
+          value={serviceFees}
+          onChange={(e) => setServiceFees(e.target.value)}
+          type="text"
+        />
+      </div>
+      <div>
+        <h4>Main Location</h4>
+        <textarea
+          rows="10"
+          cols="58"
+          value={mainLocation}
+          onChange={(e) => setMainLocation(e.target.value)}
+          type="text"
+        />
+      </div>
+      <div>
         <h4>Price</h4>
         <input
           type="number"
@@ -292,7 +410,7 @@ export default function EditIndividualCamps() {
         </select>
       </div>
       <div>
-        <h4>Area</h4>
+        <h4>property location</h4>
         <input
           type="text"
           value={area}
@@ -320,6 +438,22 @@ export default function EditIndividualCamps() {
           onChange={(e) => setRating(parseFloat(e.target.value))}
         />
       </div>
+      <div>
+        <h4>What's Included (seperate by ;)</h4>
+        <input
+          type="text"
+          value={whatsIncluded}
+          onChange={(e) => setWhatsIncluded(e.target.value)}
+        />
+      </div>
+      <div>
+        <h4>Cancellation Points (seperate by ;)</h4>
+        <input
+          type="text"
+          value={cancellationPoints}
+          onChange={(e) => setCancellationPoints(e.target.value)}
+        />
+      </div>
       {/* Number of Rooms */}
       <div>
         <h4>Number of Rooms</h4>
@@ -327,6 +461,14 @@ export default function EditIndividualCamps() {
           type="number"
           value={numRooms}
           onChange={(e) => setNumRooms(e.target.value)}
+        />
+      </div>
+      <div>
+        <h4>Extra Person Price</h4>
+        <input
+          type="number"
+          value={extraPersonPrice}
+          onChange={(e) => setExtraPersonPrice(e.target.value)}
         />
       </div>
       <div>
@@ -362,6 +504,61 @@ export default function EditIndividualCamps() {
           onChange={(e) => setPropertySubheading(e.target.value)}
         />
       </div>
+
+      <div>
+        <h4>Staff</h4>
+        {staffList.map((staff, index) => (
+          <div key={index}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor={`role-${index}`}>Role:</label>
+              <input
+                type="text"
+                id={`role-${index}`}
+                value={staff.role}
+                onChange={(e) =>
+                  handleInputChange(index, "role", e.target.value)
+                }
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor={`language-${index}`}>Point 1:</label>
+              <input
+                type="text"
+                id={`language-${index}`}
+                value={staff.language}
+                onChange={(e) =>
+                  handleInputChange(index, "language", e.target.value)
+                }
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor={`availability-${index}`}>Point 2:</label>
+              <input
+                type="text"
+                id={`availability-${index}`}
+                value={staff.availability}
+                onChange={(e) =>
+                  handleInputChange(index, "availability", e.target.value)
+                }
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor={`responsibilities-${index}`}>Point 3:</label>
+              <input
+                type="text"
+                id={`Responsibilities-${index}`}
+                value={staff.responsibilities}
+                onChange={(e) =>
+                  handleInputChange(index, "responsibilities", e.target.value)
+                }
+              />
+            </div>
+          </div>
+        ))}
+        <button onClick={addStaff}>Add</button>
+        <button onClick={removeStaff}>Remove</button>
+      </div>
+
       <div>
         <h4>About the Property Points (seperate by ";")</h4>
         <textarea
@@ -371,9 +568,16 @@ export default function EditIndividualCamps() {
         />
       </div>
       <div className="importantNotes">
-        <h4>Whats Nearby</h4>
+        <h4>Whats Nearby (seperate by ;)</h4>
         <div className="whatsNearby">
-          {whatsNearby.map((item, index) => (
+          <input
+            type="text"
+            value={whatsNearby.join(";")}
+            onChange={(e) => {
+              setWhatsNearby(e.target.value.split(";"));
+            }}
+          />
+          {/* {whatsNearby.map((item, index) => (
             <input
               key={index}
               type="text"
@@ -384,19 +588,26 @@ export default function EditIndividualCamps() {
                 setWhatsNearby(updatedWhatsNearby);
               }}
             />
-          ))}
+          ))} */}
         </div>
-        <button onClick={addWhatsNearby} className="addMoreimportantNotes">
+        {/* <button onClick={addWhatsNearby} className="addMoreimportantNotes">
           Add More
         </button>
         <button onClick={removeWhatsNearby} className="addMoreimportantNotes">
           Remove
-        </button>
+        </button> */}
       </div>
       <div className="importantNotes">
-        <h4>Top Attractions</h4>
+        <h4>Top Attractions (seperate by ;)</h4>
         <div className="topAttraction">
-          {topAttraction.map((item, index) => (
+          <input
+            type="text"
+            value={topAttraction.join(";")}
+            onChange={(e) => {
+              setTopAttraction(e.target.value.split(";"));
+            }}
+          />
+          {/* {topAttraction.map((item, index) => (
             <input
               key={index}
               type="text"
@@ -407,19 +618,26 @@ export default function EditIndividualCamps() {
                 setTopAttraction(updatedTopAttraction);
               }}
             />
-          ))}
+          ))} */}
         </div>
-        <button onClick={addTopAttraction} className="addMoreimportantNotes">
+        {/* <button onClick={addTopAttraction} className="addMoreimportantNotes">
           Add More
         </button>
         <button onClick={removeTopAttraction} className="addMoreimportantNotes">
           Remove
-        </button>
+        </button> */}
       </div>
       <div className="importantNotes">
-        <h4>Public Transport</h4>
+        <h4>Public Transport (seperate by ;)</h4>
         <div className="publicTransport">
-          {publicTransport.map((item, index) => (
+          <input
+            type="text"
+            value={publicTransport.join(";")}
+            onChange={(e) => {
+              setPublicTransport(e.target.value.split(";"));
+            }}
+          />
+          {/* {publicTransport.map((item, index) => (
             <input
               key={index}
               type="text"
@@ -430,17 +648,17 @@ export default function EditIndividualCamps() {
                 setPublicTransport(updatedPublicTransport);
               }}
             />
-          ))}
+          ))} */}
         </div>
-        <button onClick={addPublicTransport} className="addMoreimportantNotes">
+        {/* <button onClick={addPublicTransport} className="addMoreimportantNotes">
           Add More
-        </button>
-        <button
+        </button> */}
+        {/* <button
           onClick={removePublicTransport}
           className="addMoreimportantNotes"
         >
           Remove
-        </button>
+        </button> */}
       </div>
       <div className="amenitiesSection">
         <h4>Amenities</h4>
@@ -506,9 +724,10 @@ export default function EditIndividualCamps() {
               key={index}
               type="text"
               value={imgLink}
-              onChange={(e) => handleImageChange(e, index)}
+              // onChange={(e) => handleImageChange(e, index)}
             />
           ))}
+          <input type="file" onChange={onImageChange} multiple />
         </div>
       </div>
       <div>

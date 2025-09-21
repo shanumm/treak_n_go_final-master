@@ -1,7 +1,9 @@
 .why-trekngo {
   text-align: center;
-  padding: 1rem 0;
+  padding: 2rem 0;
   display: flex;
+  width: 90%;
+  margin: auto;
   justify-content: space-around;
   flex-wrap: wrap;
 }
@@ -38,5 +40,11 @@
     flex: 0 0 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+  .why-trekngo {
+    font-size: 18px;
+  }
+  .why-trekngo > * {
+    font-size: 80%;
   }
 }

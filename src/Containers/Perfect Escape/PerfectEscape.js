@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Filter from "../../Components/Filter";
 import { db } from "../../firebase";
+import LongTrekImage from "../../Images/LongTrek.jpg";
 import AllTreks from "../Treks/AllTreks";
 import "./perfectEscape.css";
 import { Star } from "@material-ui/icons";
@@ -54,9 +55,9 @@ export default function PerfectEscape() {
     "https://cdn.pixabay.com/photo/2016/05/24/16/48/mountains-1412683_960_720.png";
   return (
     <div className="perfectEscape">
-      <div className="perfectEscapeBanner">
-        <img src={img} alt="" />
-      </div>
+      {/* <div className="perfectEscapeBanner">
+        <img src={id === "longTreks" ? LongTrekImage : img} alt="" />
+      </div> */}
       <div className="perfectEscapeTop">
         <div className="perfectEscapeHeading">
           <div>
@@ -143,7 +144,7 @@ export default function PerfectEscape() {
           </div> */}
           <div className="trekReviews">
             <h3>
-              Google Reviews  4.9
+              Google Reviews 4.9
               <span>
                 {" "}
                 <Star style={{ color: "#ff5e00" }} />

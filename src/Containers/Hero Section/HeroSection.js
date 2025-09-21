@@ -6,6 +6,7 @@ import "@glidejs/glide/dist/css/glide.core.min.css";
 import "@glidejs/glide/dist/css/glide.theme.min.css";
 
 import ImageBanner from "../Treks/trekBannerBg.jpg";
+import ImageBannerSmall from "../../Images/finalHomeBanner.jpg";
 
 import { Link, useNavigate } from "react-router-dom";
 import Banner_1 from "../../Images/banner-1.jpg";
@@ -21,7 +22,29 @@ export default function HeroSection({ data }) {
   const [b1, setB1] = useState("");
   const [b2, setB2] = useState("");
   const [b3, setB3] = useState("");
+  const [selectedImage, setSelectedImage] = useState(ImageBanner);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 769) {
+        setSelectedImage(ImageBannerSmall);
+      } else {
+        setSelectedImage(ImageBanner);
+      }
+    };
+
+    // Call handleResize initially to set the image based on the current window width
+    handleResize();
+
+    // Attach the resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup: remove the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const heroSectionGlide = new Glide(".glide").mount();
@@ -60,7 +83,7 @@ export default function HeroSection({ data }) {
               <img src={b2} alt="" />
             </li> */}
             <li class="glide__slide">
-              <img src={ImageBanner} alt="" />
+              <img src={selectedImage} alt="" />
             </li>
           </ul>
         </div>

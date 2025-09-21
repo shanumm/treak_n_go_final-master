@@ -215,7 +215,10 @@ export default function IndividualBlog() {
   };
 
   return (
-    <div style={{ background: "#F7F7F8", padding: "2rem" }}>
+    <div
+      className="individualBlogCcontainer"
+      style={{ background: "#F7F7F8", padding: "2rem" }}
+    >
       <div className="individualBlog">
         <div className="individualBlogHeading">{individualBlog?.title}</div>
         <div id="editorjs"></div>

@@ -55,6 +55,19 @@ export default function EditCamps() {
       });
   }, []);
 
+  const handleRemove = (category, name) => {
+    const check = window.confirm("Do you want to delete?");
+    if (check) {
+      const deleteData = db
+        .collection(`All ${category}`)
+        .doc(name)
+        .delete()
+        .then(() => {
+          alert("deleted successfully");
+        });
+    }
+  };
+
   const popularAmenities = [
     { icon: <WifiIcon style={{ color: "#ff5e00" }} />, name: "Wi-Fi" },
     {
@@ -160,16 +173,18 @@ export default function EditCamps() {
               );
 
               return (
-                <div
-                  key={index}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginRight: "10px",
-                  }}
-                >
-                  {matchedAmenity.icon}
-                </div>
+                matchedAmenity?.icon && (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {matchedAmenity.icon}
+                  </div>
+                )
               );
             })}
         </div>
@@ -192,6 +207,12 @@ export default function EditCamps() {
           <Link to={`/editCamps/${category}-${data?.Details?.name}`}>
             <button>Edit</button>
           </Link>
+          <button
+            onClick={() => handleRemove(category, data?.Details?.name)}
+            style={{ marginLeft: "5px" }}
+          >
+            Delete
+          </button>
         </div>
         <div className="peacefulStayPageStartingFrom">
           <div>Starting From</div>

@@ -33,7 +33,7 @@ export default function Filter({
           id=""
         >
           <option value="day" selected disabled>
-            Days
+            {isPeaceful ? "Location" : "Days"}
           </option>
           {dayFilterTrek &&
             dayFilterTrek.map((d) => <option value={d}>{d}</option>)}
@@ -58,13 +58,14 @@ export default function Filter({
         >
           <input
             style={{
+              width: "80%",
               borderRadius: "4px",
               background: "white",
               paddingLeft: "35px", // Add padding to make space for the icon
             }}
             type="text"
             onChange={handleNameFilter}
-            placeholder="Search by name"
+            placeholder="Search By Destination"
           />
           <SearchIcon
             style={{

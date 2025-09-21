@@ -11,6 +11,7 @@ import PerfectEscapeMain from "./Containers/PerfectEscape/PerfectEscapeMain";
 import SliderBanner from "./Components/Slider Banner/SilderBanner";
 import { db } from "./firebase";
 import WhyTrekNgo from "./Containers/WhyTrekNGo/WhyTrekNGo";
+import { useLocation } from "react-router-dom";
 
 const liveBarContainerStyle = {
   overflow: "hidden",
@@ -26,7 +27,7 @@ const liveBarContainerStyle = {
 const liveBarContentStyle = {
   display: "inline-block",
   position: "absolute",
-  animation: "marquee 15s linear infinite",
+  animation: "marquee 25s linear infinite",
 };
 const LiveBar = () => {
   const [liveBarData, setLiveBarData] = useState("");
@@ -68,6 +69,7 @@ const LiveBar = () => {
 export default function MainPage({ data }) {
   const [isWinterAvailable, setIsWinterAvailable] = useState(false);
   const [isSpiritualAvailable, setIsSpiritualAvailable] = useState(false);
+
   useEffect(() => {
     db.collection(`Trek Availability`)
       .doc("winterTrek")
@@ -81,25 +83,6 @@ export default function MainPage({ data }) {
       .then((snapshot) => {
         setIsSpiritualAvailable(snapshot.data().availability);
       });
-    //   let d = {};
-    //   const trekData = db
-    //     .collection("All Short-Long-Isolated Trek")
-    //     .doc("Tungnath Chandrashilla & Deoriatal Trek")
-    //     .get()
-    //     .then((snapshot) => {
-    //       d = { ...snapshot.data() };
-    //       d.Details.allSelectedCategory = [];
-    //       d.Details.category = "MultiDay";
-    //       delete d.Details.SLI;
-    //     })
-    //     .then(() => {
-    //       db.collection(`All MultiDay`)
-    //         .doc("Tungnath Chandrashilla & Deoriatal Trek")
-    //         .set({
-    //           Details: d.Details,
-    //           price: parseInt(d.price),
-    //         });
-    //     });
   }, []);
 
   return (

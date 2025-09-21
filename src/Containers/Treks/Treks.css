@@ -5,7 +5,6 @@
 }
 
 .treksTop {
-  min-height: 40vh;
   background: white;
   padding-bottom: 15px;
 }
@@ -228,6 +227,9 @@
 @media (max-width: 768px) {
   .reviewContainer > div:nth-of-type(2) {
     padding: 2rem 0;
+  }
+  .treksTopRight > div {
+    height: 30vh !important;
   }
   .treksFilter {
     display: none;

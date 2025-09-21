@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./nav.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStateValue } from "../../StateProvider";
 import { auth } from "../../firebase";
 import Logo from "../../Images/logo.png";
-import { Facebook, Instagram, Person, YouTube } from "@material-ui/icons";
+import { IconButton, InputBase } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 export default function Nav() {
-  const [{ basket, user }, dispatch] = useStateValue();
+  const [{ basket, user, isPaymentModalOpen }, dispatch] = useStateValue();
   const [clickedNav, setClickedNav] = useState(null);
   const [isSticky, setIsSticky] = useState(true);
+  const [search, setSearch] = useState("");
+
+  const [showSearch, setShowSearch] = useState(false);
 
   const location = useLocation();
 
@@ -27,6 +31,9 @@ export default function Nav() {
     }
   };
 
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+  };
   useEffect(() => {
     if (location.pathname.split("/")[1] === "") {
       setClickedNav(location.pathname.split("/")[1]);
@@ -39,6 +46,8 @@ export default function Nav() {
     } else if (location.pathname.split("/")[1] === "addTrek") {
       setClickedNav(location.pathname.split("/")[1]);
     } else if (location.pathname.split("/")[1] === "addBlog") {
+      setClickedNav(location.pathname.split("/")[1]);
+    } else if (location.pathname.split("/")[1] === "custom") {
       setClickedNav(location.pathname.split("/")[1]);
     }
   }, [location]);
@@ -59,20 +68,60 @@ export default function Nav() {
     burgerLinks.classList.toggle("burgerLinksActive");
   };
 
+  const navigate = useNavigate();
+
+  const goToStays = async () => {
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollToPeacefulStay: true } });
+      await new Promise((resolve) => setTimeout(() => resolve(), 100));
+    }
+
+    const peacefulStayElement = document.getElementById("peacefulStay");
+    const offset = 100;
+
+    if (peacefulStayElement) {
+      const elementPosition =
+        peacefulStayElement.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: elementPosition - offset, behavior: "smooth" });
+    }
+  };
+
   const goToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: "auto",
     });
   };
-  return (
+  return !isPaymentModalOpen ? (
     <div className={`nav${isSticky ? " sticky" : ""}`}>
-      {" "}
-      <div>
+      {showSearch && (
+        <div className="searchOverlay">
+          <div className="searchBar">
+            <InputBase
+              autoFocus
+              type="text"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              placeholder="Search “TrekNgo”"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setShowSearch(false);
+                  setSearch("");
+                  e.preventDefault();
+                  navigate(`/treks?search=${search}&adults=${0}`);
+                }
+              }}
+            />
+            {/* Display the search results here */}
+          </div>
+        </div>
+      )}
+
+      <div className={showSearch ? "hideWhenSearchOpen" : ""}>
         <div className="navTop"></div>
       </div>
       <nav
-        className="navBar"
+        className={`navBar${showSearch ? " hideWhenSearchOpen" : ""}`}
         onScroll={(e) => {
           var c = e.getBoundingClientRect();
           console.log(c);
@@ -88,11 +137,11 @@ export default function Nav() {
           <span></span>
           <span></span>
         </div>
+        <IconButton className="searchIcon" onClick={toggleSearch}>
+          <SearchIcon />
+        </IconButton>
         <div className="burgerLinks">
           <ul className="burgerNavLinks">
-            <Link to="/">
-              <li>Home</li>
-            </Link>
             <Link to="/treks">
               <li>Treks</li>
             </Link>
@@ -124,11 +173,6 @@ export default function Nav() {
           </ul>
         </div>
         <ul className="navLinks">
-          <Link to="/">
-            <li className={clickedNav === "" ? "clickedActiveNav" : null}>
-              Home
-            </li>
-          </Link>
           <Link to="/treks">
             <li className={clickedNav === "treks" ? "clickedActiveNav" : null}>
               Treks
@@ -139,6 +183,16 @@ export default function Nav() {
               Blogs
             </li>
           </Link>
+          <Link to="/custom">
+            <li className={clickedNav === "custom" ? "clickedActiveNav" : null}>
+              Customize
+            </li>
+          </Link>
+
+          <a>
+            <li onClick={goToStays}>Stays</li>
+          </a>
+
           {user?.email === "test@example.com" && (
             <Link to="/blog/addBlog">
               <li
@@ -148,7 +202,9 @@ export default function Nav() {
               </li>
             </Link>
           )}
-          <li onClick={goToBottom}>Contact</li>
+          <a>
+            <li onClick={goToBottom}>Contact</li>
+          </a>
           {user?.email === "test@example.com" && (
             <Link to="/addTrek">
               <li
@@ -177,5 +233,5 @@ export default function Nav() {
         </ul>
       </nav>
     </div>
-  );
+  ) : null;
 }

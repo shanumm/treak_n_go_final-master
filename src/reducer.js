@@ -1,5 +1,6 @@
 export const initialState = {
   basket: [],
+  isPaymentModalOpen: false,
 };
 
 const reducer = (state, action) => {
@@ -13,6 +14,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case "SET_PAYMENT_MODAL_OPEN":
+      return {
+        ...state,
+        isPaymentModalOpen: action.isPaymentModalOpen,
       };
     default:
       return state;
