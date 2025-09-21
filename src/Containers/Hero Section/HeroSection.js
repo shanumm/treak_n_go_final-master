@@ -6,7 +6,7 @@ import "@glidejs/glide/dist/css/glide.core.min.css";
 import "@glidejs/glide/dist/css/glide.theme.min.css";
 
 import ImageBanner from "../Treks/trekBannerBg.jpg";
-import ImageBannerSmall from "../../Images/finalHomeBanner.jpg";
+import ImageBannerSmall from "../../Images/finalbannermobile.jpg";
 
 import { Link, useNavigate } from "react-router-dom";
 import Banner_1 from "../../Images/banner-1.jpg";
@@ -15,6 +15,7 @@ import Banner_3 from "../../Images/banner-3.jpg";
 import Banner_M1 from "../../Images/TrekBGMobile1.jpg";
 import Banner_M2 from "../../Images/TrekBGMobile2.jpg";
 import Banner_M3 from "../../Images/TrekBGMobile3.jpg";
+import TestingImage from "../../Images/finalbannerlarge.jpg"
 
 export default function HeroSection({ data }) {
   const [search, setSearch] = useState("");
@@ -22,7 +23,7 @@ export default function HeroSection({ data }) {
   const [b1, setB1] = useState("");
   const [b2, setB2] = useState("");
   const [b3, setB3] = useState("");
-  const [selectedImage, setSelectedImage] = useState(ImageBanner);
+  const [selectedImage, setSelectedImage] = useState(TestingImage);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function HeroSection({ data }) {
       if (window.innerWidth <= 769) {
         setSelectedImage(ImageBannerSmall);
       } else {
-        setSelectedImage(ImageBanner);
+        setSelectedImage(TestingImage);
       }
     };
 
@@ -83,7 +84,7 @@ export default function HeroSection({ data }) {
               <img src={b2} alt="" />
             </li> */}
             <li class="glide__slide">
-              <img src={selectedImage} alt="" />
+              <img src={TestingImage} alt="" />
             </li>
           </ul>
         </div>

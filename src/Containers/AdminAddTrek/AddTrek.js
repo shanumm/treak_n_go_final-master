@@ -69,7 +69,7 @@ export default function AddTrek({ searchQueryData }) {
   const [TopAttraction, setTopAttraction] = useState([]);
   const [PublicTransport, setPublicTransport] = useState([]);
   const [campDesc, setCampDesc] = useState("");
-  const [mainLocation, setMainLocation] = useState(""); //
+  // const [mainLocation, setMainLocation] = useState(""); //
   const [serviceFees, setServiceFees] = useState(0);
   const [faq, setFaq] = useState([]);
   const [packageOptions, setPackageOption] = useState([]);
@@ -347,6 +347,34 @@ export default function AddTrek({ searchQueryData }) {
     setAllDates([...allDates, ...getAllDates]);
   };
 
+  const getAllITA = () => {
+    const allITA = document.querySelectorAll(".ql-editor");
+    let arrayOfIT = [];
+    allITA.forEach((ita, index) => {
+      arrayOfIT.push(ita.innerHTML);
+    });
+    localStorage.setItem("itineraryDraft", JSON.stringify(arrayOfIT));
+  };
+  const saveAsDraft = () => {
+    getAllITA();
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("itineraryDraft")) {
+      let itiData = JSON.parse(localStorage.getItem("itineraryDraft"));
+
+      for (let i = 0; i < itiData.length - 1; i++) {
+        addItinerary();
+      }
+      setTimeout(() => {
+        const allITA = document.querySelectorAll(".ql-editor");
+        allITA.forEach((ita, index) => {
+          ita.innerHTML = itiData[index];
+        });
+      }, 2000);
+    }
+  }, []);
+
   const handleTrekData = async () => {
     setIsAdding(true);
     const SLI = document.querySelector("#cars");
@@ -506,7 +534,7 @@ export default function AddTrek({ searchQueryData }) {
               isBookingAvailable: isBookingAvailable,
               packagesOption: packageOptions,
               rating: rating,
-              discountValue,
+              discountValue: discountValue === "no" ? "0" : discountValue,
             };
             if (addon) {
               trekData.addone = allAddons;
@@ -619,6 +647,7 @@ export default function AddTrek({ searchQueryData }) {
                 });
             }
             setSuccess("Successfully Uploaded");
+            localStorage.removeItem("itineraryDraft");
             setIsAdding(false);
           }, 2000);
           setTimeout(() => {
@@ -643,7 +672,7 @@ export default function AddTrek({ searchQueryData }) {
               topAttraction: TopAttraction,
               publicTransport: PublicTransport,
               campDesc: campDesc,
-              mainLocation: mainLocation,
+              // mainLocation: mainLocation,
               serviceFees: serviceFees,
               isBookingAvailable: isBookingAvailable,
               amenities: selectedAmenities,
@@ -1201,7 +1230,13 @@ export default function AddTrek({ searchQueryData }) {
                 </div>
 
                 <div>
-                  <h4>Add Trek Name</h4>
+                  <h4>
+                    Add{" "}
+                    {editType === "Camps" || editType === "Homestays"
+                      ? editType
+                      : "Trek"}{" "}
+                    Name
+                  </h4>
                   <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -1218,7 +1253,13 @@ export default function AddTrek({ searchQueryData }) {
                 </div>
 
                 <div>
-                  <h4>Add Trek Price (Per Head)</h4>
+                  <h4>
+                    Add{" "}
+                    {editType === "Camps" || editType === "Homestays"
+                      ? editType
+                      : "Trek"}{" "}
+                    Price (Per Head)
+                  </h4>
                   <input
                     value={price}
                     type="number"
@@ -1415,7 +1456,7 @@ export default function AddTrek({ searchQueryData }) {
                 )}
 
                 <div>
-                  <h4>Add Location</h4>
+                  <h4>Add Location (eg. Delhi)</h4>
                   <input
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
@@ -1435,14 +1476,14 @@ export default function AddTrek({ searchQueryData }) {
                         type="text"
                       />
                     </div>
-                    <div>
+                    {/* <div>
                       <h4>Main Location</h4>
                       <input
                         type="text"
                         value={mainLocation}
                         onChange={(e) => setMainLocation(e.target.value)}
                       />
-                    </div>
+                    </div> */}
                     <div>
                       <h4>Service Fees</h4>
                       <input
@@ -1831,6 +1872,9 @@ export default function AddTrek({ searchQueryData }) {
                       <h2>Itinerary</h2>
                       <button onClick={addItinerary} className="addItinerary">
                         Add Itinerary
+                      </button>
+                      <button onClick={saveAsDraft} className="addItinerary">
+                        Save As Draft
                       </button>
                       <div className="allItinerary">
                         {itineraries.map((itinerary, index) => (

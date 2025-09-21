@@ -30,6 +30,8 @@
   .filter {
     height: 20vh;
     width: auto;
+    justify-content: space-around;
+    margin-top: 0.5rem;
   }
   .filter > div {
     flex: 0;

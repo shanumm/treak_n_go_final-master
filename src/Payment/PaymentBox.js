@@ -45,6 +45,7 @@ export default function PaymentBox({
   name,
   maxRooms,
   maxPeople,
+  duration,
 }) {
   const [{ isPaymentModalOpen }, dispatch] = useStateValue();
 
@@ -153,7 +154,7 @@ export default function PaymentBox({
               position: "sticky",
               top: "12%",
             }
-          : { marginTop: "1rem" }
+          : { marginTop: "0", width: "80%" }
       }
     >
       <h2>BOOKING</h2>
@@ -181,7 +182,7 @@ export default function PaymentBox({
                       (data?.price * (100 - parseInt(data?.discountValue))) /
                         100
                     )
-                  : Math.floor(data?.price / 2))}
+                  : Math.floor(data?.price))}
           /-
         </h2>
         {isPackageSelect ? (
@@ -222,9 +223,21 @@ export default function PaymentBox({
               <div style={{ marginRight: "4px" }}>{numberOfPeople} People </div>{" "}
               <div> {" " + roomsCount} Room</div>
             </div> */}
+            <div
+              style={{
+                borderRadius: "4px",
+                background: "#f6f6f6",
+                padding: "4px 8px",
+                width: "fit-content",
+                fontSize: "14px",
+              }}
+            >
+              Rooms - {rooms.length} Guests -{" "}
+              {rooms.reduce((total, obj) => total + obj.people, 0)}{" "}
+              {console.log(rooms, "testt")}
+            </div>
           </div>
         )}
-
         {fromIndividualPeacefulStays && isPopoverVisible && (
           // <div
           //   style={{
@@ -439,26 +452,39 @@ export default function PaymentBox({
                 </div>
               </div>
             ))}
-            <button
-              style={{
-                background: "rgb(255, 94, 0)",
-                padding: "4px 8px",
-                marginTop: "4px",
-                color: "white",
-                border: "none",
-                outline: "none",
-                borderRadius: "4px",
-              }}
-              onClick={() => {
-                if (rooms.length < maxRooms) {
-                  addRoom();
-                  return;
-                }
-                notify("Max rooms selected");
-              }}
-            >
-              Add Room
-            </button>
+            <div style={{ display: "flex", alignItems: "baseline" }}>
+              <button
+                style={{
+                  background: "rgb(255, 94, 0)",
+                  padding: "4px 8px",
+                  marginTop: "4px",
+                  color: "white",
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "4px",
+                  marginRight: "10px",
+                }}
+                onClick={() => {
+                  if (rooms.length < maxRooms) {
+                    addRoom();
+                    return;
+                  }
+                  notify("Max rooms selected");
+                }}
+              >
+                Add Room
+              </button>
+              <div
+                style={{
+                  color: "rgb(255, 94, 0)",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                }}
+                onClick={() => setIsPopoverVisible(false)}
+              >
+                Done
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -584,12 +610,12 @@ export default function PaymentBox({
             ></input>
           </div>
         )} */}
-        {fromIndividualPeacefulStays ? (
+        {/* {fromIndividualPeacefulStays ? (
           <div>
-            <h5>Serive Fees</h5>
+            <h5>Service Fees</h5>
             <div>INR {data?.serviceFees || 0} </div>
           </div>
-        ) : null}
+        ) : null} */}
         <div>
           <h5>Total Amount</h5>
           <div>
@@ -615,7 +641,7 @@ export default function PaymentBox({
                         (data?.price * (100 - parseInt(data?.discountValue))) /
                           100
                       )
-                    : Math.floor(data?.price / 2))}
+                    : Math.floor(data?.price))}
           </div>
         </div>
 
@@ -679,7 +705,8 @@ export default function PaymentBox({
           startingDate={startingDate}
           endingDate={endingDate}
           data={data}
-          totalPeople={rooms.length}
+          isPaymentProcessing={isPaymentProcessing}
+          totalPeople={rooms}
           numberOfDays={getNumberOfDays(startingDate, endingDate)}
           totalAmount={
             fromIndividualPeacefulStays
@@ -703,7 +730,7 @@ export default function PaymentBox({
                         (data?.price * (100 - parseInt(data?.discountValue))) /
                           100
                       )
-                    : Math.floor(data?.price / 2))
+                    : Math.floor(data?.price))
           }
           serviceFees={data?.serviceFees || 0}
           onSubmitModal={displayRazorpay}
@@ -715,6 +742,7 @@ export default function PaymentBox({
           isTrek={!fromIndividualPeacefulStays}
           currentBookingMiniDate={currentBookingMiniDate}
           mobileError={mobileError}
+          duration={duration}
         />
       )}
     </div>

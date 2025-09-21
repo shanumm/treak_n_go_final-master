@@ -76,6 +76,10 @@ export default function Edit() {
     }
   };
 
+  const saveAsDraft = () => {
+    localStorage.setItem(editT.name, JSON.stringify(itineraries));
+  };
+
   const onSliderImageChange = (e) => {
     const len = e.target.files.length;
     if (name === "") {
@@ -432,7 +436,7 @@ export default function Edit() {
             isBookingAvailable: isBookingAvailable,
             packagesOption: packageOptions,
             rating: rating || 4,
-            discountValue: discountValue || "no",
+            discountValue: discountValue === "no" ? "0" : discountValue,
           };
           if (predefinedDates) {
             trekData.allDates = allDates;
@@ -511,6 +515,7 @@ export default function Edit() {
               });
           }
           setSuccess("Successfully Uploaded");
+          localStorage.removeItem(editT.name);
           setIsAdding(false);
         }, 2000);
         setTimeout(() => {
@@ -530,13 +535,18 @@ export default function Edit() {
     } else if (paramArray[0] === "multiday") {
       paramArray[0] = "MultiDay";
     }
+    console.log(paramArray[0], paramArray[1], "testing");
     setEditType(paramArray[0]);
     const trekData = db
       ?.collection(`All ${paramArray[0]}`)
       .doc(paramArray[1])
       .get()
       .then((snapshot) => {
+        console.log(snapshot.data(), ":sdafasd");
         setEditT(snapshot.data()?.Details);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   }, []);
 
@@ -549,6 +559,12 @@ export default function Edit() {
       }))
     );
   }, [editT]);
+
+  const getFromDraft = () => {
+    if (localStorage.getItem(editT.name)) {
+      setItineraries(JSON.parse(localStorage.getItem(editT.name)));
+    }
+  };
 
   const addAddOns = () => {
     const addAddOns = document.querySelector(".addOns");
@@ -582,7 +598,7 @@ export default function Edit() {
   };
   const removePackageOption = () => {
     const packageOption = document.querySelector(".allPackages");
-    if (packageOption.childElementCount > 1) {
+    if (packageOption.childElementCount > 0) {
       packageOption.removeChild(packageOption.lastElementChild);
     }
   };
@@ -1251,6 +1267,14 @@ export default function Edit() {
                   <button onClick={addItinerary} className="addItinerary">
                     Add Itinerary
                   </button>
+                  <button onClick={saveAsDraft} className="addItinerary">
+                    Save as Draft
+                  </button>
+                  {localStorage.getItem(editT?.name) ? (
+                    <button onClick={getFromDraft} className="addItinerary">
+                      Get From Draft
+                    </button>
+                  ) : null}
                   <div className="allItinerary">
                     {itineraries?.map((i, index) => (
                       <div className="itinerary">

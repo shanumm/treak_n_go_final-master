@@ -1,241 +1,261 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./individualBlog.css";
 import { useStateValue } from "../../StateProvider";
-import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header";
-import List from "@editorjs/list";
-import InlineImage from "editorjs-inline-image";
-import Quote from "@editorjs/quote";
-import Paragraph from "@editorjs/paragraph";
-import Warning from "@editorjs/warning";
-import Delimiter from "@editorjs/delimiter";
-import Marker from "@editorjs/marker";
-import InlineCode from "@editorjs/inline-code";
-import Underline from "@editorjs/underline";
-import LinkAutocomplete from "@editorjs/link-autocomplete";
-import Hyperlink from "editorjs-hyperlink";
-import InlineSpoilerTool from "editorjs-inline-spoiler-tool";
-import AnyButton from "editorjs-button";
-import ChangeCase from "editorjs-change-case";
-import Tooltip from "editorjs-tooltip";
-import Strikethrough from "@sotaproject/strikethrough";
-import TextColorPlugin from "editorjs-text-color-plugin";
-import ImageGallery from "@rodrigoodhin/editorjs-image-gallery";
-import { db } from "../../firebase";
-
-function useApplyImageBorderRadius(individualBlog) {
-  useEffect(() => {
-    const applyBorderRadius = () => {
-      const images = document.querySelectorAll("#editorjs img");
-      images.forEach((img) => {
-        img.style.borderRadius = "10px";
-      });
-    };
-    applyBorderRadius();
-  }, [individualBlog]);
-}
-
-function Output({ data }) {
-  const renderBlock = (block) => {
-    switch (block.type) {
-      case "imageGallery":
-        return <ImageGalleryDisplay key={block.id} data={block.data} />;
-      default:
-        return null;
-    }
-  };
-
-  return <div>{data.blocks.map((block) => renderBlock(block))}</div>;
-}
-
-function ImageGalleryDisplay({ data }) {
-  if (!data) return null;
-
-  return (
-    <div className="image-gallery">
-      {data.urls.map((image, index) => (
-        <img key={index} src={image} alt={image} />
-      ))}
-    </div>
-  );
-}
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS, INLINES, MARKS } from "@contentful/rich-text-types";
+import { client } from "../AllBlog/client";
 
 export default function IndividualBlog() {
   const [{ basket, user }, dispatch] = useStateValue();
   const [individualBlog, setIndividualBlog] = useState();
   const [isNotEditable, setIsNotEditable] = useState(true);
-  const [editorData, setEditorData] = useState(null);
+  const [testingBlog, setTestingBlog] = useState(null);
+
+  const [allBlogsData, setAllBlogsData] = useState(null);
+  const [newTitle, setNewTitle] = useState(null);
+  const [newAuthor, setNewAuthor] = useState(null);
   const { id } = useParams();
+  const navigation = useNavigate();
 
   useEffect(() => {
-    var title = id;
-    if (id.includes("edit")) {
-      title = title.substring(0, title.indexOf("="));
-    }
+    const getData = async () => {
+      try {
+        const response = await client.getEntries({ content_type: "blog" });
+        const data = [];
 
-    const data = db
-      .collection("Blogs")
-      .doc(title)
-      .get()
-      .then((snapshot) => {
-        setIndividualBlog(snapshot.data());
-      });
+        for (const item of response.items) {
+          let blogObject = {
+            author: item.fields.author,
+            date: item.fields.date,
+            title: item.fields.title,
+            mainImage: item.fields.mainImage.fields.file.url,
+            id: item.sys.id,
+          };
+
+          try {
+            const richTextField = item.fields.blogField;
+
+            // Parse and render the rich text content
+            const options = {
+              renderNode: {
+                [BLOCKS.PARAGRAPH]: (node, children) => (
+                  <p
+                    className="individualBlogContentP"
+                    style={{ margin: "1rem 0" }}
+                  >
+                    {children}
+                  </p>
+                ),
+                [BLOCKS.HEADING_1]: (node, children) => (
+                  <h1 style={{ margin: "1rem 0" }}>{children}</h1>
+                ),
+                [BLOCKS.HEADING_2]: (node, children) => (
+                  <h2 style={{ margin: "1rem 0" }}>{children}</h2>
+                ),
+                [BLOCKS.HEADING_3]: (node, children) => (
+                  <h3 style={{ margin: "1rem 0" }}>{children}</h3>
+                ),
+                [BLOCKS.UL_LIST]: (node, children) => (
+                  <ul style={{ margin: "1rem 0" }}>{children}</ul>
+                ),
+                [BLOCKS.OL_LIST]: (node, children) => (
+                  <ol style={{ margin: "1rem 0" }}>{children}</ol>
+                ),
+                [BLOCKS.LIST_ITEM]: (node, children) => (
+                  <li style={{ margin: "1rem 0" }}>{children}</li>
+                ),
+                [BLOCKS.QUOTE]: (node, children) => (
+                  <blockquote style={{ margin: "1rem 0" }}>
+                    {children}
+                  </blockquote>
+                ),
+                [INLINES.HYPERLINK]: (node, children) => (
+                  <a
+                    href={node.data.uri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {children}
+                  </a>
+                ),
+                [BLOCKS.EMBEDDED_ASSET]: (node) => {
+                  const { title, description, file } = node.data.target.fields;
+                  const imageUrl = file.url;
+                  const altText = description || title;
+                  return (
+                    <img
+                      style={{
+                        borderRadius: "20px",
+                        height: "25rem",
+                        width: "100%",
+                        objectFit: "cover",
+                      }}
+                      src={imageUrl}
+                      alt={altText}
+                    />
+                  );
+                },
+              },
+              renderMark: {
+                [MARKS.BOLD]: (text) => <strong>{text}</strong>,
+                [MARKS.ITALIC]: (text) => <em>{text}</em>,
+                [MARKS.UNDERLINE]: (text) => <u>{text}</u>,
+              },
+            };
+
+            const renderedContent = documentToReactComponents(
+              richTextField,
+              options
+            );
+
+            blogObject.content = renderedContent;
+            data.push(blogObject);
+          } catch (error) {
+            console.error("Error fetching data from Contentful:", error);
+          }
+        }
+        console.log(data, ">>>>");
+        setTestingBlog(data);
+      } catch (error) {
+        console.error("Error fetching data from Contentful:", error);
+        setTestingBlog(null);
+      }
+    };
+
+    getData();
   }, []);
-
-  useEffect(() => {
-    if (individualBlog && Object.keys(individualBlog).length) {
-      const content = JSON.parse(individualBlog.content);
-      const editorJS = new EditorJS({
-        holder: "editorjs",
-        readOnly: isNotEditable,
-        data: content,
-        tools: {
-          image: {
-            class: InlineImage,
-            inlineToolbar: true,
-            config: {
-              embed: {
-                display: true,
-              },
-              unsplash: {
-                appName: "your_app_name",
-                clientId: "your_client_id",
-              },
-            },
-          },
-
-          header: {
-            type: "header",
-            class: Header,
-            config: {
-              placeholder: "Enter a header",
-              levels: [1, 2, 3, 4, 5, 6],
-            },
-            inlineToolbar: true,
-          },
-          list: {
-            class: List,
-            inlineToolbar: true,
-          },
-          paragraph: {
-            class: Paragraph,
-            inlineToolbar: true,
-          },
-          quote: {
-            class: Quote,
-            inlineToolbar: true,
-          },
-          warning: {
-            class: Warning,
-            inlineToolbar: true,
-          },
-          delimiter: {
-            class: Delimiter,
-            inlineToolbar: true,
-          },
-          marker: {
-            class: Marker,
-            inlineToolbar: true,
-          },
-          inlineCode: {
-            class: InlineCode,
-            inlineToolbar: true,
-          },
-          underline: {
-            class: Underline,
-            inlineToolbar: true,
-          },
-          linkAutocomplete: {
-            class: LinkAutocomplete,
-            config: {
-              endpoint: "http://localhost:8008/searchLinks",
-            },
-          },
-          hyperlink: {
-            class: Hyperlink,
-            config: {
-              placeholder: "Enter a link",
-              target: "_blank",
-              rel: "nofollow",
-            },
-            inlineToolbar: true,
-          },
-          inlineSpoilerTool: {
-            class: InlineSpoilerTool,
-            inlineToolbar: true,
-          },
-          changeCase: {
-            class: ChangeCase,
-            inlineToolbar: true,
-          },
-          tooltip: {
-            class: Tooltip,
-            inlineToolbar: true,
-          },
-          strikethrough: {
-            class: Strikethrough,
-            inlineToolbar: true,
-          },
-          textColor: {
-            class: TextColorPlugin,
-            inlineToolbar: true,
-          },
-        },
-        onChange: async (api, event) => {
-          let content = await editorJS.saver.save();
-          setEditorData(content);
-        },
-      });
-    }
-  }, [individualBlog, isNotEditable]);
-
-  useApplyImageBorderRadius(individualBlog); // Call the custom hook here
-
   const getTime = (value) => {
     const timestamp = value;
     const date = new Date(timestamp);
     return date.toDateString();
   };
 
-  const handleButtonClick = async () => {
-    if (isNotEditable) {
-      setIsNotEditable(!isNotEditable);
-      return;
-    } else {
-      await db
-        .collection("Blogs")
-        .doc(individualBlog.title.trim())
-        .update({
-          content: JSON.stringify(editorData),
+  const extractMainStrings = (data) => {
+    let mainString = "";
+    data.forEach((item) => {
+      if (item.props && Array.isArray(item.props.children)) {
+        item.props.children.forEach((child) => {
+          if (typeof child === "string" && child.trim() !== "") {
+            mainString += child.trim() + " ";
+          }
         });
-      setIsNotEditable(!isNotEditable);
-      window.location.reload();
-    }
+      } else if (
+        typeof item.props.children === "string" &&
+        item.props.children.trim() !== ""
+      ) {
+        mainString += item.props.children.trim() + " ";
+      }
+    });
+
+    return mainString.trim();
   };
 
+  function extractTextFromHTML(content) {
+    const mainString = extractMainStrings(content);
+    return mainString;
+  }
+
   return (
-    <div
-      className="individualBlogCcontainer"
-      style={{ background: "#F7F7F8", padding: "2rem" }}
-    >
-      <div className="individualBlog">
-        <div className="individualBlogHeading">{individualBlog?.title}</div>
-        <div id="editorjs"></div>
-        <div className="individualBlogBy">
-          Author : {individualBlog?.author}
-        </div>
-        <div className="individualBlogTime">
-          {getTime(individualBlog?.uploadTime)}
-        </div>
-        {user?.email === "test@example.com" ? (
-          <div style={{ width: "80%", margin: "auto", padding: "1rem 0" }}>
-            <button onClick={handleButtonClick}>
-              {isNotEditable ? "Update Blog" : "Confirm"}
-            </button>
+    testingBlog &&
+    testingBlog
+      .filter((blog) => blog.id === id)
+      .map((blog) => (
+        <div
+          className="individualBlogCcontainer"
+          style={{ background: "#F7F7F8", padding: "2rem", display: "flex" }}
+        >
+          <div className="individualBlog">
+            <div className="individualBlogHeading">{blog.title}</div>
+            <div>
+              <div style={{ width: "90%", margin: ".4rem auto 2rem auto" }}>
+                <img className="individualBlogMainImage" src={blog.mainImage} />
+                <div style={{ marginTop: "1rem" }}>{blog?.content}</div>
+              </div>
+            </div>
+            <div className="individualBlogBy">Author : {blog.author}</div>
+            <div className="individualBlogTime">{getTime(blog?.date)}</div>
           </div>
-        ) : null}
-      </div>
-    </div>
+          <div className="popularReads">
+            <div className="popularReadsHeading">Popular Reads</div>
+            <div>
+              {testingBlog &&
+                testingBlog
+                  .filter((blog) => blog.id != id)
+                  .map((b) => (
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        background: "white",
+                        padding: "1rem .5rem",
+                        marginBottom: "20px",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <div>
+                        <img
+                          style={{
+                            width: "100%",
+                            height: "8rem",
+                            objectFit: "cover",
+                            borderRadius: "4px",
+                          }}
+                          src={b.mainImage}
+                          alt=""
+                          onError={(e) => {
+                            e.target.onerror = null;
+                          }}
+                        />
+                      </div>
+                      <div style={{ paddingTop: ".4rem ", color: "#ff5e00" }}>
+                        {b.title}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "12px",
+                          marginTop: "4px",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Author : {b?.author}
+                      </div>
+
+                      <div style={{ fontSize: "14px", marginTop: "4px" }}>
+                        <p>
+                          {extractTextFromHTML(b?.content).substring(0, 100)}...
+                        </p>
+                      </div>
+                      <Link
+                        onClick={() => {
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 100);
+                        }}
+                        style={{ color: "#ff5e00" }}
+                        to={`/blog/${b?.id}`}
+                      >
+                        <button
+                          style={{
+                            color: "white",
+                            marginTop: "1rem",
+                            padding: "8px 12px",
+                            background: "#ff5e00",
+                            border: "none",
+                            overflow: "none",
+                            marginTop: "4px",
+                            borderRadius: "2px",
+                            marginTop: "1rem",
+                          }}
+                        >
+                          {" "}
+                          Read more
+                        </button>
+                      </Link>
+                    </div>
+                  ))}
+            </div>
+          </div>
+        </div>
+      ))
   );
 }

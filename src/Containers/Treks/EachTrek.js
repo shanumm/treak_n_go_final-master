@@ -18,8 +18,6 @@ export default function EachTrek({
   const [cloneName, setCloneName] = useState("");
   const navigate = useNavigate();
 
-  console.log(data);
-
   const handleRemove = () => {
     const check = window.confirm("Do you want to delete?");
     if (check) {
@@ -48,10 +46,13 @@ export default function EachTrek({
               .then((response) => {
                 const dd = db
                   .collection(`All Short-Long-Isolated Trek`)
-                  .doc(cloneName)
+                  .doc(cloneName.trim())
                   .set({
                     ...response.data(),
-                    Details: { ...response.data().Details, name: cloneName },
+                    Details: {
+                      ...response.data().Details,
+                      name: cloneName.trim(),
+                    },
                     price: parseInt(response.data().Details.price),
                   });
               })
@@ -71,10 +72,13 @@ export default function EachTrek({
               .then((response) => {
                 const dd = db
                   .collection(`All ${e}`)
-                  .doc(cloneName)
+                  .doc(cloneName.trim())
                   .set({
                     ...response.data(),
-                    Details: { ...response.data().Details, name: cloneName },
+                    Details: {
+                      ...response.data().Details,
+                      name: cloneName.trim(),
+                    },
                     price: parseInt(response.data().Details.price),
                   });
               })
@@ -96,10 +100,10 @@ export default function EachTrek({
           .then((response) => {
             const dd = db
               .collection(`All ${data?.category}`)
-              .doc(cloneName)
+              .doc(cloneName.trim())
               .set({
                 ...response.data(),
-                Details: { ...response.data().Details, name: cloneName },
+                Details: { ...response.data().Details, name: cloneName.trim() },
                 price: parseInt(response.data().Details.price),
               });
           })
@@ -190,7 +194,7 @@ export default function EachTrek({
             </div>
           </div>
           <div className="eachTrekDetailsPrice">
-            <div>Price -</div>
+            <div></div>
             <div>
               {" "}
               {data?.discountValue
@@ -220,7 +224,7 @@ export default function EachTrek({
                   : `/treks/${data?.name}${trekType && `=${trekType}`}`
               }
             >
-              <button>Know Now</button>
+              <button>Book Now</button>
             </Link>
             {user?.email === "test@example.com" && (
               <>
@@ -301,7 +305,7 @@ export default function EachTrek({
                 </div>
               </div>
               <div className="eachTrekDetailsPrice">
-                <div>Price - </div>
+                <div></div>
                 <div> {data?.price} ₹</div>
               </div>
               <div className="eachTrekDetailsButton">
@@ -323,7 +327,7 @@ export default function EachTrek({
                       : `/treks/${data?.name}${trekType && `=${trekType}`}`
                   }
                 >
-                  <button>Know Now</button>
+                  <button>Book Now</button>
                 </Link>
                 {user?.email === "test@example.com" && (
                   <>

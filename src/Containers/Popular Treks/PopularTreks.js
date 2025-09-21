@@ -9,7 +9,11 @@ export default function PopularTreks() {
   const [data, setData] = useState([]);
   const [customTreks, setCustomTreks] = useState([]);
   const [isCustom, setIsCustom] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCustomLoading, setIsCustomLoading] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
+    setIsCustomLoading(true);
     const trekData = db
       .collection("All Trek")
       .get()
@@ -19,6 +23,7 @@ export default function PopularTreks() {
           d.push(snap.data());
           if (d.length === snapshot.docs.length) {
             setData(d);
+            setIsLoading(false);
           }
         });
       });
@@ -32,10 +37,24 @@ export default function PopularTreks() {
           d.push(snap.data().selectedPopularTreks);
           if (d.length === snapshot.docs.length) {
             setCustomTreks(d[0]);
+            setIsCustomLoading(false);
           }
         });
       });
   }, []);
+  const Loader = () => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTop: "3px solid #ff5e00",
+        margin: "2rem auto",
+      }}
+      className="loader"
+    ></div>
+  );
+
   return (
     <div className="popularTreks">
       <div className="popularTreksHeading">
@@ -45,42 +64,46 @@ export default function PopularTreks() {
       <div className="popularTreksDetails">
         Choose from the best Himalayan treks of all time.
       </div>
-      <div className="popularTrekCards">
-        <Splide
-          options={{
-            perPage: 4,
-            rewind: true,
-            perMove: 1,
-            pagination: false,
-            gap: "2rem",
-            breakpoints: {
-              380: {
-                perPage: 1,
+      {isLoading || isCustomLoading ? (
+        <Loader />
+      ) : (
+        <div className="popularTrekCards">
+          <Splide
+            options={{
+              perPage: 4,
+              rewind: true,
+              perMove: 1,
+              pagination: false,
+              gap: "2rem",
+              breakpoints: {
+                380: {
+                  perPage: 1,
+                },
+                768: {
+                  perPage: 2,
+                },
+                1300: {
+                  perPage: 3,
+                  gap: "3rem",
+                },
               },
-              768: {
-                perPage: 2,
-              },
-              1300: {
-                perPage: 3,
-                gap: "3rem",
-              },
-            },
-          }}
-          aria-label="popular treks"
-        >
-          {isCustom
-            ? customTreks?.map((d) => (
-                <SplideSlide>
-                  <PopularTrekCards data={d?.Details} />
-                </SplideSlide>
-              ))
-            : data?.map((d) => (
-                <SplideSlide>
-                  <PopularTrekCards data={d?.Details} />
-                </SplideSlide>
-              ))}
-        </Splide>
-      </div>
+            }}
+            aria-label="popular treks"
+          >
+            {isCustom
+              ? customTreks?.map((d) => (
+                  <SplideSlide>
+                    <PopularTrekCards data={d?.Details} />
+                  </SplideSlide>
+                ))
+              : data?.map((d) => (
+                  <SplideSlide>
+                    <PopularTrekCards data={d?.Details} />
+                  </SplideSlide>
+                ))}
+          </Splide>
+        </div>
+      )}
     </div>
   );
 }

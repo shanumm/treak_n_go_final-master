@@ -76,7 +76,8 @@
   background: #f0f0f0;
 }
 
-.modal {
+.imageModal .modal,
+.trekBooking .modal {
   display: flex !important;
   position: fixed;
   z-index: 100000;
@@ -131,7 +132,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 48px;
-  font-weight: bold;
+  font-weight: 400;
   color: white;
   cursor: pointer;
 }
@@ -190,7 +191,7 @@
 }
 
 .ipslocation {
-  width: 70%;
+  width: 100%;
   margin-bottom: 10px;
 }
 .ipsCompleteAddress {
@@ -273,7 +274,15 @@
 }
 
 .ipsDescription > div:nth-of-type(1) {
-  width: 70%;
+  width: 100%;
+}
+.ipsDescription > div:nth-of-type(1) > div:nth-of-type(2) {
+  padding-top: 10px;
+  width: 100%;
+  /* line-height: 14px; */
+  /* max-height: 24px; */
+  /* overflow: hidden; */
+  /* transition: max-height 0.8s ease-in-out; */
 }
 
 .ipsDescription > div:nth-of-type(2) {
@@ -465,7 +474,7 @@
   .ipsDescription > div {
     flex: 1 1 15rem;
   }
-  .individualPeacefulStays > div {
+  .individualPeacefulStays > div:not(.imageModall) {
     width: 95% !important;
   }
   .ipsDescription > div:nth-of-type(2) > div {
@@ -505,8 +514,30 @@
     flex: 1 0 calc(33.3333% - 1rem);
   }
 }
+.hideOnSmall {
+  display: none !important;
+}
 
 @media (max-width: 767px) {
+  .hideOnSmall {
+    display: flex !important;
+  }
+  .notExpanded {
+    line-height: 14px;
+    max-height: 24px;
+  }
+
+  .showMoreExpanded {
+    line-height: normal !important;
+    max-height: 1000px !important; /* or some large value that is higher than the potential maximum height of the content */
+  }
+  .individualPeacefulStays .next,
+  .individualPeacefulStays .prev {
+    display: none;
+  }
+  .individualPeacefulStays .modal-content {
+    width: 100%;
+  }
   .ipsGallary {
     display: flex;
     flex-wrap: wrap;

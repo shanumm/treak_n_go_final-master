@@ -9,6 +9,8 @@ import {
   LocationOn,
   Star,
 } from "@material-ui/icons";
+import { useSwipeable } from "react-swipeable";
+
 import LuggageIcon from "@mui/icons-material/Luggage";
 import HikingIcon from "@mui/icons-material/Hiking";
 import DoneIcon from "@mui/icons-material/Done";
@@ -103,7 +105,7 @@ export default function IndividualTrek() {
   const [isOrderConfirmed, setIsOrderConfirmed] = useState(false);
   const [confirmedBookingId, setConfirmedBookingId] = useState("");
   const [isPackageSelect, setIsPackageSelected] = useState(false);
-  const [packagePrice, setPackagePrice] = useState();
+  const [packagePrice, setPackagePrice] = useState(null);
   const [packageSelectedData, setPackageSelectedData] = useState(null);
   const [selectedAvailableBatch, setSelectedAvailableBatch] = useState(null);
   const [suggestionId, setSuggestionId] = useState("");
@@ -112,6 +114,9 @@ export default function IndividualTrek() {
   const [selectedModalImage, setSelectedModalImage] = useState();
   const [activeNav, setActiveNav] = useState(1);
   const [selectedImgIndex, setSelectedImgIndex] = useState(0);
+  const [isShowMoreExpanded, setIsShowMoreExpanded] = useState(false);
+  const [isShowMoreDays, setIsShowMoreDays] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const gallaryRef = useRef(null);
   const destinationRef = useRef(null);
   const highlightRef = useRef(null);
@@ -346,7 +351,7 @@ export default function IndividualTrek() {
     e.preventDefault();
     setIsPaymentProcessing(true);
     const mobile = document.querySelector(".mobile");
-    if (mobile.value.length === 10 && isValidEmail(bookingEmail)) {
+    if (isValidEmail(bookingEmail)) {
       setMobileError("");
       const res = await loadScript(
         "https://checkout.razorpay.com/v1/checkout.js"
@@ -625,9 +630,17 @@ export default function IndividualTrek() {
   };
 
   const handlePackageChange = (e) => {
-    scrollToBookingDetails();
-
     const data = JSON.parse(e.target.value);
+
+    if (isPackageSelect) {
+      if (JSON.stringify(data) == JSON.stringify(packageSelectedData)) {
+        setIsPackageSelected(false);
+        setPackagePrice(null);
+        setPackageSelectedData(null);
+        return;
+      }
+    }
+    scrollToBookingDetails();
     setIsPackageSelected(true);
     setPackagePrice(data?.price);
     setPackageSelectedData(data);
@@ -654,12 +667,15 @@ export default function IndividualTrek() {
 
   const prevImage = () => {
     setSelectedImgIndex(
-      (prevIndex) => (prevIndex - 1 + data?.images.length) % data?.images.length
+      (prevIndex) =>
+        (prevIndex - 1 + data?.images.length) % (data?.images.length - 1)
     );
   };
 
   const nextImage = () => {
-    setSelectedImgIndex((prevIndex) => (prevIndex + 1) % data?.images.length);
+    setSelectedImgIndex(
+      (prevIndex) => (prevIndex + 1) % (data?.images.length - 1)
+    );
   };
 
   function setFixedImageDimensions(htmlString, width = 300, height = 200) {
@@ -685,22 +701,24 @@ export default function IndividualTrek() {
       const yOffset = -window.innerHeight * 0.2;
       const yPosition =
         enquireRef.current.getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
-      window.scrollTo({ top: yPosition, behavior: "smooth" });
-    } else if (
-      !gettingEnquire &&
-      data?.packagesOption &&
-      data?.packagesOption.length > 0
-    ) {
-      const yOffset = -window.innerHeight * 0.2;
-      const yPosition =
-        bookingDetailsRef.current.getBoundingClientRect().top +
-        window.pageYOffset +
+        window.scrollY +
         yOffset;
       window.scrollTo({ top: yPosition, behavior: "smooth" });
     }
   };
+
+  const handleShowMoreDesc = () => {
+    setIsShowMoreExpanded(!isShowMoreExpanded);
+  };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      return nextImage();
+    },
+    onSwipedRight: () => {
+      return prevImage();
+    },
+  });
 
   return (
     <div className="individualTrek">
@@ -727,18 +745,28 @@ export default function IndividualTrek() {
       </div>
       <div className="imageModal">
         <Modal
+          style={{ backgroundColor: "black" }}
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
           contentLabel="Example Modal"
         >
-          <div style={{ float: "right" }} onClick={closeModal}>
+          <div
+            className="hideOnSmall"
+            style={{ float: "left", color: "white" }}
+          >
+            {selectedImgIndex + 1} - {data?.images.length}
+          </div>
+          <div
+            style={{ float: "right", marginRight: "10px" }}
+            onClick={closeModal}
+          >
             <CancelIcon style={{ color: "white", cursor: "pointer" }} />
           </div>
           <button className="arrow arrowLeft" onClick={prevImage}>
             &lt;
           </button>
           <div className="imageModalContainer">
-            <img src={data?.images[selectedImgIndex]} />
+            <img src={data?.images[selectedImgIndex]} {...handlers} />
           </div>
           <button className="arrow arrowRight" onClick={nextImage}>
             &gt;
@@ -778,7 +806,7 @@ export default function IndividualTrek() {
               onClick={() => setActiveNav(1)}
               href="#gallary"
             >
-              <div>Gallary</div>
+              <div>Gallery</div>
             </a>
             <a
               onClick={() => setActiveNav(2)}
@@ -820,7 +848,7 @@ export default function IndividualTrek() {
               onClick={() => setActiveNav(7)}
               href="#faq"
             >
-              <div>FAQ</div>
+              <div>FAQ's</div>
             </a>
           </div>
         </div>
@@ -835,36 +863,49 @@ export default function IndividualTrek() {
             ref={gallaryRef}
           >
             <div>
-              <img
-                onClick={() => openModal(data?.images[3], 3)}
-                src={data?.images[3]}
-                alt=""
-              />
-              <img
-                onClick={() => openModal(data?.images[4], 4)}
-                src={data?.images[4]}
-                alt=""
-              />
-              <img
-                onClick={() => openModal(data?.images[5], 5)}
-                src={data?.images[5]}
-                alt=""
-              />
-              <img
-                onClick={() => openModal(data?.images[6], 6)}
-                src={data?.images[6]}
-                alt=""
-              />
-              <img
-                onClick={() => openModal(data?.images[7], 7)}
-                src={data?.images[7]}
-                alt=""
-              />
-              <img
-                onClick={() => openModal(data?.images[8], 8)}
-                src={data?.images[8]}
-                alt=""
-              />
+              <div>
+                <img
+                  onClick={() => openModal(data?.images[0], 0)}
+                  src={data?.images[0]}
+                  alt=""
+                />
+              </div>
+              <div>
+                <img
+                  onClick={() => openModal(data?.images[1], 1)}
+                  src={data?.images[1]}
+                  alt=""
+                />
+              </div>
+              <div>
+                <img
+                  onClick={() => openModal(data?.images[2], 2)}
+                  src={data?.images[2]}
+                  alt=""
+                />
+              </div>
+              <div className="lastImageOfGallery">
+                <img
+                  onClick={() => openModal(data?.images[3], 3)}
+                  src={data?.images[3]}
+                  alt=""
+                />
+              </div>
+              <div>
+                <img
+                  className="lastImageOfGallery"
+                  onClick={() => openModal(data?.images[4], 4)}
+                  src={data?.images[4]}
+                  alt=""
+                />
+              </div>
+              <div>
+                <img
+                  onClick={() => openModal(data?.images[5], 5)}
+                  src={data?.images[5]}
+                  alt=""
+                />
+              </div>
             </div>
             <div className="availableCategoriesContainer">
               <div className="availableCategories">
@@ -1217,190 +1258,6 @@ export default function IndividualTrek() {
             )}
             {data?.isBookingAvailable != "Enquiry" ||
             data?.isBookingAvailable === null ? (
-              // <div
-              //   id="bookingDeatils"
-              //   className="trekBooking"
-              //   ref={bookingDetailsRef}
-              // >
-              //   <h2>BOOKING</h2>
-              //   <div>
-              //     <h3>Trekking Fee</h3>
-              //     <h2>
-              //       INR{" "}
-              //       {isPackageSelect
-              //         ? data?.discountValue
-              //           ? Math.floor(
-              //               (parseInt(packagePrice) *
-              //                 (100 - parseInt(data?.discountValue))) /
-              //                 100
-              //             )
-              //           : Math.floor(parseInt(packagePrice))
-              //         : data?.discountValue
-              //         ? Math.floor(
-              //             (data?.price *
-              //               (100 - parseInt(data?.discountValue))) /
-              //               100
-              //           )
-              //         : Math.floor(data?.price / 2)}
-              //       /-
-              //     </h2>
-              //     {isPackageSelect ? (
-              //       <h5 style={{ fontWeight: 500 }}>
-              //         {packageSelectedData.description.split(";")[0]}
-              //       </h5>
-              //     ) : (
-              //       <h5 style={{ fontWeight: 500 }}>Original Price</h5>
-              //     )}
-              //   </div>
-
-              //   <div className="dateAndAdult">
-              //     <div>
-              //       {data?.allDates && data?.allDates?.length > 1 ? null : (
-              //         <>
-              //           <h5>Select Date</h5>
-              //           <input
-              //             type="date"
-              //             id="checkingg"
-              //             min={currentBookingMiniDate}
-              //             onChange={(e) =>
-              //               setCurrentBookingDate(e.target.value)
-              //             }
-              //           />
-              //         </>
-              //       )}
-              //     </div>
-              //     <div>
-              //       <h5>Adult</h5>
-              //       <div className="adultPicker">
-              //         <div
-              //           onClick={() => setAdults(adult + 1)}
-              //           className="addAdults"
-              //         >
-              //           +
-              //         </div>
-              //         <div>{adult}</div>
-              //         <div
-              //           onClick={() => {
-              //             if (adult > 1) setAdults(adult - 1);
-              //           }}
-              //           className="addAdults"
-              //         >
-              //           -
-              //         </div>
-              //       </div>
-              //     </div>
-              //   </div>
-              //   {data?.addone ? (
-              //     <>
-              //       <div className="addonDetails">
-              //         <h4 onClick={handleAddOnOpen}>
-              //           Add Ons <KeyboardArrowDownRounded />
-              //         </h4>
-              //         <div className="addOnContainer" id="addOnContainerId">
-              //           {data?.addone?.map((e, id) => (
-              //             <div className="addOnsCheckboxContainer">
-              //               <div className="addOnsCheckbox">
-              //                 <div>
-              //                   {e?.name} ({`${e?.price}/-`})
-              //                 </div>
-              //                 <div>
-              //                   <DoneIcon
-              //                     key={`add${id}`}
-              //                     onClick={() => addAddon(e, id)}
-              //                   />
-              //                   <CancelIcon
-              //                     key={`remove${id}`}
-              //                     onClick={() => removeAddon(e, id)}
-              //                   />
-              //                   <div
-              //                     className="addAdults"
-              //                     id={`addOndata${id}`}
-              //                   >
-              //                     0
-              //                   </div>
-              //                 </div>
-              //               </div>
-              //               <div className="isAddonAdded"></div>
-              //             </div>
-              //           ))}
-              //         </div>
-              //       </div>
-              //     </>
-              //   ) : (
-              //     <></>
-              //   )}
-              //   <form onSubmit={displayRazorpay} className="bookingDeatils">
-              //     <div>
-              //       <input
-              //         type="number"
-              //         className="mobile"
-              //         minLength={10}
-              //         maxLength={10}
-              //         style={{ marginLeft: "1rem" }}
-              //         placeholder="number"
-              //         value={bookingNumber}
-              //         onChange={(e) => setBookingNumber(e.target.value)}
-              //         required
-              //       ></input>
-              //       <input
-              //         type="email"
-              //         className="mobile"
-              //         style={{ marginLeft: "1rem" }}
-              //         placeholder="email"
-              //         value={bookingEmail}
-              //         onChange={(e) => setBookingEmail(e.target.value)}
-              //         required
-              //       ></input>
-              //     </div>
-              //     <div>
-              //       <h5>Total Amount</h5>
-              //       <div>
-              //         {addonsPrice +
-              //           adult *
-              //             (isPackageSelect
-              //               ? data?.discountValue
-              //                 ? Math.floor(
-              //                     (parseInt(packagePrice) *
-              //                       (100 - parseInt(data?.discountValue))) /
-              //                       100
-              //                   )
-              //                 : Math.floor(parseInt(packagePrice))
-              //               : data?.discountValue
-              //               ? Math.floor(
-              //                   (data?.price *
-              //                     (100 - parseInt(data?.discountValue))) /
-              //                     100
-              //                 )
-              //               : Math.floor(data?.price / 2))}
-              //         INR
-              //       </div>
-              //     </div>
-              //     <h4 style={{ color: "Red" }}>{mobileError}</h4>
-              //     <div className="bookTrekButton">
-              //       <button type="submit">
-              //         {isPaymentProcessing ? (
-              //           <Loader />
-              //         ) : user ? (
-              //           "Book Now"
-              //         ) : (
-              //           "Book as guest"
-              //         )}
-              //       </button>
-              //     </div>
-              //     <div className="bookTrekButton">
-              //       <button>
-              //         <a
-              //           href="https://wa.me/+919654749746" // Replace 1234567890 with the desired phone number (including country code)
-              //           target="_blank"
-              //           rel="noopener noreferrer"
-              //           style={{ color: "white" }}
-              //         >
-              //           Support
-              //         </a>
-              //       </button>
-              //     </div>
-              //   </form>
-              // </div>
               <PaymentBox
                 bookingDetailsRef={bookingDetailsRef}
                 isPackageSelect={isPackageSelect}
@@ -1424,6 +1281,7 @@ export default function IndividualTrek() {
                 user={user}
                 addonsPrice={addonsPrice}
                 isTrekPage={true}
+                duration={data?.duration}
               />
             ) : null}
             <div ref={enquireRef} id="enquiry" className="knowMoreForm">
@@ -1522,7 +1380,12 @@ export default function IndividualTrek() {
                             price: p?.price,
                             description: p?.description,
                           })}
-                          onChange={(e) => handlePackageChange(e)}
+                          onClick={(e) => handlePackageChange(e)}
+                          checked={
+                            isPackageSelect &&
+                            packageSelectedData.price == p?.price &&
+                            packageSelectedData.description == p?.description
+                          }
                         />
                         <div>
                           <Accordion
@@ -1539,6 +1402,7 @@ export default function IndividualTrek() {
                                   }}
                                 >
                                   <div
+                                    className="packageTitle"
                                     style={{
                                       display: "flex",
                                       justifyContent: "space-between",
@@ -1559,6 +1423,19 @@ export default function IndividualTrek() {
                                       <ArrowDropDown
                                         style={{ color: "green" }}
                                       />
+                                      {data?.discountValue && (
+                                        <div
+                                          style={{
+                                            marginLeft: "10px",
+                                            padding: "8px 12px",
+                                            background: "#fff5db",
+                                            borderRadius: "4px",
+                                            color: "#ff5e00",
+                                          }}
+                                        >
+                                          {data?.discountValue}% off
+                                        </div>
+                                      )}
                                     </div>
                                     <label
                                       style={{
@@ -1567,7 +1444,18 @@ export default function IndividualTrek() {
                                         flex: "0 1 8rem",
                                       }}
                                     >
-                                      INR/- {p?.price} per adult
+                                      INR/-{" "}
+                                      {data?.discountValue
+                                        ? Math.floor(
+                                            (parseInt(p?.price) *
+                                              (100 -
+                                                parseInt(
+                                                  data?.discountValue
+                                                ))) /
+                                              100
+                                          )
+                                        : Math.floor(parseInt(p?.price))}{" "}
+                                      per adult
                                     </label>
                                   </div>
                                 </AccordionItemButton>
@@ -1611,9 +1499,52 @@ export default function IndividualTrek() {
                 <div>
                   {data?.highlights && (
                     <li
+                      className={
+                        isShowMoreExpanded
+                          ? "highlightsExpanededContainer showMoreExpanded"
+                          : "highlightsExpanededContainer notExpanded"
+                      }
                       style={{ listStyle: "none" }}
                       dangerouslySetInnerHTML={{ __html: data?.highlights }}
                     ></li>
+                  )}
+                </div>
+                <div
+                  className=""
+                  style={{
+                    fontSize: "14px",
+                    margin: ".5rem",
+                    color: "#ff5e00",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  onClick={handleShowMoreDesc}
+                >
+                  {isShowMoreExpanded ? "Hide" : "Show More"}
+                  {isShowMoreExpanded ? (
+                    <img
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        marginLeft: "12px",
+                        marginLeft: "4px",
+                      }}
+                      src={
+                        "https://cdn-icons-png.flaticon.com/512/130/130906.png"
+                      }
+                    />
+                  ) : (
+                    <img
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        marginLeft: "12px",
+                        marginLeft: "4px",
+                      }}
+                      src={
+                        "https://cdn-icons-png.flaticon.com/512/2722/2722987.png"
+                      }
+                    />
                   )}
                 </div>
               </div>
@@ -1654,40 +1585,60 @@ export default function IndividualTrek() {
             >
               <h3>Itinerary</h3>
               <Accordion allowMultipleExpanded={true} allowZeroExpanded={true}>
-                {data?.itinerary.map((i, index) => (
-                  <AccordionItem>
-                    <AccordionItemHeading>
-                      <AccordionItemButton>
-                        <AddCircleOutlineRounded />{" "}
-                        <span
-                          style={{
-                            display: "flex",
-                          }}
-                        >
+                {data?.itinerary
+                  .filter(
+                    (val, i) =>
+                      i < (isShowMoreDays ? data?.itinerary.length : 3)
+                  )
+                  .map((i, index) => (
+                    <AccordionItem>
+                      <AccordionItemHeading>
+                        <AccordionItemButton>
+                          <AddCircleOutlineRounded />{" "}
                           <span
                             style={{
-                              whiteSpace: "nowrap",
-                              fontWeight: 600,
-                              marginRight: "2px",
+                              display: "flex",
                             }}
-                          >{`Day ${index + 1}`}</span>
-                          <span style={{ fontSize: "16px" }}>
-                            : {i?.heading}
+                          >
+                            <span
+                              style={{
+                                whiteSpace: "nowrap",
+                                fontWeight: 600,
+                                marginRight: "2px",
+                              }}
+                            >{`Day ${index + 1}`}</span>
+                            <span style={{ fontSize: "20px" }}>
+                              : {i?.heading}
+                            </span>
                           </span>
-                        </span>
-                      </AccordionItemButton>
-                    </AccordionItemHeading>
-                    <AccordionItemPanel>
-                      <h3>{i?.heading}</h3>
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: setFixedImageDimensions(i?.description),
-                        }}
-                      ></p>
-                    </AccordionItemPanel>
-                  </AccordionItem>
-                ))}
+                        </AccordionItemButton>
+                      </AccordionItemHeading>
+                      <AccordionItemPanel>
+                        <h3
+                          id="AccordionItemPanelHeading"
+                          className="AccordionItemPanelHeading"
+                        >
+                          {i?.heading}
+                        </h3>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: setFixedImageDimensions(i?.description),
+                          }}
+                        ></p>
+                      </AccordionItemPanel>
+                    </AccordionItem>
+                  ))}
               </Accordion>
+              <h4
+                onClick={() => setIsShowMoreDays(!isShowMoreDays)}
+                style={{
+                  margin: "10px 0",
+                  color: "#ff5e00",
+                  cursor: "pointer",
+                }}
+              >
+                Show {isShowMoreDays ? "Less " : "More "} Days
+              </h4>
             </div>
             <div
               id="inclusion"
@@ -1765,7 +1716,7 @@ export default function IndividualTrek() {
             {data?.faq && data?.faq.length > 0 ? (
               <>
                 <div id="faq" className="itnerary scroll-target" ref={faqRef}>
-                  <h3>Faq</h3>
+                  <h3>Faq's</h3>
                   <div className="faqAllContainer">
                     <div class="wrapper">
                       <div class="faqcontainer">
@@ -1972,7 +1923,7 @@ export default function IndividualTrek() {
               aria-label="popular treks"
             >
               {suggestedData
-                ?.filter((item, index) => index < 4)
+                ?.filter((item, index) => index < 6)
                 .map((d) => (
                   <SplideSlide>
                     <PopularTrekCards data={d?.Details} />

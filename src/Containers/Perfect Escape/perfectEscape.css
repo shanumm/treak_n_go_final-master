@@ -47,7 +47,7 @@
   right: 0;
 }
 .perfectdes {
-  font-size: 16px;
+  font-size: 15px;
   width: 80%;
   margin: auto;
   text-align: center;
@@ -77,6 +77,6 @@
 
 @media (max-width: 767px) {
   .perfectdes {
-    width: 100%;
+    display: none;
   }
 }

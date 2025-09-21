@@ -122,7 +122,7 @@ export default function PeacefulStays() {
     setLocationFilter(location);
   };
 
-  const PeacefulStayComponent = ({ data }) => (
+  const PeacefulStayComponent = ({ data, i }) => (
     <Link to={`/stays/${id}-${data?.Details?.name}`}>
       <div className="peacefulStayComponent">
         <div>
@@ -207,14 +207,14 @@ export default function PeacefulStays() {
           <div>
             <div>
               <div>Good</div>
-              <div>5367 reviews</div>
+              <div>{5367 + i * 13} reviews</div>
             </div>
             <div>{data?.Details?.rating ? data?.Details?.rating : "4.5"}</div>
           </div>
 
           <div className="peacefulStayPageStartingFrom">
-            <div>Starting From (per night / 2 adults)</div>
             <div>INR {data?.Details?.price}/-</div>
+            <div>Starting From (per night / 2 adults)</div>
           </div>
           <div>
             <Link to={`/stays/${id}-${data?.Details?.name}`}>
@@ -306,7 +306,9 @@ export default function PeacefulStays() {
           <div>
             {campData &&
               (getLocationFilter === "" && nameFilter === ""
-                ? campData.map((c) => <PeacefulStayComponent data={c} />)
+                ? campData.map((c, i) => (
+                    <PeacefulStayComponent data={c} i={i} />
+                  ))
                 : campData
                     .filter((c) => {
                       if (

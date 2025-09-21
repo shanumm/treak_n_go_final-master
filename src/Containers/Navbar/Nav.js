@@ -62,6 +62,22 @@ export default function Nav() {
     });
   }, []);
 
+  document.body.addEventListener("click", (event) => {
+    const burgerLinks = document.querySelector(".burgerLinks");
+    const navBurgerMenu = document.querySelector(".navBurgerMenu");
+
+    // Check if the click target is not within the .burgerLinks container
+    if (
+      burgerLinks &&
+      navBurgerMenu &&
+      burgerLinks.classList.contains("burgerLinksActive") &&
+      !burgerLinks.contains(event.target) &&
+      !navBurgerMenu.contains(event.target)
+    ) {
+      burgerLinks.classList.remove("burgerLinksActive");
+    }
+  });
+
   const handleNav = () => {
     const navBurgerMenu = document.querySelector(".navBurgerMenu");
     const burgerLinks = document.querySelector(".burgerLinks");
@@ -151,7 +167,9 @@ export default function Nav() {
             <Link to="/blog">
               <li>Blogs</li>
             </Link>
-            <li onClick={goToBottom}>Contact</li>
+            <a onClick={goToBottom}>
+              <li>Contact</li>
+            </a>
             {user?.email === "test@example.com" && (
               <Link to="/addTrek">
                 <li>Edit/Update Trek</li>

@@ -225,6 +225,10 @@
 }
 
 @media (max-width: 768px) {
+  .treksTopLeft p {
+    display: none;
+  }
+
   .reviewContainer > div:nth-of-type(2) {
     padding: 2rem 0;
   }

@@ -23,7 +23,8 @@
 
 .glide__slides img {
   width: 100%;
-  object-fit: fill;
+  object-fit: cover;
+  object-position: left;
 }
 
 .glide__arrow {

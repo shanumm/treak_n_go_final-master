@@ -8,7 +8,7 @@
 }
 .blogFilter {
   width: 90%;
-  margin: 0 auto;
+  margin: 0 auto 1rem auto;
   padding-top: 2rem;
 }
 
@@ -32,7 +32,6 @@
 .blogContainer {
   width: 90%;
   margin: auto;
-  padding: 2rem 0;
 }
 .topBlog {
   padding: 2rem 1rem;
@@ -67,12 +66,11 @@
 }
 .topBlogContentContainer > div:nth-of-type(2) {
   text-transform: capitalize;
-  font-size: 28px;
+  font-size: 26px;
 }
 .topBlogContentContainer > div:nth-of-type(3) {
   color: rgb(79, 79, 79);
   flex: 1;
-  width: 90%;
   text-align: justify;
 }
 .topBlogContentContainer > div:nth-of-type(5) {
@@ -112,7 +110,7 @@
 }
 .eachBlog > div div:nth-of-type(2) {
   text-transform: capitalize;
-  font-size: 28px;
+  font-size: 26px;
 }
 .eachBlog > div div:nth-of-type(3) {
   color: rgb(79, 79, 79);
@@ -132,9 +130,64 @@
 .eachBlog > div div:nth-of-type(5) {
   color: #ff5e00;
 }
+.showOnSmall {
+  display: none;
+}
 
 @media (max-width: 729px) {
+  .showOnSmall {
+    display: inline-block;
+  }
+  .hideAuthorOnSmall {
+    font-size: 12px;
+    display: none !important;
+  }
+  .blogFilter > input {
+    width: 90%;
+  }
+  .topBlogContentContainer > div:nth-of-type(1),
+  .eachBlog > div:nth-of-type(1) {
+    font-size: 12px;
+  }
   .topBlogContentContainer > div:nth-of-type(2) {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .topBlogContentContainer > div:nth-of-type(3) {
+    text-align: left;
+  }
+  .eachBlog > div div:nth-of-type(3) {
+    text-align: left;
+  }
+  .eachBlog > div div:nth-of-type(2) {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .eachBlog img {
+    height: 150px;
+  }
+  .topBlog {
+    padding: 0;
+  }
+  .topBlogContent img {
+    margin-right: 0;
+    height: 150px;
+  }
+  .eachBlog {
+    margin-right: 0;
+  }
+  .topBlogContentContainer {
+    padding: 10px 16px;
+  }
+
+  .topBlogContentContainer > div:nth-of-type(3) p,
+  .eachBlog > div div:nth-of-type(3) p {
+    line-height: 20px;
+    height: 60px;
+    overflow: hidden;
+  }
+  .eachBlog,
+  .eachBlog > div {
+    min-height: auto;
   }
 }

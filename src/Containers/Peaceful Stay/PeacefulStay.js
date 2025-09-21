@@ -27,8 +27,8 @@ export default function PeacefulStay() {
             color: "gray",
           }}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam,
-          tenetur.
+          Escape to Isolated Perfection: Discover Exquisite Stays Away from the
+          World
         </div>
         <div className="peacefulStayContainerImages">
           <div>

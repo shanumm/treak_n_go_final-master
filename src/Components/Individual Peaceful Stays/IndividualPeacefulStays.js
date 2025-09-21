@@ -35,6 +35,7 @@ import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import "./individualPeacefulStays.css";
 import PaymentBox from "../../Payment/PaymentBox";
+import { useSwipeable } from "react-swipeable";
 
 function loadScript(src) {
   return new Promise((resolve) => {
@@ -64,6 +65,7 @@ export default function IndividualPeacefulStays() {
   const [bookingNumber, setBookingNumber] = useState("");
   const [bookingEmail, setBookingEmail] = useState("");
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+  const [isShowMoreExpanded, setIsShowMoreExpanded] = useState(false);
 
   // useEffect(() => {
   //   const individualPeacefulStays = document.querySelector(
@@ -482,6 +484,18 @@ export default function IndividualPeacefulStays() {
     );
   };
 
+  const handleShowMoreDesc = () => {
+    setIsShowMoreExpanded(!isShowMoreExpanded);
+  };
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      return navigateImage(-1);
+    },
+    onSwipedRight: () => {
+      return navigateImage(1);
+    },
+  });
+
   return (
     <div className="individualPeacefulStays">
       <div className="fixed-bottom-right">
@@ -499,27 +513,43 @@ export default function IndividualPeacefulStays() {
         </div>
       </div>
       {modalVisible && (
-        <div className="modal">
+        <div
+          className="modal imageModall"
+          style={{
+            display: "block",
+            zIndex: "10000000000000",
+            height: "100%",
+            display: "flex",
+            background: "black",
+          }}
+        >
           <span className="close" onClick={closeModal}>
             &times;
           </span>
           <img
+            {...handlers}
             className="modal-content"
             src={data.images[currentImageIndex]}
             alt=""
           />
-          <div className="prev" onClick={() => navigateImage(-1)}>
-            &#10094;
+          <div
+            className="arrow arrowLeft prev"
+            onClick={() => navigateImage(-1)}
+          >
+            &lt;
           </div>
-          <div className="next" onClick={() => navigateImage(1)}>
-            &#10095;
+          <div
+            className="arrow arrowRight next"
+            onClick={() => navigateImage(1)}
+          >
+            &gt;
           </div>
         </div>
       )}
       <div className="ipsNav">
         <ul>
           <li>
-            <a href="#ipsGallary">Gallary</a>
+            <a href="#ipsGallary">Gallery</a>
           </li>
           <li>
             <a href="#infoPrice">Description</a>
@@ -547,14 +577,18 @@ export default function IndividualPeacefulStays() {
         </div>
       </div>
 
-      <div className="ipsDetailsContainerParent" style={{ display: "flex", position: "relative" }}>
-        <div className="ipsDetailsContainer" style={{ marginRight: "1rem" }}>
+      <div
+        className="ipsDetailsContainerParent"
+        style={{ display: "flex", position: "relative" }}
+      >
+        <div
+          className="ipsDetailsContainer"
+          style={{ marginRight: "1rem", width: "100%" }}
+        >
           <div className="ipsDetails">
             <div id="infoPrice" className="ipsDetailsHeading">
               <div>
-                <div>
-                  {data?.name ? data?.name : "Capital O 89808 Sk Residency"}
-                </div>
+                <div>{data?.name ? data?.name : ""}</div>
                 <div>
                   {data?.rating ? (
                     <>
@@ -575,7 +609,7 @@ export default function IndividualPeacefulStays() {
               </div>
               <div className="ipslocation">
                 <LocationOn style={{ color: "#2378CC" }} />{" "}
-                {data?.area ? data?.area : "New Delhi"} |
+                {data?.area ? data?.area : ""} |
                 <span
                   style={{
                     color: "gray",
@@ -587,7 +621,7 @@ export default function IndividualPeacefulStays() {
                 </span>
               </div>
               <div className="ipsCompleteAddress">
-                {data?.completeAddress ? data?.completeAddress : "New Delhi"}{" "}
+                {data?.completeAddress ? data?.completeAddress : ""}{" "}
               </div>
             </div>
           </div>
@@ -630,28 +664,52 @@ export default function IndividualPeacefulStays() {
               >
                 Highlights of the property
               </div>
-              <div style={{ fontSize: "14px" }}>
-                {data?.campDesc ? (
-                  data?.campDesc
+              <div
+                className={
+                  isShowMoreExpanded
+                    ? "highlightsExpanededContainer showMoreExpanded"
+                    : "highlightsExpanededContainer notExpanded"
+                }
+                style={{ fontSize: "14px" }}
+              >
+                {data?.campDesc ? data?.campDesc : <></>}
+              </div>
+              <div
+                className="hideOnSmall"
+                style={{
+                  fontSize: "14px",
+                  marginTop: "5px",
+                  color: "#ff5e00",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                onClick={handleShowMoreDesc}
+              >
+                {isShowMoreExpanded ? "Hide" : "Show More"}
+                {isShowMoreExpanded ? (
+                  <img
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      marginLeft: "12px",
+                      marginLeft: "4px",
+                    }}
+                    src={
+                      "https://cdn-icons-png.flaticon.com/512/130/130906.png"
+                    }
+                  />
                 ) : (
-                  <>
-                    Capital O 89808 Sk Residency features air-conditioned rooms
-                    with TV in the South West district of New Delhi. Among the
-                    facilities at this property are a shared kitchen and room
-                    service, along with free WiFi throughout the property. Local
-                    points of interest like Gurudwara Bangla Sahib and Qutub
-                    Minar are reachable within 13 km and 14 km, respectively.{" "}
-                    <br />
-                    Rashtrapati Bhavan is 12 km from the hotel, while Gandhi
-                    Smriti is 13 km away. The nearest airport is Delhi
-                    International, 6 km from Capital O 89808 Sk Residency, and
-                    the property offers a paid airport shuttle service. Capital
-                    O 89808 Sk Residency has been welcoming Booking.com guests
-                    since 10 Jun 2022. Hotel chain/brand: OYO Rooms
-                    <br />
-                    Distance in property description is calculated using ©
-                    OpenStreetMap
-                  </>
+                  <img
+                    style={{
+                      width: "18px",
+                      height: "18px",
+                      marginLeft: "12px",
+                      marginLeft: "4px",
+                    }}
+                    src={
+                      "https://cdn-icons-png.flaticon.com/512/2722/2722987.png"
+                    }
+                  />
                 )}
               </div>
             </div>

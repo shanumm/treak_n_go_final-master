@@ -15,29 +15,37 @@ function WhyTrekNgo() {
       </div>
 
       <div className="why-trekngo-item">
-        <h3>+50 Premium tours</h3>
+        <h3>Explore the unexplored</h3>
         <p>
-          Trekking is not just a journey, it is the way of discovering yourself.
-          Amidst nature you have that peace, that feeling and that time. So,
-          make reservations soon and get lost to find the real your inner self.
+          TrekNgo is renowned for its tranquil yet adventurous trekking tours in
+          the Himalayan region. It extensively explores lesser-known areas and
+          is recognized for its discovery of new trekking tours, trails, and
+          homestays. These initiatives contribute to the economic development of
+          rural areas without compromising the local culture, while also
+          providing offbeat destinations for adventure seekers.
         </p>
       </div>
 
       <div className="why-trekngo-item">
-        <h3>+1000 Customers</h3>
+        <h3>Clean/Green Trails</h3>
         <p>
-          We always hustle around trying to settle down and end up searching for
-          a change to start over afresh. Do you have the same question on mind,
-          when are holidays lined? Tired from everyday routine, looking for a
-          break then go Trek.
+          We firmly believe in preserving the natural beauty of the trails we
+          traverse. To achieve this, we prioritize training our trek leaders to
+          educate trekkers on the importance of leaving no trace behind. We
+          emphasize the need to refrain from littering, disposing of plastic
+          waste, or leaving any carbon footprint during our treks.
         </p>
       </div>
 
       <div className="why-trekngo-item">
-        <h3>24/7 Support</h3>
+        <h3>Life transformation experiences</h3>
         <p>
-          Extra Ordinary service right from the sales staff to tour managers to
-          help you get the best holiday experience and life long memories.
+          Yes, it&#39;s true that trekking makes you a better person. You become
+          connected to nature by staying away from electronic devices for a few
+          days, learning, observing, and admiring nature. Most importantly, you
+          challenge yourself. Through trekking, we not only improve our fitness
+          but also enhance our learning abilities. We develop a deeper
+          appreciation for nature and gain valuable experiences.
         </p>
       </div>
     </div>

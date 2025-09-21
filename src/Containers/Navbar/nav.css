@@ -217,6 +217,7 @@
   #logo {
     flex: 1 1 30rem;
   }
+
   .burgerLinks {
     position: fixed;
     top: 0;
@@ -225,7 +226,7 @@
     transform: translateX(200%);
     transition: all 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
     display: block;
-    width: 50%;
+    width: 60%;
     background: white;
     z-index: 100000;
   }
@@ -237,14 +238,18 @@
     flex-direction: column;
     justify-content: space-around;
     width: 100%;
-    height: 50%;
-    margin: 10rem 0;
+    height: 60%;
+    margin-top: 2rem;
+    margin: 0;
+  }
+  .burgerNavLinks > * {
+    border-bottom: 1px solid rgba(183, 183, 183, 0.203);
   }
   .burgerNavLinks li {
     list-style: none;
     padding: 1rem 0;
     margin: 0 2rem;
-    font-size: var(--navText);
+    font-size: 15px;
   }
   #logo {
     text-align: center;

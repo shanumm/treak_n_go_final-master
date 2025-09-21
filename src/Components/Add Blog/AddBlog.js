@@ -23,41 +23,74 @@ import InlineImage from "editorjs-inline-image";
 // import "@editorjs/editorjs/dist/editor.min.css";
 // index.js
 
-import { db } from "../../firebase";
+import { db, storage } from "../../firebase";
 import "./addblog.css";
+import ReactQuill from "react-quill";
 export default function AddBlog() {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuther, setBlogAuther] = useState("");
   const [editorData, setEditorData] = useState();
+  const [loading, setLoading] = useState(false);
   const addBlog = async () => {
+    setLoading(true);
     if (blogTitle && blogAuther && editorData) {
       try {
         const currentTime = Date.now(); // Current time in milliseconds
 
         // Check if the editorData contains undefined values
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(`blog/${blogTitle.trim()}`);
+        fileRef
+          .putString(
+            JSON.stringify({
+              title: blogTitle,
+              author: blogAuther,
+              content: JSON.stringify(editorData),
+              uploadTime: currentTime,
+            })
+          )
+          .then(() => {
+            setBlogTitle("");
+            setBlogAuther("");
+            // await editorRef.current.clear();
 
-        await db
-          .collection("Blogs")
-          .doc(blogTitle.trim())
-          .set({
-            title: blogTitle,
-            author: blogAuther,
-            content: JSON.stringify(editorData),
-            uploadTime: currentTime,
+            alert("Blog added successfully!");
+          })
+          .catch((err) => {
+            console.error("Error adding blog: ", err);
+            alert("Failed to add blog. Please try again.");
+          })
+          .finally(() => {
+            setLoading(false);
+            localStorage.removeItem("blogdraft");
           });
 
-        // Reset the form fields after a successful submission
-        setBlogTitle("");
-        setBlogAuther("");
-        await editorRef.current.clear();
+        //   await db
+        //     .collection("Blogs")
+        //     .doc(blogTitle.trim())
+        //     .set({
+        //       title: blogTitle,
+        //       author: blogAuther,
+        //       content: JSON.stringify(editorData),
+        //       uploadTime: currentTime,
+        //     });
 
-        alert("Blog added successfully!");
+        //   // Reset the form fields after a successful submission
+        //   setBlogTitle("");
+        //   setBlogAuther("");
+        //   // await editorRef.current.clear();
+
+        //   alert("Blog added successfully!");
       } catch (error) {
         console.error("Error adding blog: ", error);
         alert("Failed to add blog. Please try again.");
+      } finally {
+        setLoading(false);
+        localStorage.removeItem("blogdraft");
       }
     } else {
       alert("Please fill out all fields before submitting.");
+      setLoading(false);
     }
   };
 
@@ -79,9 +112,14 @@ export default function AddBlog() {
   }, []);
 
   const initiator = () => {
+    let initialContent = {}; // Initialize initialContent as an empty object
+    if (localStorage.getItem("blogdraft")) {
+      initialContent = JSON.parse(localStorage.getItem("blogdraft"));
+    }
     const editor = new EditorJS({
       holder: "editorjs",
       autofocus: true,
+      data: initialContent,
       onReady: () => {
         console.log("Ready");
         editorRef.current = editor;
@@ -179,15 +217,46 @@ export default function AddBlog() {
       },
       onChange: async (api, event) => {
         let content = await editor.saver.save();
+        // localStorage.setItem("blogdraft", JSON.stringify(content));
         setEditorData(content);
       },
     });
   };
 
+  const toolbarOptions = [
+    ["bold", "italic", "underline", "strike"], // Standard text formatting options
+    ["blockquote", "code-block"],
+
+    [{ header: 1 }, { header: 2 }], // Custom header options
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ script: "sub" }, { script: "super" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ direction: "rtl" }],
+
+    [{ size: ["small", false, "large", "huge"] }], // Custom font size options
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ color: [] }, { background: [] }], // Color options for text and background
+    [{ font: [] }],
+    [{ align: [] }],
+
+    ["link", "image", "video", "formula"], // Insert links, images, videos, and formulas
+    ["clean"], // Remove formatting button
+  ];
+
+  const saveAsDraft = () => {
+    localStorage.setItem("blogdraft", JSON.stringify(editorData));
+    window.alert("Saved");
+  };
+
   useEffect(() => {
-    // console.log(editorData, ">>>>");
-    // console.log(JSON.stringify(editorData).includes("undefined"), ">>>>");
-  }, [editorData]);
+    if (localStorage.getItem("blogdraft")) {
+      let initialContent = JSON.parse(localStorage.getItem("blogdraft"));
+      setEditorData(initialContent);
+    }
+  }, []);
+
+  const Loader = () => <div className="loader"></div>;
 
   return (
     <div className="addblog">
@@ -209,11 +278,20 @@ export default function AddBlog() {
             type="text"
           />
         </div>
+        {/* <ReactQuill
+          theme="snow"
+          value={editorData}
+          onChange={(e) => {
+            setEditorData(e);
+          }}
+          modules={{ toolbar: toolbarOptions }}
+        /> */}
         <div id="editorjs" className="editorjs"></div>
       </div>
       <button onClick={addBlog} className="addBlogButton">
-        Add Blog
+        {loading ? <Loader /> : "Add Blog"}
       </button>
+      <button onClick={saveAsDraft}>Save Draft</button>
     </div>
   );
 }

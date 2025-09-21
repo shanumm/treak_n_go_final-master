@@ -7,6 +7,7 @@ export default function Modal({
   closeModal,
   startingDate,
   endingDate,
+  isPaymentProcessing,
   data,
   totalPeople,
   totalAmount,
@@ -21,7 +22,21 @@ export default function Modal({
   isTrek,
   currentBookingMiniDate,
   mobileError,
+  duration,
 }) {
+  const Loader = () => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderTop: "3px solid #ff5e00 !important",
+        margin: "0rem auto",
+      }}
+      className="loader"
+    ></div>
+  );
+
   return (
     <div
       className="modal"
@@ -41,7 +56,7 @@ export default function Modal({
         }}
         className="modal-content paymentModalParent"
       >
-        <div style={{ fontSize: "24px", margin: "1rem" }}>Request To Book</div>
+        <div style={{ fontSize: "24px", margin: "1rem" }}>Confirm And Pay</div>
         <div
           className="paymentModalContainer"
           style={{ display: "flex", margin: "1rem", flexWrap: "wrap" }}
@@ -62,35 +77,54 @@ export default function Modal({
                   <div style={{ marginBottom: ".8rem", fontWeight: 400 }}>
                     Dates
                   </div>
-                  <div style={{ fontWeight: 500 }}>
+                  <div style={{ fontWeight: 400 }}>
                     {isTrek
-                      ? currentBookingMiniDate
+                      ? `${currentBookingMiniDate} (${duration})`
                       : `${startingDate} - ${endingDate}`}
                   </div>
                 </div>
                 <div style={{ marginBottom: ".8rem", fontWeight: 400 }}>
                   <div>{isTrek ? "Adults" : "Guests"}</div>
                   <div style={{ fontWeight: 500 }}>
-                    {isTrek ? adult : totalPeople} {isTrek ? null : "Rooms"}
+                    {isTrek ? adult : totalPeople.length}{" "}
+                    {isTrek ? null : "Rooms"}
+                    {!isTrek && " / "}
+                    {!isTrek &&
+                      `${totalPeople.reduce((a, b) => a + b.people, 0)} Guests`}
                   </div>
                 </div>
               </div>
             </div>
+            <hr
+              style={{
+                borderBottom: "1px solid #bababa4d",
+                width: "85%",
+              }}
+            />
             <div style={{ marginTop: "2rem" }}>
               <div style={{ fontSize: "22px", fontWeight: 500 }}>Details</div>
               <div>
-                <input
-                  type="number"
+                <div
                   className="mobile"
-                  minLength={10}
-                  maxLength={10}
-                  style={{ marginLeft: "1rem", width: "85%" }}
-                  placeholder="Phone Number"
-                  value={bookingNumber}
-                  onChange={(e) => setBookingNumber(e.target.value)}
-                  required
-                ></input>
-
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "85%",
+                  }}
+                >
+                  <div>+91</div>
+                  <input
+                    style={{ background: "transparent", padding: "0 10px" }}
+                    type="number"
+                    // className="mobile"
+                    minLength={10}
+                    maxLength={10}
+                    placeholder="Phone Number"
+                    value={bookingNumber}
+                    onChange={(e) => setBookingNumber(e.target.value)}
+                    required
+                  ></input>
+                </div>
                 <input
                   type="email"
                   className="mobile"
@@ -101,7 +135,12 @@ export default function Modal({
                   required
                 ></input>
                 <h4 style={{ color: "Red" }}>{mobileError}</h4>
+                <p style={{ fontSize: "11px" }}>
+                  We’ll call or text you to confirm your number. Standard
+                  message and data rates apply
+                </p>
               </div>
+
               <div
                 onClick={onSubmitModal}
                 style={{
@@ -116,7 +155,7 @@ export default function Modal({
                   cursor: "pointer",
                 }}
               >
-                Book Now
+                {isPaymentProcessing ? <Loader /> : "Book Now"}
               </div>
             </div>
           </div>
@@ -155,14 +194,36 @@ export default function Modal({
                 <div style={{ fontSize: "14px", color: "gray", flex: "1" }}>
                   {data?.area}
                 </div>
+                {isTrek && (
+                  <div style={{ fontSize: "14px", color: "gray", flex: "1" }}>
+                    Altitude : {data?.maxAltitude}
+                  </div>
+                )}
+                {isTrek && (
+                  <div style={{ fontSize: "14px", color: "gray", flex: "1" }}>
+                    Length : {data?.trekkingKm}km
+                  </div>
+                )}
                 <div style={{ display: "flex" }}>
-                  {data?.rating}
+                  Rating {data?.rating}
                   <Star style={{ color: "#ff5e00" }} />
                 </div>
               </div>
             </div>
             <div style={{ marginTop: "1rem" }}>
-              <div style={{ fontWeight: "500", fontSize: "22px" }}>
+              <hr
+                style={{
+                  borderBottom: "1px solid #bababa4d",
+                  width: "85%",
+                  margin: "2rem 0",
+                }}
+              />
+              <div
+                style={{
+                  fontWeight: "500",
+                  fontSize: "22px",
+                }}
+              >
                 Price Details
               </div>
               <div
@@ -181,8 +242,11 @@ export default function Modal({
                   borderRadius: "5px",
                 }}
               >
-                <div>Price (For {numberOfDays} Day/s)</div>
-                <div style={{ fontSize: "18px", fontWeight: "500" }}>
+                <div>
+                  Price{" "}
+                  {isTrek ? "(For Trek)" : "(For " + numberOfDays + " Day/s)"}
+                </div>
+                <div style={{ fontSize: "18px", fontWeight: "400" }}>
                   INR {totalAmount}
                 </div>
               </div>
@@ -203,7 +267,7 @@ export default function Modal({
                 }}
               >
                 <div>Service Fees</div>
-                <div style={{ fontSize: "18px", fontWeight: "500" }}>
+                <div style={{ fontSize: "18px", fontWeight: "400" }}>
                   INR {serviceFees}
                 </div>
               </div>

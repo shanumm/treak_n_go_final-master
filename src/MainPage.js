@@ -23,12 +23,21 @@ const liveBarContainerStyle = {
   position: "relative",
   height: "5vh",
 };
+function calculateMarqueeSpeed() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth <= 768) {
+    return 20; // slower speed for smaller screens
+  } else {
+    return 30; // faster speed for larger screens
+  }
+}
 
 const liveBarContentStyle = {
   display: "inline-block",
   position: "absolute",
-  animation: "marquee 25s linear infinite",
+  animation: `marquee ${calculateMarqueeSpeed()}s linear infinite`,
 };
+
 const LiveBar = () => {
   const [liveBarData, setLiveBarData] = useState("");
   const liveText = db
@@ -37,13 +46,14 @@ const LiveBar = () => {
     .get()
     .then((snapshot) => setLiveBarData(snapshot.data().liveBar));
   if (!liveBarData.length) return;
+
   return (
     <div style={liveBarContainerStyle}>
       <style>
         {`
         @keyframes marquee {
           0% {
-            transform: translateX(300%);
+            transform: translateX(150%);
           }
           100% {
             transform: translateX(-100%);

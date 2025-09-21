@@ -30,7 +30,7 @@ export default function EditIndividualCamps() {
   const [name, setName] = useState("");
   const [campDesc, setCampDesc] = useState("");
   const [serviceFees, setServiceFees] = useState(0);
-  const [mainLocation, setMainLocation] = useState("");
+  // const [mainLocation, setMainLocation] = useState("");
   const [completeAddress, setCompleteAddress] = useState("");
   const [numRooms, setNumRooms] = useState(0);
   const [maxPeople, setMaxPeople] = useState(0);
@@ -201,7 +201,7 @@ export default function EditIndividualCamps() {
       setPublicTransport(data?.publicTransport || []);
       setSelectedAmenities(data?.amenities || []);
       setPrice(data?.price || 0);
-      setMainLocation(data?.mainLocation || "");
+      // setMainLocation(data?.mainLocation || "");
       setServiceFees(data?.serviceFees || 0);
       setEditType(data?.category || "Camps");
       setArea(data?.area || "");
@@ -242,7 +242,7 @@ export default function EditIndividualCamps() {
               Details: {
                 name,
                 campDesc,
-                mainLocation,
+                // mainLocation,
                 serviceFees,
                 numRooms,
                 completeAddress,
@@ -303,7 +303,7 @@ export default function EditIndividualCamps() {
                   Details: {
                     name,
                     campDesc,
-                    mainLocation,
+                    // mainLocation,
                     serviceFees,
                     numRooms,
                     completeAddress,
@@ -383,7 +383,7 @@ export default function EditIndividualCamps() {
           type="text"
         />
       </div>
-      <div>
+      {/* <div>
         <h4>Main Location</h4>
         <textarea
           rows="10"
@@ -392,7 +392,7 @@ export default function EditIndividualCamps() {
           onChange={(e) => setMainLocation(e.target.value)}
           type="text"
         />
-      </div>
+      </div> */}
       <div>
         <h4>Price</h4>
         <input

@@ -105,12 +105,29 @@ export default function App() {
       });
   }, []);
 
+  // const checking = () => {
+  //   const trekData = db
+  //     .collection("All Trek")
+  //     .doc("Leh Ladakh")
+  //     .get()
+  //     .then((snapshot) => {
+  //       db.collection("All MultiDay")
+  //         .doc("Leh Ladakh")
+  //         .set({ ...snapshot.data() })
+  //         .then(() => {
+  //           console.log("done");
+  //         })
+  //         .catch((err) => console.log(err));
+  //     });
+  // };
+
   return (
     <FilterProvider>
       <Router>
         <ScrollToTop />
-        <Nav />
+          <Nav />
         <div className="App">
+          {/* <button onClick={checking}>testing</button> */}
           <Routes>
             <Route
               exact
